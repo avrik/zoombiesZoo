@@ -1,0 +1,19 @@
+<div class="container">
+  <header style="display:flex;justify-content:space-between;background-color:black;color:yellow;margin:0;padding:0 10px 0 10px">
+    <h2>Score <span style="color:white">{{total|number}}</span> </h2>
+    <h2 style="color:white">Optimum Prime</h2>
+    <h2>Max <span style="color:white">{{totalMax|number}}</span> </h2>
+  </header>
+  <app-resource-table></app-resource-table>
+  <app-arena></app-arena>
+
+  <div style="text-align:center;width:100%">
+    
+    <app-items-store></app-items-store>
+  </div>
+  
+  <div style="margin:5px">
+    <app-board></app-board>
+  </div>
+
+</div>

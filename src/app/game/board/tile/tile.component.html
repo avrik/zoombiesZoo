@@ -1,0 +1,19 @@
+<div *ngIf="data && !data.card" class="tile empty">
+</div>
+
+<div *ngIf="data && data.card && data.card.bonus" class="bonus">{{data.card.bonus}}</div>
+<div *ngIf="data && data.card" [ngClass]="getCSSClass()" [ngStyle]="{'backgroundColor': data.card.color }">
+
+  <span *ngIf="data.card.img" class="normal">
+    <img [src]="data.card.img" alt="" width="30" height="40">
+  </span>
+  <span *ngIf="data.card && data.card.symbol && !data.card.img" class="normal">{{data.card.symbol}}</span>
+
+
+
+
+</div>
+
+<!-- <li class='hex'>
+  <span *ngIf="data && data.card">{{data.card.symbol}}</span>
+</li> -->
