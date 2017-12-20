@@ -2,27 +2,13 @@
   <button (click)="gameEngine.restart()">Start Over</button>
 </div>
 
-<!-- <span style="display:flex;position:absolute" *ngFor="let soldier of soldiersCollected;let i=index">
-  <app-tile [style.margin-right.px]="i*10" [onBoard]="false" [data]="{value:soldier.value,card:soldier}"></app-tile>
-</span> -->
 
 
-
-
-
-<div (mousemove)="onMove($event)">
-  <span #tileRef style="position:absolute;pointer-events: none;" [style.left.px]="xpos" [style.top.px]="ypos">
-    <!-- <app-tile *ngIf="!gameEngine.gameOver" [data]="{value:gameEngine._currentValue,color:gameEngine._currentColor}"></app-tile> -->
-    <app-tile *ngIf="!gameEngine.gameOver && currentCard" [onBoard]="false" [data]="{value:currentCard.value,card:currentCard}"></app-tile>
-  </span>
-
-  <div class="container" [ngStyle]="{'grid-template-columns': getCols() }">
-    <app-tile *ngFor="let tile of tiles" (click)="clickTile($event,tile)" [data]="tile"></app-tile>
-    <app-tile [data]="emptySlot" style="margin-top:10px" (click)="clickEmptySlot()"></app-tile>
+<div>
+  <div class="container" #mainBoard [ngStyle]="{'grid-template-columns': getCols() }">
+    <app-tile *ngFor="let tile of tiles" [tile]="tile" (openStore)="onTileOpenStore($event)"></app-tile>
+    <!-- <app-tile [data]="emptySlot" style="margin-top:10px" (click)="clickEmptySlot()"></app-tile> -->
   </div>
   <!-- <app-board-bg></app-board-bg> -->
 </div>
 
-<!-- <div style="display:flex;zoom:0.5;width:100%;justify-content:center;margin:15px;flex-wrap:wrap">
-  <app-tile *ngFor="let item of gameEngine.targets" [data]="{value:item.value}" [style.opacity]="item.reached?1:0.1"></app-tile>
-</div> -->

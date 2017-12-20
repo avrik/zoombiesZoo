@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { GameEngineService, ICard } from '../../services/game-engine.service';
+import { GameEngineService } from '../../services/game-engine.service';
 import { TileComponent } from './tile/tile.component';
 import { Tile } from './tile/tile';
-
-const colors = ["red", "green", "blue"];
+import { timeout } from 'q';
+import { Card } from '../cards/card';
+import { Enemy } from 'app/game/arena/enemy';
+import { Observable } from 'rxjs/Rx';
 
 @Component({
   selector: 'app-board',
@@ -13,11 +15,13 @@ const colors = ["red", "green", "blue"];
 export class BoardComponent implements OnInit {
   emptySlot: Tile;
   tiles: Tile[] = [];
-  xpos: number;
-  ypos: number;
-  currentCard: ICard;
-  
+  //xpos: number;
+  //ypos: number;
+  currentCard: Card;
+  currentTileClicked: TileComponent;
+  //enemies: Enemy[] = [];
   @ViewChild('tileRef') tileRef: ElementRef;
+  @ViewChild('mainBoard') mainBoard: ElementRef;
 
   constructor(public gameEngine: GameEngineService) {
 
@@ -25,34 +29,46 @@ export class BoardComponent implements OnInit {
     this.gameEngine.currentCard$.subscribe(currentCard => {
       this.currentCard = currentCard;
     });
-    this.emptySlot = new Tile()
+
+    /* this.gameEngine.spawnEnemies$.subscribe(enemy => {
+
+      if (enemy) {
+        let newEnemy: Enemy = new Enemy();
+        this.enemies.push(newEnemy);
+      }
+
+    }) */
+    this.emptySlot = new Tile();
   }
 
   ngOnInit() {
     this.gameEngine.restart();
-    //this.currentCard = this.currentCard.cards[0];
+
+    /* let timer = Observable.timer(2000, 100);
+    timer.subscribe(t => {
+
+      if (!this.gameEngine.gameOver) {
+        this.enemies.forEach(enemy => {
+          enemy.ypos--;
+
+          if (Math.floor(Math.random() * 2) == 0) {
+            enemy.xpos++;
+          } else {
+            enemy.xpos--;
+          }
+
+        })
+      }
+
+    }); */
   }
 
   getCols() {
     let str: string = ''
-    for (var i = 0; i < this.gameEngine.totalCols; i++) {
-      str += '51px '
+    for (var i = 0; i < this.gameEngine.totalRows; i++) {
+      str += '63px '
     }
     return str;
-  }
-
-  clickTile(event: MouseEvent, tile: Tile) {
-    if (!tile.card) {
-      this.tileRef.nativeElement.style.opacity = 0;
-      setTimeout(a => {
-        this.tileRef.nativeElement.style.opacity = 1;
-      }, 200);
-
-      tile.card = this.currentCard;
-
-      this.gameEngine.findMatch(tile);
-      this.gameEngine.nextTurn();
-    }
   }
 
   clickEmptySlot() {
@@ -66,9 +82,9 @@ export class BoardComponent implements OnInit {
     }
   }
 
-  onMove(event) {
-    this.xpos = event.screenX - 20;
-    this.ypos = event.screenY - 150;
+  onTileOpenStore(event) {
+    if (this.currentTileClicked) this.currentTileClicked.showStore = false;
+    this.currentTileClicked = event;
   }
 
 }

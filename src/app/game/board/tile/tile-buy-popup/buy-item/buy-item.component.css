@@ -1,0 +1,16 @@
+
+.container {
+    width: 50px;
+    background-color: rgb(173, 154, 154);
+    border-radius: 5px;
+    /* opacity: 0.8; */
+    border: 2px solid rgb(201, 187, 187);
+}
+
+.container:hover {
+    opacity: 1;
+    border: 2px solid gold;
+    background-color: rgb(231, 219, 219);
+}
+
+

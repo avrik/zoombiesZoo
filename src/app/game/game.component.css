@@ -2,3 +2,12 @@
     width: 100%;
     
 }
+
+.header {
+    display:flex;
+    justify-content: center;
+    background-color: #6b3d3d;
+    margin: 0;
+    padding: 0 5px 0 5px;
+    border-bottom: 3px solid #3a1f1f;
+}

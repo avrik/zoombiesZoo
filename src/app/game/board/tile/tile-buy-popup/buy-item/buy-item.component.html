@@ -1,0 +1,21 @@
+
+
+
+<div class="container">
+
+  <div style="text-align:center">
+    <!-- {{title}} -->
+    <div>
+      <img [src]="icon" alt="" height="40" >
+    </div>
+    
+    <span *ngIf="resourceNeeded" style="margin-top:20px">
+      <app-resource-item *ngIf="cost.lumber" [amount]="cost.lumber" icon="assets/resources/wood.png"></app-resource-item>
+      <app-resource-item *ngIf="cost.block" [amount]="cost.block" icon="assets/resources/brick.png"></app-resource-item>
+      <app-resource-item *ngIf="cost.coin" [amount]="cost.coin" icon="assets/resources/coin.png"></app-resource-item>
+    </span>
+
+  </div>
+
+</div>
+<!-- <button type="button" (click)="onClick()">buy</button> -->

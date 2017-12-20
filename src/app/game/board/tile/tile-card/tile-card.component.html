@@ -1,0 +1,12 @@
+<!-- <div *ngIf="card" (click)="clickTileCard()" [ngStyle]="{'backgroundColor': card.color }"> -->
+<div style="position:absolute;height:64;" (click)="clickTileCard()" >
+
+  <div *ngIf="card.collect" class="count-frame">
+    <div class="collect-box">x{{card.collect}}</div>
+  </div>
+
+  <div class="in-place">
+    <img *ngIf="card.img" [src]="card.img" alt="" height="54">
+  </div>
+  <!-- <span *ngIf="tile.card && tile.card.symbol && !tile.card.img" class="normal">{{tile.card.symbol}}</span> -->
+</div>

@@ -1,11 +1,20 @@
-import { ICard } from '../../../services/game-engine.service';
+import { Card, MATCH } from '../../cards/card';
+import { Enemy } from 'app/game/arena/enemy';
+import { Terrain } from './terrain';
+import { Building } from './building';
 export class Tile {
 
     linked: Tile[] = [];
-    bonus: number = 0;
-    card: ICard;
-    //age: number = 0;
-    constructor(public col: number = -1, public row: number = -1) { }
+    card: Card;
+    enemy:Enemy;
+    overMe:boolean;
+    terrain:Terrain
+    building:Building;
+
+    constructor(public col: number = -1, public row: number = -1) 
+    { 
+        this.terrain = new Terrain();
+    }
 
     getAllEmpties(): Tile[] {
         return this.linked.filter(a => !a.card);
@@ -14,10 +23,10 @@ export class Tile {
     getCardsAround(): Tile[] {
         let aroundMe: Tile[] = [];
         let recurse: Function = (arr: Tile[]) => {
-            
+
             arr.forEach(item => {
                 aroundMe.push(item);
-                let newArr: Tile[] = item.linked.filter(a => { return aroundMe.indexOf(a) == -1 && a.card && a.card.value })
+                let newArr: Tile[] = item.linked.filter(a => { return aroundMe.indexOf(a) == -1 && a.card })
                 recurse(newArr);
             })
         }
@@ -36,10 +45,10 @@ export class Tile {
                     this != item &&
                     this.card &&
                     item.card &&
-                    this.card.type == "match" &&
-                    item.card.type == "match" &&
+                    this.card.type == MATCH &&
+                    item.card.type == MATCH &&
                     collector.indexOf(item) == -1 &&
-                    (item.card.name === this.card.name))
+                    (item.card.value === this.card.value))
                     .forEach(item => {
                         collector.push(item);
                         func(item.linked);
@@ -53,6 +62,5 @@ export class Tile {
 
     clear() {
         this.card = null;
-        this.bonus = 0;
     }
 }

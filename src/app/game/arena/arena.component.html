@@ -1,4 +1,4 @@
 <div class="container" >
-
-  <app-enemy *ngFor="let enemy of enemies"></app-enemy>
+  <!-- <app-arena-spot *ngFor="let item of spots" (click)="onSpotClick($event)"></app-arena-spot> -->
+  <app-enemy *ngFor="let enemy of enemies" [data]="enemy"></app-enemy>
 </div>

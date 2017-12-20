@@ -2,5 +2,11 @@
     border-top:3px solid rgb(68, 65, 65);
     border-bottom:1px solid rgb(68, 65, 65);
 
-    height:100px;width:100%;background-color:rgb(173, 122, 86)
+    /* height:100px;width:100%;background-color:rgb(173, 122, 86); */
+    background-color:rgb(173, 122, 86);
+
+    display:inline-grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 1px;
+    /* grid-auto-rows: minmax(30px, auto); */
 }

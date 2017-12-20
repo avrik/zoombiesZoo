@@ -1,19 +1,22 @@
-<div *ngIf="data && !data.card" class="tile empty">
-</div>
+<tile-buy-popup *ngIf="showStore" (buyItem)="buyItem($event)"></tile-buy-popup>
 
-<div *ngIf="data && data.card && data.card.bonus" class="bonus">{{data.card.bonus}}</div>
-<div *ngIf="data && data.card" [ngClass]="getCSSClass()" [ngStyle]="{'backgroundColor': data.card.color }">
+<div style="position:absolute;padding-left:8px" *ngIf="!gameEngine.gameOver">
 
-  <span *ngIf="data.card.img" class="normal">
-    <img [src]="data.card.img" alt="" width="30" height="40">
-  </span>
-  <span *ngIf="data.card && data.card.symbol && !data.card.img" class="normal">{{data.card.symbol}}</span>
-
-
-
+  <div class="card-float" [@floatOver]="state" *ngIf="(!tile.card || tile.terrain.type=='plain') && tile.overMe && currentCard && tile.terrain.clickable">
+    <app-tile-card [card]="currentCard"></app-tile-card>
+  </div>
+  <app-tile-card *ngIf="tile.card" [card]="tile.card" (collected)="onCardCollected()"></app-tile-card>
 
 </div>
 
-<!-- <li class='hex'>
-  <span *ngIf="data && data.card">{{data.card.symbol}}</span>
-</li> -->
+
+<!-- /TERRAIN -->
+<div class="tile" *ngIf="tile" (mouseover)="overMe()" (mouseout)="outMe()">
+  <div class="over" *ngIf="tile.terrain.clickable && !tile.card" (click)="clickTile()"></div>
+
+
+  <div class="terrain">
+    <!-- <img *ngIf="tile.building" [src]="tile.building.url" alt="" width="64"> -->
+    <img [src]="tile.building?tile.building.url:tile.terrain.url" alt="" width="64">
+  </div>
+</div>

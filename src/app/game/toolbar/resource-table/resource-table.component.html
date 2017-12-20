@@ -1,0 +1,26 @@
+<div class="container">
+  <div class="text-box"> day
+    <br>
+    <b style="color:white;line-height: 30px;">{{years| number}}</b>
+  </div>
+
+  <div class="text-box">population
+    <br>
+    <b style="color:white;line-height: 30px;">{{population | number}}</b>
+  </div>
+
+  <app-resource-item [amount]="lumber" icon="assets/resources/wood.png"></app-resource-item>
+  <app-resource-item [amount]="blocks" icon="assets/resources/brick.png"></app-resource-item>
+  <app-resource-item [amount]="coins" icon="assets/resources/coin.png"></app-resource-item>
+
+  <div class="text-box store-btn">
+      <img style="padding: 5px;" src="assets/plus.png" alt="" height="30">
+    </div>
+
+  <div class="text-box" style="background-color: #2d2733;padding:0">
+    <img [src]="currentCard.img" alt="" height="40">
+  </div>
+
+</div>
+
+<!-- <div style="width:200px;height:30px;background-color:gainsboro"></div> -->

@@ -1,0 +1,3 @@
+<div class="container">
+  <app-buy-item *ngFor="let item of items;let i = index" [icon]="item.icon" [cost]="item.cost" (click)="buy(i)"></app-buy-item>
+</div>
