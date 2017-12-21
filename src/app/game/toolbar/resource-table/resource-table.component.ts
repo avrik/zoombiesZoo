@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { GameEngineService } from 'app/services/game-engine.service';
 import { Card } from '../../cards/card';
 import { Resources } from 'app/enums/resources.enum';
@@ -9,6 +9,7 @@ import { Resources } from 'app/enums/resources.enum';
   styleUrls: ['./resource-table.component.css']
 })
 export class ResourceTableComponent implements OnInit {
+  @ViewChild('myBar') myBar: ElementRef;
   collected: Card[] = [];
 
   lumber: number = 0;
@@ -22,6 +23,7 @@ export class ResourceTableComponent implements OnInit {
   currentCard: Card;
 
   constructor(public gameEngine: GameEngineService) {
+
     this.gameEngine.currentCard$.subscribe(currentCard => this.currentCard = currentCard);
     this.gameEngine.tiles$.subscribe(tiles => {
       if (tiles) {
@@ -31,7 +33,14 @@ export class ResourceTableComponent implements OnInit {
 
     })
     this.gameEngine.years$.subscribe(years => { this.years = years })
-    this.gameEngine.population$.subscribe(population => { this.population = population })
+    this.gameEngine.population$.subscribe(population => {
+      // if (!isNaN(this.population)) {
+      this.population = population;
+      this.move(Math.round(this.population*100/100));
+      //}
+
+    }
+    )
     this.gameEngine.collected$.subscribe(collected => {
       this.collected = collected;
       if (collected && collected.length) {
@@ -51,6 +60,26 @@ export class ResourceTableComponent implements OnInit {
       return bonus ? bonus / 10 : 0;
     }
     return 0;
+  }
+
+  move(target: number) {
+    console.log('1111 '+target)
+    if (!this.myBar) return;
+    let width = this.myBar.nativeElement.style.width;
+
+    let frame = () => {
+      if (width >= target) {
+
+      } else {
+        width++;
+        this.myBar.nativeElement.style.width = width + '%';
+        setTimeout(() => {
+          frame();
+        }, 100);
+      }
+    }
+
+    frame()
   }
 
   ngOnInit() {

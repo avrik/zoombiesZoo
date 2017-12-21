@@ -29,3 +29,14 @@
     /* padding: 0 4px 0 4px; */
 
 }
+
+.level {
+    position: absolute;
+    width:15px;
+    height: 15px;
+    background-color: gold;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 12px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+}

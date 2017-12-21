@@ -2,13 +2,11 @@ import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Tile } from './tile';
 import { GameEngineService } from 'app/services/game-engine.service';
-import { TileMatch } from 'app/game/board/tile/tile-match';
 import { ICardData, Card, MATCH } from '../../cards/card';
-import { Resources } from '../../../enums/resources.enum';
 import { IBuyItem } from './tile-buy-popup/buy-item/buy-item';
 import { Terrain } from 'app/game/board/tile/terrain';
 import { Building } from './building';
-
+import { Resources } from 'app/enums/resources.enum';
 
 @Component({
   selector: 'app-tile',
@@ -37,8 +35,6 @@ export class TileComponent implements OnInit {
   @Output() openStore: EventEmitter<any> = new EventEmitter();
   state: string = "inactive";
   currentCard: Card;
-  //over: boolean;
-  // matchTile: boolean;
   showStore: boolean;
   timeout: any;
 
@@ -50,8 +46,6 @@ export class TileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.matchTile = (this.tile instanceof TileMatch) ? true : false;
-    //this.matchTile = this.tile.terrain.type == "resource"?true:false;
 
   }
 
@@ -109,7 +103,11 @@ export class TileComponent implements OnInit {
       } */
       if (buyItem.type == "house") {
         this.gameEngine.updatePopulation = 5;
+        this.tile.card = this.gameEngine.getNewCard(Resources.HOUSE);
+        this.gameEngine.findMatch(this.tile)
       }
+
+      this.gameEngine.nextTurn();
     } else {
       console.warn("not enough resources!")
     }

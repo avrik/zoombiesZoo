@@ -159,21 +159,9 @@ export class GameEngineService {
   }
 
   roundComplete() {
-
-    /* this.tiles.filter(tile => tile.card && tile.card.type == WALKING && tile.card.name == ENEMY).forEach(tile => {
-        this.getCityTile().card = tile.card;
-        tile.card = null;
-    }); */
-
-
-
     if (!this.anyEmptyCells) {
       this.gameIsOver();
-    } else {
-      /* let onOver:Tile = this.tilesMatches.find(a => a.overMe);
-      if (onOver) onOver.overMe=false;
-      this.tilesMatches.filter(a => !a.card)[0].overMe = true; */
-    }
+    } 
   }
 
   getCityTile(): Tile {

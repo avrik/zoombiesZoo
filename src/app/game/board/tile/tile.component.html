@@ -5,7 +5,7 @@
   <div class="card-float" [@floatOver]="state" *ngIf="(!tile.card || tile.terrain.type=='plain') && tile.overMe && currentCard && tile.terrain.clickable">
     <app-tile-card [card]="currentCard"></app-tile-card>
   </div>
-  <app-tile-card *ngIf="tile.card" [card]="tile.card" (collected)="onCardCollected()"></app-tile-card>
+  <app-tile-card *ngIf="tile.card" [placed]="true" [card]="tile.card" (collected)="onCardCollected()"></app-tile-card>
 
 </div>
 

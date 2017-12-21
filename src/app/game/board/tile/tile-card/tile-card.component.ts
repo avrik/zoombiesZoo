@@ -10,6 +10,7 @@ import { GameEngineService } from 'app/services/game-engine.service';
 })
 export class TileCardComponent implements OnInit {
   @Input() card: Card;
+  @Input() placed: boolean;
   @Output() collected:EventEmitter<any> = new EventEmitter();
 
   constructor(private gameEngine: GameEngineService) { }
@@ -17,16 +18,9 @@ export class TileCardComponent implements OnInit {
   ngOnInit() {
   }
 
-  /* getCSSClass() {
-    return this.onBoard ? "tile block" : "tile block-out";
-  } */
-
   clickTileCard() {
     if (this.card.collect) {
-      //this.tile.overMe = false;
       this.gameEngine.collect(this.card, this.card.collect);
-      //this.tile.clear();
-      //this.gameEngine.nextTurn();
       this.collected.emit();
     }
   }

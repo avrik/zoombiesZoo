@@ -5,8 +5,15 @@
   </div>
 
   <div class="text-box">population
+
+    <div  class="progress-bar">
+      <div #myBar class="progress-bar-inside">
+          <b style="color:white;line-height: 20px;text-align:center;margin-left:20px">{{population | number}}%</b>
+        
+      </div>
+    </div>
     <br>
-    <b style="color:white;line-height: 30px;">{{population | number}}</b>
+    
   </div>
 
   <app-resource-item [amount]="lumber" icon="assets/resources/wood.png"></app-resource-item>
@@ -14,8 +21,8 @@
   <app-resource-item [amount]="coins" icon="assets/resources/coin.png"></app-resource-item>
 
   <div class="text-box store-btn">
-      <img style="padding: 5px;" src="assets/plus.png" alt="" height="30">
-    </div>
+    <img style="padding: 5px;" src="assets/plus.png" alt="" height="30">
+  </div>
 
   <div class="text-box" style="background-color: #2d2733;padding:0">
     <img [src]="currentCard.img" alt="" height="40">
