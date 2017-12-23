@@ -366,7 +366,6 @@ export class GameEngineService {
       this.handleWild(tile);
     }
 
-
     let matchedTiles: Tile[] = tile.getMatchesAround();
 
     if (matchedTiles.length > 1) {

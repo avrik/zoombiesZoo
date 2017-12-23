@@ -22,6 +22,8 @@ export class ResourceTableComponent implements OnInit {
   population: number;
   currentCard: Card;
 
+  showStore:boolean;
+  
   constructor(public gameEngine: GameEngineService) {
 
     this.gameEngine.currentCard$.subscribe(currentCard => this.currentCard = currentCard);
@@ -80,6 +82,10 @@ export class ResourceTableComponent implements OnInit {
     }
 
     frame()
+  }
+
+  openStore() {
+    this.showStore=!this.showStore;
   }
 
   ngOnInit() {

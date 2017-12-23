@@ -93,7 +93,7 @@ export class TileComponent implements OnInit {
     let canBuy: boolean = this.gameEngine.useResources(buyItem.cost)
 
     if (canBuy == true) {
-      this.tile.building = new Building(buyItem.type)
+     
       /* if (buyItem.type == Resources.WALL) {
         this.tile.terrain = new Terrain('wall')
       } else 
@@ -105,6 +105,8 @@ export class TileComponent implements OnInit {
         this.gameEngine.updatePopulation = 5;
         this.tile.card = this.gameEngine.getNewCard(Resources.HOUSE);
         this.gameEngine.findMatch(this.tile)
+      } else {
+        this.tile.building = new Building(buyItem.type)
       }
 
       this.gameEngine.nextTurn();

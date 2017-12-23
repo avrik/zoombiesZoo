@@ -95,6 +95,18 @@ export const cardCityCollection: ICardData[] = [
 
 export const cardCollection: ICardData[] = [
   {
+    id: 1000, level: 0, family: familyHouse, name: Resources.HOUSE, mergeBy: MATCH, type: MATCH, minForNextLevel: 3,  img: "assets/buildings/Door Tall Closed.png",
+    nextCard: {
+      id: 1001, level: 1, family: familyHouse, name: `${Resources.HOUSE}2`, mergeBy: MATCH, type: MATCH, minForNextLevel: 3,  img: "assets/buildings/Door Tall Closed.png",
+      nextCard: {
+        id: 1002, level: 2, family: familyHouse, name: `${Resources.HOUSE}3`, mergeBy: MATCH, type: MATCH, minForNextLevel: 3,  img: "assets/buildings/house.png",
+        nextCard: {
+          id: 1003, level: 3, family: familyHouse, name: `${Resources.HOUSE}4`, mergeBy: MATCH, type: MATCH, minForNextLevel: 3,  img: "assets/buildings/house.png",
+        }
+      }
+    }
+  },
+  {
     id: 100, level: 0, family: familyBrick, name: Resources.ROCK, mergeBy: MATCH, type: MATCH, minForNextLevel: 3, color: "#9DCAB5", chance: 100, img: "assets/resources/rock.png",
     nextCard: {
       id: 102, level: 1, family: familyBrick, name: Resources.BLOCK, mergeBy: MATCH, type: MATCH, minForNextLevel: 3, color: "#AFE0C9", chance: 5, img: "assets/resources/brick.png",
@@ -159,11 +171,11 @@ export const cardCollection: ICardData[] = [
   {
     id: -1, level: 0, family: { name: Resources.WILD, value: -1 }, name: Resources.WILD, mergeBy: MATCH, type: MATCH, minForNextLevel: 3, img: "assets/resources/diamond.png", color: "yellow", chance: 30, 
     nextCard: {
-      id: 0, level: 1, family: { name: Resources.PERSON, value: 0 }, name: Resources.PERSON, mergeBy: TRAP, type: WALKING, minForNextLevel: 3, chance: 20, img: "assets/people/Character Cat Girl.png",
+      id: 0, level: 1, family: { name: Resources.PERSON, value: 0 }, name: Resources.PERSON, mergeBy: TRAP, type: WALKING, minForNextLevel: 3, chance: 20, img: "assets/people/pig.png",
       nextCard: {
         id: 500, level: 2, family: { name: Resources.GRAVE, value: 100 }, name: Resources.GRAVE, mergeBy: MATCH, type: MATCH, minForNextLevel: 3, img: "assets/resources/grave.png",
         nextCard: {
-          id: 800, level: 3, family: { name: Resources.ZOOMBIE, value: 100 }, name: ENEMY, mergeBy: TRAP, type: WALKING, minForNextLevel: 3, img: "assets/resources/zoombie.gif",
+          id: 800, level: 3, family: { name: Resources.ZOOMBIE, value: 100 }, name: ENEMY, mergeBy: TRAP, type: WALKING, minForNextLevel: 3, img: "assets/people/zombiePig.png",
           nextCard: {
             id: 1000, level: 4, family: familyCoin, name: Resources.COIN, mergeBy: MATCH, type: Resources.COIN, minForNextLevel: 3, img: "assets/resources/coin.png"
           }

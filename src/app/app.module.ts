@@ -20,6 +20,8 @@ import { ResourceItemComponent } from './game/toolbar/resource-table/resource-it
 import { PopupComponent } from './common/popup/popup.component';
 
 import { FormsModule } from "@angular/forms";
+import { ItemsStorePopupComponent } from './game/toolbar/items-store-popup/items-store-popup.component';
+import { ItemsStorePopupItemComponent } from './game/toolbar/items-store-popup/items-store-popup-item/items-store-popup-item.component';
 //import { Ng2PopupModule } from 'ng2-popup';
 @NgModule({
   declarations: [
@@ -38,6 +40,8 @@ import { FormsModule } from "@angular/forms";
     TileBuyPopupComponent,
     ToolbarComponent,
     PopupComponent,
+    ItemsStorePopupComponent,
+    ItemsStorePopupItemComponent,
     
   ],
   imports: [

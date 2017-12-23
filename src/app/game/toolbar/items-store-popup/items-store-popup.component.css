@@ -1,0 +1,11 @@
+.container {
+    margin-top: 10px;
+    position: absolute;
+    /* width: 250px; */
+    /* height: 100px; */
+    background-color: gainsboro;
+    display: grid;
+    grid-template-columns: 50px 50px 50px;
+    grid-template-rows: 50px 50px;
+    z-index: 1000;
+}
