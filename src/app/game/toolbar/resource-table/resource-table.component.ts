@@ -2,6 +2,9 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { GameEngineService } from 'app/services/game-engine.service';
 import { Card } from '../../cards/card';
 import { Resources } from 'app/enums/resources.enum';
+import { CardFamilyTypeEnum } from '../../../enums/card-family-type-enum.enum';
+import { GameLevel } from '../../levels/game-level';
+import { IResourceStorage } from '../../../services/game-engine.service';
 
 @Component({
   selector: 'app-resource-table',
@@ -22,10 +25,17 @@ export class ResourceTableComponent implements OnInit {
   population: number;
   currentCard: Card;
 
-  showStore:boolean;
-  
-  constructor(public gameEngine: GameEngineService) {
+  showStore: boolean;
 
+  popProgress: number = 0;
+  cardHint: Card;
+  currentLevel: GameLevel;
+
+  resourceStorage:IResourceStorage;
+
+  constructor(public gameEngine: GameEngineService) {
+    this.gameEngine.currentLevel$.subscribe(currentLevel => this.currentLevel = currentLevel);
+    this.gameEngine.cardHint$.subscribe(cardHint => this.cardHint = cardHint);
     this.gameEngine.currentCard$.subscribe(currentCard => this.currentCard = currentCard);
     this.gameEngine.tiles$.subscribe(tiles => {
       if (tiles) {
@@ -36,36 +46,24 @@ export class ResourceTableComponent implements OnInit {
     })
     this.gameEngine.years$.subscribe(years => { this.years = years })
     this.gameEngine.population$.subscribe(population => {
-      // if (!isNaN(this.population)) {
-      this.population = population;
-      this.move(Math.round(this.population*100/100));
-      //}
+
+      if (!isNaN(population)) {
+        this.population = population;
+        //this.move(Math.round(this.population*100/100));
+        let percent: number = this.population;
+        if (this.currentLevel) this.popProgress = (this.population / this.currentLevel.goal) * 100;
+
+        //if (this.myBar) this.myBar.nativeElement.style.width = percent + '%';
+      }
 
     }
     )
-    this.gameEngine.collected$.subscribe(collected => {
-      this.collected = collected;
-      if (collected && collected.length) {
-
-        this.lumber = collected.filter(a => a && a.family.name == Resources.LUMBER).length;
-        this.blocks = collected.filter(a => a && a.family.name == Resources.BLOCK).length;
-        this.wheat = collected.filter(a => a && a.family.name == Resources.WHEAT).length;
-        this.coins = collected.filter(a => a && a.family.name == Resources.COIN).length;
-      }
-    });
+    this.gameEngine.resourceStorage$.subscribe(resourceStorage => this.resourceStorage = resourceStorage)
   }
 
-  getBonusPoints(name: string): number {
-    let arr: number[] = this.collected.filter(a => a.name === name).map(a => a.bonus);
-    if (arr && arr.length) {
-      let bonus: number = arr.reduce((prev, cur) => { return prev + cur })
-      return bonus ? bonus / 10 : 0;
-    }
-    return 0;
-  }
 
   move(target: number) {
-    console.log('1111 '+target)
+    console.log('1111 ' + target)
     if (!this.myBar) return;
     let width = this.myBar.nativeElement.style.width;
 
@@ -85,7 +83,7 @@ export class ResourceTableComponent implements OnInit {
   }
 
   openStore() {
-    this.showStore=!this.showStore;
+    this.showStore = !this.showStore;
   }
 
   ngOnInit() {

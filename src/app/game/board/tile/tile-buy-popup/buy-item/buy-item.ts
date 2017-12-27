@@ -3,20 +3,20 @@ export interface ICost {
     block?: number;
     coin?: number;
     wheat?: number;
-  }
+}
 
-  export interface IBuyItem {
-    cost:ICost;
-    icon:string;
-    type:string;
+export interface IBuyItem {
+    cost: ICost;
+    icon: string;
+    type: number;
 }
 
 export class BuyItem {
-    woodCost:number;
-    coinCost:number;
-    stoneCost:number;
+    woodCost: number;
+    coinCost: number;
+    stoneCost: number;
 
     constructor() {
-        
+
     }
 }

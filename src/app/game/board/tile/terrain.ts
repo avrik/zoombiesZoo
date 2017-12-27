@@ -1,26 +1,32 @@
+import { TerrainEnum } from '../../../enums/terrain.enum';
 export class Terrain {
     url: string = "assets/terrain/Grass Block.png";
-    type: string;
+    type: number;
     clickable: boolean = true;
+    walkable: boolean = true;
 
-    constructor(type: string = "resource") {
+    constructor(type: number = 0) {
         this.type = type;
         switch (type) {
-            case "bridge":
-            this.clickable = false;
+            case TerrainEnum.BRIDGE:
+                this.clickable = false;
                 this.url = "assets/terrain/Wood Block.png";
                 break;
-            case "wall":
+            case TerrainEnum.WALL:
+                this.clickable = false;
+                this.walkable = false;
+                this.url = "assets/terrain/Stone Block Tall.png";
+                break;
+            case TerrainEnum.ROAD:
+                this.clickable = false;
                 this.url = "assets/terrain/Stone Block.png";
                 break;
-            case "plain":
-                this.url = "assets/terrain/Plain Block.png";
-                break;
-            case "water":
+            case TerrainEnum.WATER:
                 this.clickable = false;
+                this.walkable = false;
                 this.url = "assets/terrain/Water Block.png";
                 break;
-            case "city":
+            case TerrainEnum.CITY:
                 this.url = "assets/terrain/Dirt Block.png";
                 break;
             default:

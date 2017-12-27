@@ -1,7 +1,7 @@
 
 
 
-<div class="container">
+<div class="container" [style.opacity]="enabled?1:0.2">
 
   <div style="text-align:center">
     <!-- {{title}} -->
@@ -10,8 +10,8 @@
     </div>
     
     <span *ngIf="resourceNeeded" style="margin-top:20px">
-      <app-resource-item *ngIf="cost.lumber" [amount]="cost.lumber" icon="assets/resources/wood.png"></app-resource-item>
       <app-resource-item *ngIf="cost.block" [amount]="cost.block" icon="assets/resources/brick.png"></app-resource-item>
+      <app-resource-item *ngIf="cost.lumber" [amount]="cost.lumber" icon="assets/resources/wood.png"></app-resource-item>
       <app-resource-item *ngIf="cost.coin" [amount]="cost.coin" icon="assets/resources/coin.png"></app-resource-item>
     </span>
 

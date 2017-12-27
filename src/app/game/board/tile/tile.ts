@@ -1,12 +1,12 @@
-import { Card, MATCH } from '../../cards/card';
-import { Enemy } from 'app/game/arena/enemy';
+import { Card } from '../../cards/card';
 import { Terrain } from './terrain';
 import { Building } from './building';
+import { MergeTypeEnum } from 'app/enums/merge-type-enum.enum';
+
 export class Tile {
 
     linked: Tile[] = [];
     card: Card;
-    enemy:Enemy;
     overMe:boolean;
     terrain:Terrain
     building:Building;
@@ -21,7 +21,7 @@ export class Tile {
     }
 
     getCardsAround(): Tile[] {
-        let aroundMe: Tile[] = [];
+        /* let aroundMe: Tile[] = [];
         let recurse: Function = (arr: Tile[]) => {
 
             arr.forEach(item => {
@@ -33,7 +33,8 @@ export class Tile {
         let arr: Tile[] = this.linked.filter(a => a.card && a.card.value);
         recurse(arr);
 
-        return aroundMe;
+        return aroundMe; */
+        return this.linked.filter(a => a.card);
     }
 
     getMatchesAround(): Tile[] {
@@ -45,8 +46,8 @@ export class Tile {
                     this != item &&
                     this.card &&
                     item.card &&
-                    this.card.type == MATCH &&
-                    item.card.type == MATCH &&
+                    this.card.mergeBy == MergeTypeEnum.MATCH &&
+                    item.card.mergeBy == MergeTypeEnum.MATCH &&
                     collector.indexOf(item) == -1 &&
                     (item.card.value === this.card.value))
                     .forEach(item => {

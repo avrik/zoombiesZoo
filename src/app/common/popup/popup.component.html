@@ -1,3 +1,5 @@
-<div class="popup">Click me!
-    <span class="popuptext" id="myPopup">Popup text...</span>
-  </div>
+<div class="container" *ngIf="message">
+  <button style="float:right;margin:2px" (click)="onClose()">x</button>
+  <div class="message">{{message.title}}</div>
+  <div>{{message?.message}}</div>
+</div>

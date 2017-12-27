@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ICost } from './buy-item';
-
-
+import { GameEngineService } from '../../../../../services/game-engine.service';
 
 @Component({
   selector: 'app-buy-item',
@@ -14,21 +13,17 @@ export class BuyItemComponent implements OnInit {
   @Input() cost: ICost;
 
   resourceNeeded: any[] = [];
-  constructor() { }
+  constructor(private gameEngine:GameEngineService) { }
 
   ngOnInit() {
-    let i: number
-    for (i = 0; i < this.cost.lumber; i++) {
-      this.resourceNeeded.push({ src: "assets/resources/wood.png" })
-    }
+    
+    this.resourceNeeded.concat(Array(this.cost.block).map(a=> {return { src: "assets/resources/brick.png" }}));
+    this.resourceNeeded.concat(Array(this.cost.lumber).map(a=> {return { src: "assets/resources/wood.png" }}));
+    this.resourceNeeded.concat(Array(this.cost.coin).map(a=> {return { src: "assets/resources/coin.png" }}));
+  }
 
-    for (i = 0; i < this.cost.block; i++) {
-      this.resourceNeeded.push({ src: "assets/resources/brick.png" })
-    }
-
-    for (i = 0; i < this.cost.coin; i++) {
-      this.resourceNeeded.push({ src: "assets/resources/coin.png" })
-    }
+  get enabled() {
+    return true;
   }
 
 }

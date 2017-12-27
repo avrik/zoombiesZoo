@@ -1,12 +1,16 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Tile } from './tile';
-import { GameEngineService } from 'app/services/game-engine.service';
-import { ICardData, Card, MATCH } from '../../cards/card';
+import { GameEngineService, IResourceStorage } from 'app/services/game-engine.service';
+import { ICardData, Card } from '../../cards/card';
 import { IBuyItem } from './tile-buy-popup/buy-item/buy-item';
 import { Terrain } from 'app/game/board/tile/terrain';
 import { Building } from './building';
-import { Resources } from 'app/enums/resources.enum';
+import { TerrainEnum } from '../../../enums/terrain.enum';
+import { BuildingEnum } from '../../../enums/building-enum.enum';
+import { MergeTypeEnum } from 'app/enums/merge-type-enum.enum';
+import { CardFamilyTypeEnum } from '../../../enums/card-family-type-enum.enum';
+import { MessagesService } from '../../../services/messages.service';
 
 @Component({
   selector: 'app-tile',
@@ -15,11 +19,9 @@ import { Resources } from 'app/enums/resources.enum';
   animations: [
     trigger('floatOver', [
       state('inactive', style({
-        //backgroundColor: '#eee',
         transform: 'scale(1)'
       })),
       state('active', style({
-        //backgroundColor: '#cfd8dc',
         transform: 'scale(1.2)'
       })),
       transition('inactive => active', animate('300ms ease-out')),
@@ -37,9 +39,10 @@ export class TileComponent implements OnInit {
   currentCard: Card;
   showStore: boolean;
   timeout: any;
+  resourceStorage: IResourceStorage;
 
-  constructor(private gameEngine: GameEngineService) {
-
+  constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
+    this.gameEngine.resourceStorage$.subscribe(resourceStorage => this.resourceStorage = resourceStorage)
     this.gameEngine.currentCard$.subscribe(currentCard => {
       this.currentCard = currentCard;
     });
@@ -57,7 +60,7 @@ export class TileComponent implements OnInit {
   clickTile() {
     this.tile.overMe = false;
 
-    if (this.tile.terrain.type == "plain") {
+    if (this.tile.terrain.type == TerrainEnum.CARD_HOLDER) {
       let temp = this.tile.card;
       this.tile.card = this.currentCard;
 
@@ -68,11 +71,11 @@ export class TileComponent implements OnInit {
       }
     } else
 
-      if (this.tile.terrain.type == "resource") {
+      if (this.tile.terrain.type == TerrainEnum.RESOURCES) {
 
         this.tile.card = this.currentCard;
 
-        if (this.tile.card.type == MATCH) {
+        if (this.tile.card.mergeBy == MergeTypeEnum.MATCH) {
           this.gameEngine.findMatch(this.tile);
         }
 
@@ -80,7 +83,7 @@ export class TileComponent implements OnInit {
         this.gameEngine.nextTurn();
         //}, 100);
       }
-      else if (this.tile.terrain.type == "city") {
+      else if (this.tile.terrain.type == TerrainEnum.CITY) {
         this.showStore = !this.showStore;
 
         this.openStore.emit(this);
@@ -90,28 +93,32 @@ export class TileComponent implements OnInit {
   buyItem(buyItem: IBuyItem) {
 
     this.showStore = false;
-    let canBuy: boolean = this.gameEngine.useResources(buyItem.cost)
 
-    if (canBuy == true) {
-     
-      /* if (buyItem.type == Resources.WALL) {
-        this.tile.terrain = new Terrain('wall')
-      } else 
+    let testResources: IResourceStorage =
       {
-        this.tile.card = this.gameEngine.getNewCityCard(buyItem.type);
-        this.gameEngine.findMatch(this.tile)
-      } */
-      if (buyItem.type == "house") {
-        this.gameEngine.updatePopulation = 5;
-        this.tile.card = this.gameEngine.getNewCard(Resources.HOUSE);
-        this.gameEngine.findMatch(this.tile)
-      } else {
-        this.tile.building = new Building(buyItem.type)
+        bricks: this.resourceStorage.bricks - buyItem.cost.block,
+        lumber: this.resourceStorage.lumber - buyItem.cost.lumber,
+        coins: this.resourceStorage.coins - buyItem.cost.coin
       }
+
+    if (testResources.bricks >= 0 && testResources.lumber >= 0 && testResources.coins >= 0) {
+
+      if (buyItem.type == CardFamilyTypeEnum.ROAD) {
+        this.tile.terrain = new Terrain(TerrainEnum.ROAD)
+      } else if (buyItem.type == CardFamilyTypeEnum.WALL) {
+        this.tile.terrain = new Terrain(TerrainEnum.WALL)
+      } else {
+        this.tile.card = this.gameEngine.getNewCard(buyItem.type);
+        this.gameEngine.findMatch(this.tile);
+      }
+
+      this.gameEngine.updateResourceStorage = testResources;
+      this.gameEngine.removeFromResourcesStorage(buyItem.cost.block + buyItem.cost.lumber + buyItem.cost.coin);
 
       this.gameEngine.nextTurn();
     } else {
-      console.warn("not enough resources!")
+      console.warn("not enough resources!");
+      this.messagesService.postMessage({ title: "not enough resources!" })
     }
   }
 
@@ -119,11 +126,12 @@ export class TileComponent implements OnInit {
     this.state = 'inactive';
     this.tile.overMe = false;
     clearTimeout(this.timeout);
+    this.gameEngine.showCardMatchHint(null);
 
   }
 
   overMe() {
-    if (this.tile.terrain.type == "resource" || this.tile.terrain.type == "plain") {
+    if (this.tile.terrain.type == TerrainEnum.RESOURCES || this.tile.terrain.type == TerrainEnum.CARD_HOLDER) {
       this.tile.overMe = true;
 
       this.timeout = setTimeout(() => {
@@ -131,6 +139,9 @@ export class TileComponent implements OnInit {
         this.goDown();
       }, 50);
 
+    } else if (this.tile.terrain.type == TerrainEnum.CITY) {
+
+      this.gameEngine.showCardMatchHint(this.gameEngine.getNewCardByValue(CardFamilyTypeEnum.WILD));
     }
   }
 
@@ -148,5 +159,8 @@ export class TileComponent implements OnInit {
     }, 320);
   }
 
+  getIndex() {
+    return this.tile.col * 100;
+  }
 
 }

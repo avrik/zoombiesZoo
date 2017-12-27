@@ -1,6 +1,7 @@
 <div class="container">
   <div class="box">{{amount | number}}
-    <!-- <span *ngIf="bonus">(+{{bonus}})</span> -->
+      <button *ngIf="type>=0" style="position:absolute;margin-left: 15px" (click)="onClick()">+</button>
   </div>
   <img [src]="icon" alt="" height="35">
+  <!-- <button style="position:absolute;margin-left: -8px;margin-top: 20px;">+</button> -->
 </div>

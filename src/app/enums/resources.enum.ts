@@ -12,6 +12,7 @@ export const Resources  = {
     GRAVE : "grave",
     ZOOMBIE : "zoombie",
     PERSON : "person",
+    ANIMAL : "animal",
 
     WILD : "wild",
 

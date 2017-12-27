@@ -1,10 +1,8 @@
 .container {
     display: grid;
-    grid-template-columns: 90px 90px 70px 70px 70px 90px 90px;
-    grid-template-rows: 55px;
+    grid-template-columns: 210px 90px 90px 90px 210px;
+    grid-template-rows: 30px 55px;
     justify-content: center;
-    /* width: 100%; */
-    /* border-bottom: 1px solid black; */
     background-color: #796e6e;
     padding: 3px 0 3px 0;
 }
@@ -12,15 +10,13 @@
 .text-box {
     border-top: 3px solid #4e1010;
     background-color: #443258;
-    /* width: 100%; */
     color: gold;
-    /* line-height: 30px; */
-    /* height: 30px; */
     font-size: 12px;
     border-radius: 5px;
     padding-top: 2px;
     margin: 2px;
-    /* margin:5px; */
+    /* text-align: left;
+    padding-left:15px; */
 }
 
 .store-btn {
@@ -47,13 +43,35 @@
 .progress-bar {
     border: 1px solid #160728!important;
     border-radius: 5px;
-    margin:5px;
+    margin:3px 10px;
     background-color: #160728;
 }
 
 .progress-bar-inside{
-    background-color: #4a0e8e!important;
+    background-color: #37a91c!important;
+    box-shadow: inset 2px -4px 4px 0px #367b26;
     border-radius: 5px;
-    height:18px;width:10%;
+    height:15px;
+    /* width:10%; */
     text-align: center;
+}
+
+.card-hint {
+
+    width: 300%;
+    display:flex;
+    line-height:30px;
+    justify-content:center;
+    text-align: center;
+    color: rgb(107, 228, 117);
+    font-size: 12px;
+}
+.sign {
+    margin:0 3px 0 3px;
+}
+.big-number {
+    font-size:16px;
+    color:white;
+    /* line-height:18px; */
+    
 }

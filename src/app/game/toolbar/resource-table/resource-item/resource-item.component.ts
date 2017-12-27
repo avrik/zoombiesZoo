@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { GameEngineService } from 'app/services/game-engine.service';
 
 @Component({
   selector: 'app-resource-item',
@@ -7,12 +8,18 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class ResourceItemComponent implements OnInit {
 
+  @Input() type:number;
   @Input() amount:number;
   @Input() icon:string;
   @Input() bonus:number;
-  constructor() { }
+  constructor(private gameEngine:GameEngineService) { }
 
   ngOnInit() {
+  }
+
+  onClick() {
+    this.amount++;
+    this.gameEngine.addToStorage(this.type,1);
   }
 
 }

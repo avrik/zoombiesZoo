@@ -2,10 +2,8 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { GameEngineService } from '../../services/game-engine.service';
 import { TileComponent } from './tile/tile.component';
 import { Tile } from './tile/tile';
-import { timeout } from 'q';
-import { Card } from '../cards/card';
-import { Enemy } from 'app/game/arena/enemy';
 import { Observable } from 'rxjs/Rx';
+import { Card } from '../cards/card';
 
 @Component({
   selector: 'app-board',
@@ -15,11 +13,9 @@ import { Observable } from 'rxjs/Rx';
 export class BoardComponent implements OnInit {
   emptySlot: Tile;
   tiles: Tile[] = [];
-  //xpos: number;
-  //ypos: number;
   currentCard: Card;
   currentTileClicked: TileComponent;
-  //enemies: Enemy[] = [];
+
   @ViewChild('tileRef') tileRef: ElementRef;
   @ViewChild('mainBoard') mainBoard: ElementRef;
 
@@ -30,37 +26,11 @@ export class BoardComponent implements OnInit {
       this.currentCard = currentCard;
     });
 
-    /* this.gameEngine.spawnEnemies$.subscribe(enemy => {
-
-      if (enemy) {
-        let newEnemy: Enemy = new Enemy();
-        this.enemies.push(newEnemy);
-      }
-
-    }) */
     this.emptySlot = new Tile();
   }
 
   ngOnInit() {
     this.gameEngine.restart();
-
-    /* let timer = Observable.timer(2000, 100);
-    timer.subscribe(t => {
-
-      if (!this.gameEngine.gameOver) {
-        this.enemies.forEach(enemy => {
-          enemy.ypos--;
-
-          if (Math.floor(Math.random() * 2) == 0) {
-            enemy.xpos++;
-          } else {
-            enemy.xpos--;
-          }
-
-        })
-      }
-
-    }); */
   }
 
   getCols() {
