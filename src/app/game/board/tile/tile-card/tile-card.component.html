@@ -1,7 +1,8 @@
 <!-- <div *ngIf="card" (click)="clickTileCard()" [ngStyle]="{'backgroundColor': card.color }"> -->
 
 
-<div style="position:absolute;height:64;" (click)="clickTileCard()" (mouseover)="showCardMatch()" (mouseout)="hideCardMatch()">
+<!-- <div class="container" (click)="clickTileCard()" (mouseover)="showCardMatch()" (mouseout)="hideCardMatch()"> -->
+<div class="container">
 
     <div *ngIf="card.collect && card.type == 0" class="count-frame">
         <div class="collect-box">x{{card.collect}}</div>
@@ -12,11 +13,11 @@
     </div>
 
     <div class="in-place">
-        <div *ngIf="showThinkBubble" style="position:absolute;margin-top:-30px;margin-left:30px">
+        <!-- <div *ngIf="showThinkBubble" style="position:absolute;margin-top:-30px;margin-left:30px">
             <img src="assets/people/SpeechBubble.png" alt="" height="64">
             <img style="position:fixed;;margin-top:-45px;margin-left:-15px" src="assets/buildings/house2.png" alt="" height="35">
-        </div>
-        
+        </div> -->
+
         <img *ngIf="card.img" [src]="card.img" alt="" height="54">
     </div>
     <!-- <span *ngIf="tile.card && tile.card.symbol && !tile.card.img" class="normal">{{tile.card.symbol}}</span> -->

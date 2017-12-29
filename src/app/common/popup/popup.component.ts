@@ -1,3 +1,4 @@
+import { IMessageButton } from './../../services/messages.service';
 import { Component, OnInit } from '@angular/core';
 import { MessagesService, IMessage } from '../../services/messages.service';
 
@@ -20,7 +21,13 @@ export class PopupComponent implements OnInit {
   }
 
   onClose() {
-    this.messagesService.postMessage(null)
+    this.messagesService.postMessage(null);
+  }
+
+  butnClicked(butnItem:IMessageButton) {
+    if (butnItem.action) butnItem.action();
+    this.messagesService.postMessage(null);
+
   }
 
 }

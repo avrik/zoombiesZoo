@@ -1,3 +1,4 @@
+import { CardTypeEnum } from './../../../enums/card-type-enum.enum';
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Tile } from './tile';
@@ -40,7 +41,8 @@ export class TileComponent implements OnInit {
   showStore: boolean;
   timeout: any;
   resourceStorage: IResourceStorage;
-
+  showThinkBubble:boolean;
+  
   constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
     this.gameEngine.resourceStorage$.subscribe(resourceStorage => this.resourceStorage = resourceStorage)
     this.gameEngine.currentCard$.subscribe(currentCard => {
@@ -69,30 +71,50 @@ export class TileComponent implements OnInit {
       } else {
         this.gameEngine.setNextValue();
       }
+      this.overMe();
     } else
 
-      if (this.tile.terrain.type == TerrainEnum.RESOURCES) {
+      if (this.tile.card) {
 
-        this.tile.card = this.currentCard;
+        if (this.tile.card.collect && this.tile.card.type == CardTypeEnum.RESOURCE) {
+          if (this.gameEngine.addToStorage(this.tile.card.family.name, this.tile.card.collect)) {
+            if (this.tile.card.bonus) {
+              this.gameEngine.addToStorage(CardFamilyTypeEnum.COIN, this.tile.card.bonus);
+            }
+            //this.collected.emit();
 
-        if (this.tile.card.mergeBy == MergeTypeEnum.MATCH) {
-          this.gameEngine.findMatch(this.tile);
+            this.tile.overMe = false;
+            this.tile.clear();
+          } else {
+            this.messagesService.postMessage({ title: "No more storage place", message: "build more storage" });
+          }
+
+          this.overMe();
         }
+      } else
 
-        // setTimeout(() => {
-        this.gameEngine.nextTurn();
-        //}, 100);
-      }
-      else if (this.tile.terrain.type == TerrainEnum.CITY) {
-        this.showStore = !this.showStore;
+        if (this.tile.terrain.type == TerrainEnum.RESOURCES) {
 
-        this.openStore.emit(this);
-      }
+          this.tile.card = this.currentCard;
+
+          if (this.tile.card.mergeBy == MergeTypeEnum.MATCH) {
+            this.gameEngine.findMatch(this.tile);
+          }
+
+          // setTimeout(() => {
+          this.gameEngine.nextTurn();
+          //}, 100);
+        }
+        else if (this.tile.terrain.type == TerrainEnum.CITY) {
+          this.showStore = !this.showStore;
+          //this.openStore.emit(this);
+        }
   }
 
   buyItem(buyItem: IBuyItem) {
 
     this.showStore = false;
+    if (!buyItem) return;
 
     let testResources: IResourceStorage =
       {
@@ -126,24 +148,49 @@ export class TileComponent implements OnInit {
     this.state = 'inactive';
     this.tile.overMe = false;
     clearTimeout(this.timeout);
-    this.gameEngine.showCardMatchHint(null);
+    if (this.tile.card) {
+      this.hideCardMatch();
+    }
 
   }
+
 
   overMe() {
-    if (this.tile.terrain.type == TerrainEnum.RESOURCES || this.tile.terrain.type == TerrainEnum.CARD_HOLDER) {
-      this.tile.overMe = true;
+    if (this.tile.card) {
+      this.showCardMatch();
+    } else {
+      if (this.tile.terrain.type == TerrainEnum.RESOURCES || this.tile.terrain.type == TerrainEnum.CARD_HOLDER) {
+        this.tile.overMe = true;
 
-      this.timeout = setTimeout(() => {
-        this.state = 'active';
-        this.goDown();
-      }, 50);
+        this.timeout = setTimeout(() => {
+          this.state = 'active';
+          this.goDown();
+        }, 50);
 
-    } else if (this.tile.terrain.type == TerrainEnum.CITY) {
-
-      this.gameEngine.showCardMatchHint(this.gameEngine.getNewCardByValue(CardFamilyTypeEnum.WILD));
+      } else if (this.tile.terrain.type == TerrainEnum.CITY) {
+        this.gameEngine.showCardMatchHint(this.gameEngine.getNewCardByValue(CardFamilyTypeEnum.WILD));
+      }
     }
   }
+
+
+
+  hideCardMatch() {
+    this.gameEngine.showCardMatchHint(null);
+    this.showThinkBubble = false;
+  }
+  showCardMatch() {
+    //console.log('show card match')
+    if (this.tile.card.nextCard) {
+      this.gameEngine.showCardMatchHint(this.tile.card);
+    } else if (this.tile.card.family.name == CardFamilyTypeEnum.PERSON) {
+      this.showThinkBubble = true;
+    }
+
+  }
+
+
+
 
   goUp() {
     this.timeout = setTimeout(() => {

@@ -21,7 +21,7 @@ export class ResourceTableComponent implements OnInit {
   wheat: number = 0;
 
   years: number;
-  total: number;
+  total: number = 0;
   population: number;
   currentCard: Card;
 
@@ -31,16 +31,21 @@ export class ResourceTableComponent implements OnInit {
   cardHint: Card;
   currentLevel: GameLevel;
 
-  resourceStorage:IResourceStorage;
+  resourceStorage: IResourceStorage;
 
   constructor(public gameEngine: GameEngineService) {
-    this.gameEngine.currentLevel$.subscribe(currentLevel => this.currentLevel = currentLevel);
+    this.gameEngine.currentLevel$.subscribe(currentLevel => {
+      this.currentLevel = currentLevel;
+      setTimeout(() => {
+        this.popProgress = 0;
+      }, 1000);
+    });
     this.gameEngine.cardHint$.subscribe(cardHint => this.cardHint = cardHint);
     this.gameEngine.currentCard$.subscribe(currentCard => this.currentCard = currentCard);
     this.gameEngine.tiles$.subscribe(tiles => {
       if (tiles) {
-        this.total = 0;
-        tiles.filter(a => a.card && a.card.value > 0).forEach(a => this.total += a.card.value);
+        let arr = tiles.filter(a => a.card && !a.card.autoPlaced).map(a => a.card.value)
+        if (arr.length) this.total = arr.reduce((prev, cur) => prev + cur);
       }
 
     })

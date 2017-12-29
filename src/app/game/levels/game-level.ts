@@ -7,10 +7,10 @@ export interface IGameLevelData {
 
 
 const gameLevelsData: IGameLevelData[] = [
-    { goal: 5 },
-    { goal: 25 },
-    { goal: 50 },
-    { goal: 100 },
+    { goal: 6 },
+    { goal: 18 },
+    { goal: 54 },
+    { goal: 108 },
     { goal: 200 },
     { goal: 400 },
     { goal: 800 },

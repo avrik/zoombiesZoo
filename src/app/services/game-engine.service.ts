@@ -1,3 +1,5 @@
+import { MessagesService } from './messages.service';
+import { TerrainEnum } from './../enums/terrain.enum';
 import { Injectable, Input } from '@angular/core';
 import { Observable } from "rxjs/Observable";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
@@ -5,7 +7,6 @@ import { Tile } from '../game/board/tile/tile';
 import { Card, ICardData, cardCollection } from '../game/cards/card';
 import { ICost } from '../game/board/tile/tile-buy-popup/buy-item/buy-item';
 import { Terrain } from 'app/game/board/tile/terrain';
-import { TerrainEnum } from '../enums/terrain.enum';
 import { CardTypeEnum } from 'app/enums/card-type-enum.enum';
 import { CardFamilyTypeEnum } from '../enums/card-family-type-enum.enum';
 import { BuildingEnum } from '../enums/building-enum.enum';
@@ -44,8 +45,6 @@ export class GameEngineService {
   private _currentCard$: BehaviorSubject<Card>;
   private _currentLevel$: BehaviorSubject<GameLevel>;
   private _years$: BehaviorSubject<number>;
-  //private _collected$: BehaviorSubject<Card[]>;
-  //private _spawnEnemies$: BehaviorSubject<Card[]>;
 
   get cardHint$(): Observable<Card> { return this._cardHint$.asObservable(); }
   get population$(): Observable<number> { return this._population$.asObservable(); }
@@ -53,7 +52,6 @@ export class GameEngineService {
   get resourceStorage$(): Observable<IResourceStorage> { return this._resourceStorage$.asObservable(); }
   get currentLevel$(): Observable<GameLevel> { return this._currentLevel$.asObservable(); }
   get currentCard$(): Observable<Card> { return this._currentCard$.asObservable(); }
-  //get collected$(): Observable<Card[]> { return this._collected$.asObservable(); }
   get years$(): Observable<number> { return this._years$.asObservable(); }
 
   set updateCurrentCard(card: Card) {
@@ -66,8 +64,8 @@ export class GameEngineService {
   }
 
   set updateResourceStorage(storage: IResourceStorage) {
-    this.resourceStorage = Object.assign({}, storage);
-    this._resourceStorage$.next(this.resourceStorage);
+    this.resourceStorage =  storage;
+    this._resourceStorage$.next(Object.assign({},this).resourceStorage);
   }
 
   constructor() {
@@ -108,6 +106,8 @@ export class GameEngineService {
     this.getTileByCord(2, middle).terrain = new Terrain(TerrainEnum.WATER);
     this.getTileByCord(3, middle).terrain = new Terrain(TerrainEnum.BRIDGE);
     this.getTileByCord(4, middle).terrain = new Terrain(TerrainEnum.WATER);
+
+    this.getTileByCord(0, this.totalRows - 1).terrain = new Terrain(TerrainEnum.CARD_HOLDER);
 
     this.tiles.forEach(tile => {
       let tileLeft = this.getTileOnPos(tile.col - 1, tile.row);
@@ -156,14 +156,17 @@ export class GameEngineService {
       let tile: Tile = this.getRandomTile(this.tilesMatches.filter(a => a.terrain.type == TerrainEnum.RESOURCES && !a.card));
       let rand: number = Math.floor(Math.random() * options.length);
       tile.card = this.getNewCard(options[rand]);
+      tile.card.autoPlaced = true;
     }
 
     let arr: Tile[] = this.tilesCities.filter(a => a.row > 0 && a.row < (this.totalRows / 2 - 2) && a.linked.length > 3);
     let randTile: Tile = this.getRandomTile(arr.filter(a => !a.card));
     randTile.card = this.getNewCard(CardFamilyTypeEnum.STORAGE);
+    randTile.card.autoPlaced = true;
 
     randTile = this.getRandomTile(arr.filter(a => !a.card));
-    randTile.card = this.getNewCard(CardFamilyTypeEnum.HOUSE)
+    randTile.card = this.getNewCard(CardFamilyTypeEnum.HOUSE);
+    randTile.card.autoPlaced = true;
   }
 
   private getTileOnPos(col: number, row: number): Tile {
@@ -192,13 +195,13 @@ export class GameEngineService {
   }
 
   roundComplete() {
-    if (!this.anyEmptyCells) {
-      this.gameIsOver();
-    }
+    if (this.isGameOver) {
+      //this.gameIsOver();
+    } else
 
-    if (this.population >= this.currentLevel.goal) {
-      this.setNextLevel();
-    }
+      if (this.population >= this.currentLevel.goal) {
+        this.setNextLevel();
+      }
   }
 
   getCityTile(): Tile {
@@ -357,38 +360,44 @@ export class GameEngineService {
   }
 
   addToStorage(type: number, amount: number): boolean {
-    let storages: Tile[] = this.tilesCities.filter(a => a.card && a.card.family && a.card.family.name == CardFamilyTypeEnum.STORAGE && (a.card.collected + amount) <= a.card.collect);
 
-    if (storages.length) {
-      storages[0].card.collected += amount
+    let newResources: IResourceStorage = this.resourceStorage;
 
-      let newResources: IResourceStorage = this.resourceStorage;
-
-      switch (type) {
-        case CardFamilyTypeEnum.LUMBER:
-          newResources.lumber += amount;
-          break;
-        case CardFamilyTypeEnum.BRICK:
-          newResources.bricks += amount;
-          break;
-        case CardFamilyTypeEnum.COIN:
-          newResources.coins += amount;
-          break;
-      }
-
+    if (type == CardFamilyTypeEnum.COIN) {
+      newResources.coins += amount;
       this.updateResourceStorage = newResources;
       return true;
     } else {
-      console.log("no place in storage");
-      return false;
+      let storages: Tile[] = this.tilesCities.filter(a => a.card && a.card.family && a.card.family.name == CardFamilyTypeEnum.STORAGE && (a.card.collected + amount) <= a.card.collect);
+
+      if (storages.length) {
+        storages[0].card.collected += amount
+
+        switch (type) {
+          case CardFamilyTypeEnum.LUMBER:
+            newResources.lumber += amount;
+            break;
+          case CardFamilyTypeEnum.BRICK:
+            newResources.bricks += amount;
+            break;
+          case CardFamilyTypeEnum.COIN:
+            newResources.coins += amount;
+            break;
+        }
+
+        this.updateResourceStorage = newResources;
+        return true;
+      } else {
+        console.log("no place in storage");
+        return false;
+      }
     }
+
   }
 
   setNextValue() {
     let rand: number = Math.round(Math.random() * 100);
-
-
-    let pickFrom: ICardData[] = []
+    let pickFrom: ICardData[] = [];
     cardCollection.filter(item => item.chance).forEach(a => {
       pickFrom.push(a);
       if (a.nextCard && a.nextCard.chance) {
@@ -415,16 +424,21 @@ export class GameEngineService {
       let totalCollected: number = 0;
 
       matchedTiles.filter(a => a.card).forEach(linked => {
-        if (linked.card.collected) totalCollected += linked.card.collected;
+        if (linked.card && linked.card.collected) totalCollected += linked.card.collected;
         linked.clear();
       });
 
       if (tile.card.nextCard) {
+        if (tile.card.bonus) {
+
+          this.addToStorage(CardFamilyTypeEnum.COIN, tile.card.bonus);
+        }
+
         let extra: number = (matchedTiles.length - (tile.card.minForNextLevel - 1));// * Math.max(tile.card.bonus, 1);
         tile.card = new Card(tile.card.nextCard)
 
         if (tile.card.collect) {
-          tile.card.collect += extra;
+          tile.card.collect += extra * (tile.card.level - 1);
           tile.card.collected = totalCollected;
         }
 
@@ -434,6 +448,8 @@ export class GameEngineService {
         }
 
         this.findMatch(tile);
+
+
       } else {
 
       }
@@ -445,28 +461,42 @@ export class GameEngineService {
     let optionsForWild: Tile[] = tile.linked.filter(a => a.card && a.card.mergeBy == MergeTypeEnum.MATCH);//.map(a => a.card);
     let selectedCard: Card = null;
 
+    optionsForWild.sort((a, b) => {
+      if (a.card.level > b.card.level) { return -1 }
+      if (a.card.level < b.card.level) { return 1 }
+      return 0;
+    });
+
     if (optionsForWild.length) {
-      let groupScore: number = 0;
+      // let groupScore: number = 0;
 
       optionsForWild.forEach(tileInList => {
         tile.card = tileInList.card;
-        if (this.getLinkedGroup(tileInList).length > 2) {
+        let groupForMatch: Tile[] = this.getLinkedGroup(tileInList);
+        if (groupForMatch.length >= tileInList.card.minForNextLevel) {
+          // let score: number = groupForMatch.map(a => a.card.value).reduce((prev, cur) => prev + cur);
 
-          if (selectedCard && tileInList.card.family.value > selectedCard.family.value) {
-            groupScore = tileInList.card.family.value;
+          if (!selectedCard) {
             selectedCard = tileInList.card;
-          } else if (tileInList.card.family.value + (100000 - tileInList.card.id) > groupScore) {
-            groupScore = tileInList.card.family.value;
-            selectedCard = tileInList.card;
+          } else {
+            if (selectedCard.family != tileInList.card.family && tileInList.card.level > selectedCard.level) {
+              selectedCard = tileInList.card;
+            }
+            else
+              if (selectedCard.family == tileInList.card.family && tileInList.card.level < selectedCard.level) {
+                selectedCard = tileInList.card;
+              }
+            /* else
+              if (tileInList.card.family.value > selectedCard.family.value) {
+                selectedCard = tileInList.card;
+              } */
           }
 
-          tile.card = null;
         }
       })
     }
 
     tile.card = selectedCard ? selectedCard : this.getNewCard(CardFamilyTypeEnum.GRAVE);
-    //tile.card = selectedCard ? selectedCard : this.getNewCardByValue(this.getNewCard(Resources.WILD).nextCard.id);
   }
 
   getNewCardByValue(value: number): Card {
@@ -490,8 +520,11 @@ export class GameEngineService {
     return card;
   }
 
-  get anyEmptyCells() {
-    return this.tilesMatches.filter(a => !a.card).length;
+  get isGameOver() {
+    if (this.tilesMatches.filter(a => a.terrain.type == TerrainEnum.RESOURCES && !a.card).length == 0) return true;
+    if (this.tilesCities.filter(a => a.terrain.type == TerrainEnum.CITY && !a.card).length == 0) return true;
+
+    return false
   }
 
 

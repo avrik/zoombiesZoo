@@ -1,5 +1,13 @@
 <div class="container" *ngIf="message">
-  <button style="float:right;margin:2px" (click)="onClose()">x</button>
-  <div class="message">{{message.title}}</div>
-  <div>{{message?.message}}</div>
+    <button style="float:right;margin:2px" (click)="onClose()">x</button>
+    <div class="title"><b>{{message?.title}}</b></div>
+    <div class="content">{{message?.message}}</div>
+
+    <div style="display:flex;justify-content:space-around">
+        <span *ngFor="let item of message.butns">
+        <button (click)="butnClicked(item)">{{item?.label}}</button>
+      </span>
+    </div>
 </div>
+
+<div class="blocker"></div>

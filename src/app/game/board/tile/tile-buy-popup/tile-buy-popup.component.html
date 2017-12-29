@@ -1,4 +1,11 @@
-
 <div class="container">
-  <app-buy-item *ngFor="let item of items;let i = index" [icon]="item.icon" [cost]="item.cost" (click)="buy(i)"></app-buy-item>
+    <div class="header">
+        <span>city improvments</span>
+        <button style="float:right" (click)="onClose()">x</button>
+    </div>
+
+    <div class="content">
+        <app-buy-item *ngFor="let item of items;let i = index" [icon]="item.icon" [buyItem]="item" (buy)="buy($event)"></app-buy-item>
+    </div>
+
 </div>

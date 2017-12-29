@@ -22,7 +22,7 @@ export class TileCardComponent implements OnInit {
   ngOnInit() {
   }
 
-  clickTileCard() {
+ /*  clickTileCard() {
     if (this.card.collect && this.card.type == CardTypeEnum.RESOURCE) {
       if (this.gameEngine.addToStorage(this.card.family.name, this.card.collect)) {
         if (this.card.bonus) {
@@ -40,13 +40,12 @@ export class TileCardComponent implements OnInit {
     this.showThinkBubble = false;
   }
   showCardMatch() {
-    //console.log('show card match')
     if (this.card.nextCard) {
       this.gameEngine.showCardMatchHint(this.card);
     } else if (this.card.family.name == CardFamilyTypeEnum.PERSON) {
       this.showThinkBubble = true;
     }
 
-  }
+  } */
 
 }

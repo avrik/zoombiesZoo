@@ -1,8 +1,11 @@
 <div class="container">
-    <items-store-popup-item></items-store-popup-item>
-    <items-store-popup-item></items-store-popup-item>
-    <items-store-popup-item></items-store-popup-item>
-    <items-store-popup-item></items-store-popup-item>
-    <items-store-popup-item></items-store-popup-item>
-    <items-store-popup-item></items-store-popup-item>
+    <div class="header">
+        <span>store</span>
+        <button style="float:right" (click)="onClose()">x</button>
+    </div>
+
+    <div class="content">
+        <app-buy-item *ngFor="let item of items;let i = index" [icon]="item.icon" [buyItem]="item" buyLabel="buy" (buy)="buy($event)"></app-buy-item>
+    </div>
+
 </div>

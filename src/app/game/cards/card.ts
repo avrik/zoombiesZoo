@@ -24,16 +24,15 @@ export interface ICardData {
 }
 
 
-const familyBrick: ICardFamily = { name: CardFamilyTypeEnum.BRICK, value: 10 };
-//const familyWheat: ICardFamily = { name: Resources.WHEAT, value: 20 };
-const familyLumber: ICardFamily = { name: CardFamilyTypeEnum.LUMBER, value: 30 };
+const familyBrick: ICardFamily = { name: CardFamilyTypeEnum.BRICK, value: 5 };
+const familyLumber: ICardFamily = { name: CardFamilyTypeEnum.LUMBER, value: 10 };
 const familyCoin: ICardFamily = { name: CardFamilyTypeEnum.COIN, value: 50 };
 
-const familyRoad: ICardFamily = { name: CardFamilyTypeEnum.ROAD, value: 5000 };
-const familyWall: ICardFamily = { name: CardFamilyTypeEnum.WALL, value: 1000 };
+const familyRoad: ICardFamily = { name: CardFamilyTypeEnum.ROAD, value: 200 };
+const familyWall: ICardFamily = { name: CardFamilyTypeEnum.WALL, value: 500 };
 const familyTower: ICardFamily = { name: CardFamilyTypeEnum.TOWER, value: 2000 };
-const familyHouse: ICardFamily = { name: CardFamilyTypeEnum.HOUSE, value: 3000 };
-const familyStorage: ICardFamily = { name: CardFamilyTypeEnum.STORAGE, value: 4000 };
+const familyHouse: ICardFamily = { name: CardFamilyTypeEnum.HOUSE, value: 1000 };
+const familyStorage: ICardFamily = { name: CardFamilyTypeEnum.STORAGE, value: 1500 };
 
 
 const coinCard: ICardData = { id: 400, level: 0, family: familyCoin, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, img: "assets/resources/coin.png" };
@@ -57,17 +56,17 @@ export const cardCollection: ICardData[] = [
     id: 500, level: 0, family: familyRoad, mergeBy: MergeTypeEnum.NONE, type: CardTypeEnum.BUILDING, img: ""
   },
   {
-    id: 1000, level: 0, family: familyHouse, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 5, img: "assets/buildings/house.png",
+    id: 1000, level: 0, family: familyHouse, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 6, img: "assets/buildings/house.png",
     nextCard: {
-      id: 1001, level: 1, family: familyHouse, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 20, img: "assets/buildings/house2.png",
+      id: 1001, level: 1, family: familyHouse, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 24, bonus:3, img: "assets/buildings/house2.png",
       nextCard: {
-        id: 1002, level: 2, family: familyHouse, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 80, img: "assets/buildings/house3.png",
+        id: 1002, level: 2, family: familyHouse, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 78, bonus:6, img: "assets/buildings/house3.png",
         nextCard: {
-          id: 1003, level: 3, family: familyHouse, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 300, img: "assets/buildings/house3.png",
+          id: 1003, level: 3, family: familyHouse, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 300, bonus:9, img: "assets/buildings/house3.png",
           nextCard: {
-            id: 1004, level: 5, family: familyHouse, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 1200, img: "assets/buildings/house3.png",
+            id: 1004, level: 5, family: familyHouse, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 1200, bonus:12, img: "assets/buildings/house3.png",
             nextCard: {
-              id: 1005, level: 6, family: familyHouse, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 3000, img: "assets/buildings/house3.png",
+              id: 1005, level: 6, family: familyHouse, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 3000, bonus:15, img: "assets/buildings/house3.png",
             }
           }
         }
@@ -75,17 +74,17 @@ export const cardCollection: ICardData[] = [
     }
   },
   {
-    id: 2000, level: 0, family: familyStorage, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 50, img: "assets/buildings/storage.png",
+    id: 2000, level: 0, family: familyStorage, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 27, img: "assets/buildings/storage.png",
     nextCard: {
-      id: 2001, level: 1, family: familyStorage, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 150, img: "assets/buildings/storage.png",
+      id: 2001, level: 1, family: familyStorage, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 54, bonus:3,img: "assets/buildings/storage.png",
       nextCard: {
-        id: 2002, level: 2, family: familyStorage, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 450, img: "assets/buildings/storage.png",
+        id: 2002, level: 2, family: familyStorage, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 150,bonus:6, img: "assets/buildings/storage.png",
         nextCard: {
-          id: 2003, level: 3, family: familyStorage, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 1350, img: "assets/buildings/storage.png",
+          id: 2003, level: 3, family: familyStorage, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 450,bonus:9, img: "assets/buildings/storage.png",
           nextCard: {
-            id: 2004, level: 5, family: familyStorage, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 5000, img: "assets/buildings/storage.png",
+            id: 2004, level: 5, family: familyStorage, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 5000, bonus:12,img: "assets/buildings/storage.png",
             nextCard: {
-              id: 2005, level: 6, family: familyStorage, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 15000, img: "assets/buildings/storage.png",
+              id: 2005, level: 6, family: familyStorage, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 15000,bonus:15, img: "assets/buildings/storage.png",
             }
           }
         }
@@ -163,6 +162,7 @@ export class Card implements ICardData {
   mergeBy: number;
   collected: number;
   state: string = "inactive";
+  autoPlaced:boolean=false;
 
   constructor(data: ICardData) {
     if (!data) return;
@@ -179,7 +179,7 @@ export class Card implements ICardData {
     this.collect = data.collect;
     this.bonus = data.bonus ? data.bonus : 0;
     this.moved = false;
-    this.value = ((this.level * 100) + this.family.value);
+    this.value = (Math.max((this.level * this.level*10),1) * this.family.value);
     this.collected = 0;
   }
 }

@@ -2,10 +2,15 @@ import { Injectable } from '@angular/core';
 import { Observable } from "rxjs/Observable";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 
+export interface IMessageButton {
+    label:string;
+    action:Function;
+} 
+
 export interface IMessage {
   title:string;
   message?:string;
-  actions?:any[];
+  butns?:IMessageButton[];
 }
 @Injectable()
 export class MessagesService {

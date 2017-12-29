@@ -1,6 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { ICost } from './buy-item';
-import { GameEngineService } from '../../../../../services/game-engine.service';
+import { IResourceStorage } from 'app/services/game-engine.service';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { ICost, IBuyItem } from './buy-item';
+import { GameEngineService } from '../../../../../services/game-engine.service'
 
 @Component({
   selector: 'app-buy-item',
@@ -9,21 +10,43 @@ import { GameEngineService } from '../../../../../services/game-engine.service';
 })
 export class BuyItemComponent implements OnInit {
   @Input() title: string = "";
+  @Input() buyLabel: string = "build";
   @Input() icon: string = ""
-  @Input() cost: ICost;
+  @Input() buyItem: IBuyItem;
+  @Output() buy: EventEmitter<IBuyItem> = new EventEmitter();
 
   resourceNeeded: any[] = [];
-  constructor(private gameEngine:GameEngineService) { }
+  resourceStorage: IResourceStorage;
+  enabled: boolean;
 
-  ngOnInit() {
+  constructor(private gameEngine: GameEngineService) {
     
-    this.resourceNeeded.concat(Array(this.cost.block).map(a=> {return { src: "assets/resources/brick.png" }}));
-    this.resourceNeeded.concat(Array(this.cost.lumber).map(a=> {return { src: "assets/resources/wood.png" }}));
-    this.resourceNeeded.concat(Array(this.cost.coin).map(a=> {return { src: "assets/resources/coin.png" }}));
   }
 
-  get enabled() {
-    return true;
+  ngOnInit() {
+
+    this.resourceNeeded.concat(Array(this.buyItem.cost.block).map(a => { return { src: "assets/resources/brick.png" } }));
+    this.resourceNeeded.concat(Array(this.buyItem.cost.lumber).map(a => { return { src: "assets/resources/wood.png" } }));
+    this.resourceNeeded.concat(Array(this.buyItem.cost.coin).map(a => { return { src: "assets/resources/coin.png" } }));
+
+    this.gameEngine.resourceStorage$.subscribe(resourceStorage => {
+      this.resourceStorage = resourceStorage;
+
+      if (this.buyItem && this.buyItem.cost && this.resourceStorage) {
+        this.enabled = (
+          resourceStorage.bricks >= this.buyItem.cost.block &&
+          resourceStorage.lumber >= this.buyItem.cost.lumber &&
+          resourceStorage.coins >= this.buyItem.cost.coin
+        )?true:false;
+     
+      }
+
+    })
+  }
+
+
+  onBuy() {
+    this.buy.emit(this.buyItem)
   }
 
 }

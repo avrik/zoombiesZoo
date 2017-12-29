@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { createStore } from 'redux'
 import { mainReducerFunc } from './redux/main-reducer';
 import { MessagesService, IMessage } from './services/messages.service';
 

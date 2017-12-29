@@ -8,18 +8,18 @@ import { GameEngineService } from 'app/services/game-engine.service';
 })
 export class ResourceItemComponent implements OnInit {
 
-  @Input() type:number;
-  @Input() amount:number;
-  @Input() icon:string;
-  @Input() bonus:number;
-  constructor(private gameEngine:GameEngineService) { }
+  @Input() type: number;
+  @Input() amount: number;
+  @Input() icon: string;
+  @Input() bonus: number;
+  constructor(private gameEngine: GameEngineService) { }
 
   ngOnInit() {
   }
 
   onClick() {
     this.amount++;
-    this.gameEngine.addToStorage(this.type,1);
+    this.gameEngine.addToStorage(this.type, 1);
   }
 
 }
