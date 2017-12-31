@@ -256,8 +256,8 @@ export class GameEngineService {
   }
 
   trapWalkers() {
-    let people: Tile[] = this.tilesMatches.filter(tile => (tile.card && tile.card.mergeBy === MergeTypeEnum.TRAP));
-    this.testGroupTrapped(people);
+    let walkers: Tile[] = this.tilesMatches.filter(tile => (tile.card && tile.card.mergeBy === MergeTypeEnum.TRAP && tile.terrain.type == TerrainEnum.RESOURCES));
+    this.testGroupTrapped(walkers);
   }
 
   getLinkedGroup(firstOne: Tile): Tile[] {
@@ -329,13 +329,14 @@ export class GameEngineService {
   }
 
   moveZoombiesToRandomEmpty(tile: Tile): boolean {
-    let trapsAround: Tile[] = tile.getAllEmpties().filter(a => a.terrain.type == TerrainEnum.ZOOMBIE_TRAP)
+    let trapsAround: Tile[] = tile.getCardsAround().filter(a => a.terrain.type == TerrainEnum.ZOOMBIE_TRAP)
     if (trapsAround.length) {
       let rand: number = Math.floor(Math.random() * (trapsAround.length));
       let moveToTile: Tile = trapsAround.find((item, index) => index == rand);
 
       tile.clear();
       moveToTile.card = this.getNewCard(CardFamilyTypeEnum.ZOOMBIE_TRAP);
+      //moveToTile.card.collected++;
       this.findMatch(moveToTile);
       return true;
     } else {

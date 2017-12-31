@@ -53,7 +53,8 @@
     <app-resource-item [amount]="resourceStorage.lumber" [type]="1" icon="assets/resources/wood.png"></app-resource-item>
 
     <div>
-        <span style="position:absolute;margin-left:18px;margin-top:35px" (click)="openStore()"><button >+</button></span>
+        <span style="position:absolute;margin-left:21px;margin-top:20px" (click)="openStore()">
+            <button style="background-color: #9c7bbf;border: none; height: 35px;" >+</button></span>
         <app-resource-item [amount]="resourceStorage.coins" [type]="2" icon="assets/resources/coin.png"></app-resource-item>
 
         <items-store-popup *ngIf="showStore" (buyItem)="onBuyItem($event)"></items-store-popup>

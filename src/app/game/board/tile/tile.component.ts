@@ -41,8 +41,8 @@ export class TileComponent implements OnInit {
   showStore: boolean;
   timeout: any;
   resourceStorage: IResourceStorage;
-  showThinkBubble:boolean;
-  
+  showThinkBubble: boolean;
+
   constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
     this.gameEngine.resourceStorage$.subscribe(resourceStorage => this.resourceStorage = resourceStorage)
     this.gameEngine.currentCard$.subscribe(currentCard => {
@@ -126,15 +126,22 @@ export class TileComponent implements OnInit {
     if (testResources.bricks >= 0 && testResources.lumber >= 0 && testResources.coins >= 0) {
 
       if (buyItem.type == CardFamilyTypeEnum.ROAD) {
-        this.tile.terrain = new Terrain(TerrainEnum.ROAD)
+        // this.tile.terrain = new Terrain(TerrainEnum.ROAD)
+        this.tile.setTempTerrain(TerrainEnum.ROAD);
       } else if (buyItem.type == CardFamilyTypeEnum.WALL) {
-        this.tile.terrain = new Terrain(TerrainEnum.WALL)
+        //this.tile.terrain = new Terrain(TerrainEnum.WALL)
+        this.tile.setTempTerrain(TerrainEnum.WALL);
       } else if (buyItem.type == CardFamilyTypeEnum.ZOOMBIE_TRAP) {
-        this.tile.terrain = new Terrain(TerrainEnum.ZOOMBIE_TRAP)
-      } else{
+        this.tile.setTempTerrain(TerrainEnum.ZOOMBIE_TRAP);
+        //this.tile.card = this.gameEngine.getNewCard(buyItem.type);
+        this.gameEngine.findMatch(this.tile);
+      }
+      else {
         this.tile.card = this.gameEngine.getNewCard(buyItem.type);
         this.gameEngine.findMatch(this.tile);
       }
+
+
 
       this.gameEngine.updateResourceStorage = testResources;
       this.gameEngine.removeFromResourcesStorage(buyItem.cost.block + buyItem.cost.lumber + buyItem.cost.coin);

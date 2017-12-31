@@ -7,12 +7,12 @@ export class Tile {
 
     linked: Tile[] = [];
     card: Card;
-    overMe:boolean;
-    terrain:Terrain
-    building:Building;
+    overMe: boolean;
+    terrain: Terrain;
+    terrainTemp: Terrain;
+    building: Building;
 
-    constructor(public col: number = -1, public row: number = -1) 
-    { 
+    constructor(public col: number = -1, public row: number = -1) {
         this.terrain = new Terrain();
     }
 
@@ -21,19 +21,6 @@ export class Tile {
     }
 
     getCardsAround(): Tile[] {
-        /* let aroundMe: Tile[] = [];
-        let recurse: Function = (arr: Tile[]) => {
-
-            arr.forEach(item => {
-                aroundMe.push(item);
-                let newArr: Tile[] = item.linked.filter(a => { return aroundMe.indexOf(a) == -1 && a.card })
-                recurse(newArr);
-            })
-        }
-        let arr: Tile[] = this.linked.filter(a => a.card && a.card.value);
-        recurse(arr);
-
-        return aroundMe; */
         return this.linked.filter(a => a.card);
     }
 
@@ -61,7 +48,16 @@ export class Tile {
         return collector;
     }
 
+    setTempTerrain(value: number) {
+        this.terrainTemp = new Terrain(this.terrain.type);
+        this.terrain = new Terrain(value);
+    }
+
     clear() {
+        if (this.terrainTemp) {
+            this.terrain = this.terrainTemp;
+            this.terrainTemp = null;
+        }
         this.card = null;
     }
 }
