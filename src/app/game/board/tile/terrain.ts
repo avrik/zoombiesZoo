@@ -8,6 +8,9 @@ export class Terrain {
     constructor(type: number = 0) {
         this.type = type;
         switch (type) {
+            case TerrainEnum.ZOOMBIE_TRAP:
+                this.url = "assets/buildings/Selector.png";
+                break;
             case TerrainEnum.CARD_HOLDER:
                 this.walkable = false;
                 this.url = "assets/terrain/Plain Block.png";

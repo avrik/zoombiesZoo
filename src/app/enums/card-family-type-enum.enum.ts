@@ -8,6 +8,7 @@ export enum CardFamilyTypeEnum {
     ANIMAL = 200,
     GRAVE = 300,
     ZOOMBIE = 500,
+    ZOOMBIE_TRAP = 600,
 
     HOUSE = 1000,
     TOWER = 2000,

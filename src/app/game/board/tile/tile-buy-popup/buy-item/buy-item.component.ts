@@ -20,7 +20,7 @@ export class BuyItemComponent implements OnInit {
   enabled: boolean;
 
   constructor(private gameEngine: GameEngineService) {
-    
+
   }
 
   ngOnInit() {
@@ -34,11 +34,11 @@ export class BuyItemComponent implements OnInit {
 
       if (this.buyItem && this.buyItem.cost && this.resourceStorage) {
         this.enabled = (
-          resourceStorage.bricks >= this.buyItem.cost.block &&
-          resourceStorage.lumber >= this.buyItem.cost.lumber &&
-          resourceStorage.coins >= this.buyItem.cost.coin
-        )?true:false;
-     
+          (!this.buyItem.cost.block || resourceStorage.bricks >= this.buyItem.cost.block) &&
+          (!this.buyItem.cost.lumber || resourceStorage.lumber >= this.buyItem.cost.lumber) &&
+          (!this.buyItem.cost.coin || resourceStorage.coins >= this.buyItem.cost.coin)
+        ) ? true : false;
+
       }
 
     })

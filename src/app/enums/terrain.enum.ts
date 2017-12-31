@@ -6,5 +6,6 @@ export enum TerrainEnum {
     BRIDGE = 3,
     CARD_HOLDER = 4,
     ROAD = 5,
-    WALL = 6
+    WALL = 6,
+    ZOOMBIE_TRAP=10,
 }

@@ -37,13 +37,18 @@ const familyStorage: ICardFamily = { name: CardFamilyTypeEnum.STORAGE, value: 15
 
 const coinCard: ICardData = { id: 400, level: 0, family: familyCoin, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, img: "assets/resources/coin.png" };
 
+const zoombieTrappedCard: ICardData = {
+  id: 250, level: 3, family: { name: CardFamilyTypeEnum.ZOOMBIE_TRAP, value: 250 }, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, img: "assets/people/cage.png",
+  nextCard: coinCard
+}
+
 const zoombieCard: ICardData = {
   id: -100, level: 3, family: { name: CardFamilyTypeEnum.ZOOMBIE, value: 0 }, mergeBy: MergeTypeEnum.TRAP_IN_CITY, type: CardTypeEnum.WALKER, img: "assets/people/zombiePig.png",
   nextCard: coinCard
 }
 
 const graveCard: ICardData = {
-  id: 500, level: 2, family: { name: CardFamilyTypeEnum.GRAVE, value: 100 }, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, img: "assets/resources/grave.png",
+  id: -10, level: 2, family: { name: CardFamilyTypeEnum.GRAVE, value: 100 }, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, img: "assets/resources/grave.png",
   nextCard: zoombieCard
 }
 
@@ -141,6 +146,7 @@ export const cardCollection: ICardData[] = [
   zoombieCard,
   coinCard,
   graveCard,
+  zoombieTrappedCard
 ]
 
 

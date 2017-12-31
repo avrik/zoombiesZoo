@@ -14,10 +14,9 @@ export class TileBuyPopupComponent  {
   items:IBuyItem[] = [
     
     { cost: { block: 12, lumber: 6, coin: 0 }, icon: "assets/buildings/house.png", type: CardFamilyTypeEnum.HOUSE },
-    { cost: { block: 15, lumber: 9, coin: 0 }, icon: "assets/buildings/storage.png", type: CardFamilyTypeEnum.STORAGE },
-    // { cost: { block: 18, lumber: 0, coin: 0 }, icon: "assets/terrain/Stone Block Tall.png", type: CardFamilyTypeEnum.WALL },
+    { cost: { block: 9, lumber: 3, coin: 0 }, icon: "assets/buildings/storage.png", type: CardFamilyTypeEnum.STORAGE },
     { cost: { block: 3, lumber: 0, coin: 0 }, icon: "assets/buildings/Stone Block.png", type: CardFamilyTypeEnum.ROAD },
-    { cost: { block: 0, lumber: 3, coin: 1 }, icon: "assets/buildings/Selector.png", type: CardFamilyTypeEnum.ROAD },
+    { cost: { block: 0, lumber: 3, coin: 1 }, icon: "assets/buildings/Selector.png", type: CardFamilyTypeEnum.ZOOMBIE_TRAP },
   ]
   
 

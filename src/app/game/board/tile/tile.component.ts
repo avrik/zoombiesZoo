@@ -77,7 +77,7 @@ export class TileComponent implements OnInit {
       if (this.tile.card) {
 
         if (this.tile.card.collect && this.tile.card.type == CardTypeEnum.RESOURCE) {
-          if (this.gameEngine.addToStorage(this.tile.card.family.name, this.tile.card.collect)) {
+          if (this.gameEngine.collectResources(this.tile.card.family.name, this.tile.card.collect)) {
             if (this.tile.card.bonus) {
               this.gameEngine.addToStorage(CardFamilyTypeEnum.COIN, this.tile.card.bonus);
             }
@@ -129,14 +129,15 @@ export class TileComponent implements OnInit {
         this.tile.terrain = new Terrain(TerrainEnum.ROAD)
       } else if (buyItem.type == CardFamilyTypeEnum.WALL) {
         this.tile.terrain = new Terrain(TerrainEnum.WALL)
-      } else {
+      } else if (buyItem.type == CardFamilyTypeEnum.ZOOMBIE_TRAP) {
+        this.tile.terrain = new Terrain(TerrainEnum.ZOOMBIE_TRAP)
+      } else{
         this.tile.card = this.gameEngine.getNewCard(buyItem.type);
         this.gameEngine.findMatch(this.tile);
       }
 
       this.gameEngine.updateResourceStorage = testResources;
       this.gameEngine.removeFromResourcesStorage(buyItem.cost.block + buyItem.cost.lumber + buyItem.cost.coin);
-
       this.gameEngine.nextTurn();
     } else {
       console.warn("not enough resources!");

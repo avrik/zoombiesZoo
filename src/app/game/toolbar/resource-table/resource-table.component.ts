@@ -1,3 +1,4 @@
+import { IBuyItem } from './../../board/tile/tile-buy-popup/buy-item/buy-item';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { GameEngineService } from 'app/services/game-engine.service';
 import { Card } from '../../cards/card';
@@ -91,6 +92,11 @@ export class ResourceTableComponent implements OnInit {
     this.showStore = !this.showStore;
   }
 
+  onBuyItem(buyItem:IBuyItem) {
+    this.showStore =false;
+  }
+
+  
   ngOnInit() {
   }
 

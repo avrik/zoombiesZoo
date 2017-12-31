@@ -1,8 +1,8 @@
 <div class="container">
 
-    <div style="text-align:center;display:flex" [style.opacity]="enabled?1:0.2">
+    <div style="text-align:center;display:flex">
         <!-- {{title}} -->
-        <div>
+        <div [style.opacity]="enabled?1:0.5">
             <img [src]="icon" alt="" height="40">
             <br>
             <button [disabled]="!enabled" (click)="onBuy()">{{buyLabel}}</button>
