@@ -1,3 +1,4 @@
+
 import { Card } from '../../cards/card';
 import { Terrain } from './terrain';
 import { Building } from './building';
@@ -31,10 +32,10 @@ export class Tile {
             let func: Function = (arr: Tile[]) => {
                 arr.filter(item =>
                     this != item &&
-                    this.card &&
-                    item.card &&
-                    this.card.mergeBy == MergeTypeEnum.MATCH &&
-                    item.card.mergeBy == MergeTypeEnum.MATCH &&
+                    this.card && item.card &&
+                    ((this.card.mergeBy == MergeTypeEnum.MATCH && item.card.mergeBy == MergeTypeEnum.MATCH) ||
+                    (this.card.mergeBy == MergeTypeEnum.MATCH_COLLECTED && item.card.mergeBy == MergeTypeEnum.MATCH_COLLECTED
+                        && this.card.collect == this.card.collected && item.card.collect == item.card.collected)) &&
                     collector.indexOf(item) == -1 &&
                     (item.card.value === this.card.value))
                     .forEach(item => {
@@ -53,11 +54,15 @@ export class Tile {
         this.terrain = new Terrain(value);
     }
 
-    clear() {
+    removeTempTerrain() {
         if (this.terrainTemp) {
             this.terrain = this.terrainTemp;
             this.terrainTemp = null;
         }
+    }
+
+    clear() {
+
         this.card = null;
     }
 }

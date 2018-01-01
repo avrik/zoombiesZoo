@@ -13,7 +13,8 @@ export class Terrain {
                 break;
             case TerrainEnum.CARD_HOLDER:
                 this.walkable = false;
-                this.url = "assets/terrain/Plain Block.png";
+                //this.url = "assets/terrain/Stone Block Tall.png";
+                this.url = "assets/resources/Chest Open.png";
                 break;
             case TerrainEnum.BRIDGE:
                 this.clickable = false;

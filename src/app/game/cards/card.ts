@@ -1,3 +1,5 @@
+import { Tile } from './../board/tile/tile';
+import { UrlConst } from './../../consts/url-const';
 import { MergeTypeEnum } from '../../enums/merge-type-enum.enum';
 import { CardTypeEnum } from '../../enums/card-type-enum.enum';
 import { ResourceEnum } from '../../enums/resource-enum.enum';
@@ -11,7 +13,6 @@ interface ICardFamily {
 
 export interface ICardData {
   mergeBy: number;
-  id: number;
   level?: number;
   family: ICardFamily;
   type: number;
@@ -27,52 +28,66 @@ export interface ICardData {
 const familyBrick: ICardFamily = { name: CardFamilyTypeEnum.BRICK, value: 5 };
 const familyLumber: ICardFamily = { name: CardFamilyTypeEnum.LUMBER, value: 10 };
 const familyCoin: ICardFamily = { name: CardFamilyTypeEnum.COIN, value: 50 };
+const familyPerson: ICardFamily = { name: CardFamilyTypeEnum.PERSON, value: 100 };
 
 const familyRoad: ICardFamily = { name: CardFamilyTypeEnum.ROAD, value: 200 };
-const familyWall: ICardFamily = { name: CardFamilyTypeEnum.WALL, value: 500 };
+//const familyWall: ICardFamily = { name: CardFamilyTypeEnum.WALL, value: 500 };
 const familyTower: ICardFamily = { name: CardFamilyTypeEnum.TOWER, value: 2000 };
+const familyChurch: ICardFamily = { name: CardFamilyTypeEnum.CHURCH, value: 5000 };
 const familyHouse: ICardFamily = { name: CardFamilyTypeEnum.HOUSE, value: 1000 };
 const familyStorage: ICardFamily = { name: CardFamilyTypeEnum.STORAGE, value: 1500 };
 
 
-const coinCard: ICardData = { id: 400, level: 0, family: familyCoin, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, img: "assets/resources/coin.png" };
-
-const zoombieTrappedCard: ICardData = {
-  id: 250, level: 0, family: { name: CardFamilyTypeEnum.ZOOMBIE_TRAP, value: 250 }, mergeBy: MergeTypeEnum.MATCH, collect: 1, type: CardTypeEnum.BUILDING, img: "assets/people/cage.png",
-  nextCard:
-    { id: 1250, level: 1, family: { name: CardFamilyTypeEnum.GOLD_CHEST, value: 1250 }, mergeBy: MergeTypeEnum.NONE, collect: 10, type: CardTypeEnum.BUILDING, img: "assets/resources/Chest Closed.png" }
+const coinCard: ICardData = { level: 0, family: familyCoin, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, img: UrlConst.COIN };
+//const goldChest: ICardData = { level: 1, family: { name: CardFamilyTypeEnum.GOLD_CHEST, value: 1250 }, mergeBy: MergeTypeEnum.NONE, collect: 10, type: CardTypeEnum.BUILDING, img: "assets/resources/Chest Closed.png" }
+const churchCard: ICardData = {
+  level: 0, family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 1, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH1,
+  nextCard: {
+    level: 1,family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 3, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH2,
+    nextCard: {
+      level: 2,family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 9, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH3,
+      nextCard: {
+        level: 3,family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 27, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH4,
+        nextCard: {
+          level: 4,family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 81, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH5,
+          nextCard: {
+            level: 5,family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 81, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH6,
+          }
+        }
+      }
+    }
+  }
 }
 
 const zoombieCard: ICardData = {
-  id: -100, level: 3, family: { name: CardFamilyTypeEnum.ZOOMBIE, value: 0 }, mergeBy: MergeTypeEnum.TRAP_IN_CITY, type: CardTypeEnum.WALKER, img: "assets/people/zombiePig.png",
-  nextCard: coinCard
+  level: 3, family: { name: CardFamilyTypeEnum.ZOOMBIE, value: 0 }, mergeBy: MergeTypeEnum.TRAP_IN_CITY, type: CardTypeEnum.WALKER, img: UrlConst.ZOOMBIE,
 }
 
 const graveCard: ICardData = {
-  id: -10, level: 2, family: { name: CardFamilyTypeEnum.GRAVE, value: 100 }, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, img: "assets/resources/grave.png",
+  level: 2, family: { name: CardFamilyTypeEnum.GRAVE, value: 1 }, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, img: UrlConst.GRAVE,
   nextCard: zoombieCard
 }
 
 
 export const cardCollection: ICardData[] = [
+  /* {
+     level: 0, family: familyWall, mergeBy: MergeTypeEnum.NONE, type: CardTypeEnum.BUILDING, img: ""
+  }, */
   {
-    id: 500, level: 0, family: familyWall, mergeBy: MergeTypeEnum.NONE, type: CardTypeEnum.BUILDING, img: ""
+    level: 0, family: familyRoad, mergeBy: MergeTypeEnum.NONE, type: CardTypeEnum.TERRAIN, img: ""
   },
   {
-    id: 500, level: 0, family: familyRoad, mergeBy: MergeTypeEnum.NONE, type: CardTypeEnum.BUILDING, img: ""
-  },
-  {
-    id: 1000, level: 0, family: familyHouse, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 6, img: "assets/buildings/house.png",
+    level: 0, family: familyHouse, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 6, img: UrlConst.HOUSE1,
     nextCard: {
-      id: 1001, level: 1, family: familyHouse, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 24, bonus: 3, img: "assets/buildings/house2.png",
+      level: 1, family: familyHouse, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 24, bonus: 3, img: UrlConst.HOUSE2,
       nextCard: {
-        id: 1002, level: 2, family: familyHouse, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 78, bonus: 6, img: "assets/buildings/house3.png",
+        level: 2, family: familyHouse, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 78, bonus: 6, img: UrlConst.HOUSE3,
         nextCard: {
-          id: 1003, level: 3, family: familyHouse, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 300, bonus: 9, img: "assets/buildings/house3.png",
+          level: 3, family: familyHouse, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 300, bonus: 9, img: UrlConst.HOUSE4,
           nextCard: {
-            id: 1004, level: 5, family: familyHouse, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 1200, bonus: 12, img: "assets/buildings/house3.png",
+            level: 5, family: familyHouse, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 1200, bonus: 12, img: UrlConst.HOUSE5,
             nextCard: {
-              id: 1005, level: 6, family: familyHouse, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 3000, bonus: 15, img: "assets/buildings/house3.png",
+              level: 6, family: familyHouse, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 3000, bonus: 15, img: UrlConst.HOUSE6,
             }
           }
         }
@@ -80,17 +95,36 @@ export const cardCollection: ICardData[] = [
     }
   },
   {
-    id: 2000, level: 0, family: familyStorage, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 27, img: "assets/buildings/storage.png",
+    level: 0, family: familyStorage, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 27, img: UrlConst.STORAGE1,
     nextCard: {
-      id: 2001, level: 1, family: familyStorage, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 81, bonus: 3, img: "assets/buildings/storage.png",
+      level: 1, family: familyStorage, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 81, bonus: 3, img: UrlConst.STORAGE2,
       nextCard: {
-        id: 2002, level: 2, family: familyStorage, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 243, bonus: 6, img: "assets/buildings/storage.png",
+        level: 2, family: familyStorage, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 243, bonus: 6, img: UrlConst.STORAGE3,
         nextCard: {
-          id: 2003, level: 3, family: familyStorage, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 729, bonus: 9, img: "assets/buildings/storage.png",
+          level: 3, family: familyStorage, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 729, bonus: 9, img: UrlConst.STORAGE4,
           nextCard: {
-            id: 2004, level: 5, family: familyStorage, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 5000, bonus: 12, img: "assets/buildings/storage.png",
+            level: 5, family: familyStorage, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 5000, bonus: 12, img: UrlConst.STORAGE5,
             nextCard: {
-              id: 2005, level: 6, family: familyStorage, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 15000, bonus: 15, img: "assets/buildings/storage.png",
+              level: 6, family: familyStorage, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.BUILDING, collect: 15000, bonus: 15, img: UrlConst.STORAGE6,
+            }
+          }
+        }
+      }
+    }
+  },
+  churchCard,
+  {
+    level: 0, family: familyBrick, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, chance: 100, img: UrlConst.BRICK1,
+    nextCard: {
+      level: 1, family: familyBrick, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, chance: 5, img: UrlConst.BRICK2,
+      nextCard: {
+        level: 2, family: familyBrick, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 3, img: UrlConst.BRICK3,
+        nextCard: {
+          level: 3, family: familyBrick, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 9, bonus: 1, img: UrlConst.BRICK4,
+          nextCard: {
+            level: 4, family: familyBrick, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 27, bonus: 3, img: UrlConst.BRICK5,
+            nextCard: {
+              level: 5, family: familyBrick, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 81, bonus: 9, img: UrlConst.BRICK6,
             }
           }
         }
@@ -98,59 +132,40 @@ export const cardCollection: ICardData[] = [
     }
   },
   {
-    id: 100, level: 0, family: familyBrick, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, chance: 100, img: "assets/resources/rock.png",
+    level: 0, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, chance: 70, img: UrlConst.LUMBER1,
     nextCard: {
-      id: 102, level: 1, family: familyBrick, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, chance: 5, img: "assets/resources/brick.png",
+      level: 1, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, chance: 5, img: UrlConst.LUMBER2,
       nextCard: {
-        id: 103, level: 2, family: familyBrick, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 3, img: "assets/resources/bricks.png",
+        level: 2, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 3, img: UrlConst.LUMBER3,
         nextCard: {
-          id: 104, level: 3, family: familyBrick, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 9, bonus: 1, img: "assets/resources/bricks.png",
+          level: 3, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 9, bonus: 1, img: UrlConst.LUMBER4,
           nextCard: {
-            id: 105, level: 4, family: familyBrick, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 27, bonus: 3, img: "assets/resources/bricks.png",
+            level: 3, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 27, bonus: 3, img: UrlConst.LUMBER5,
             nextCard: {
-              id: 106, level: 5, family: familyBrick, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 81, bonus: 9, img: "assets/resources/bricks.png",
+              level: 3, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 81, bonus: 9, img: UrlConst.LUMBER6
             }
           }
         }
       }
     }
   },
+  { level: 0, family: familyPerson, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 20, img: UrlConst.PERSON1, },
+  { level: 0, family: familyPerson, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 20, img: UrlConst.PERSON2, },
+  { level: 0, family: familyPerson, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 20, img: UrlConst.PERSON3, },
+  { level: 0, family: familyPerson, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 20, img: UrlConst.PERSON4, },
   {
-    id: 300, level: 0, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, chance: 70, img: "assets/resources/tree.png",
-    nextCard: {
-      id: 301, level: 1, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, chance: 5, img: "assets/resources/lumber1.png",
-      nextCard: {
-        id: 302, level: 2, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 3, img: "assets/resources/wood.png",
-        nextCard: {
-          id: 303, level: 3, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 9, bonus: 1, img: "assets/resources/lumber3.png",
-          nextCard: {
-            id: 303, level: 3, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 27, bonus: 3, img: "assets/resources/lumber3.png",
-            nextCard: {
-              id: 303, level: 3, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 81, bonus: 9, img: "assets/resources/lumber3.png"
-            }
-          }
-        }
-      }
-    }
+    level: 0, family: { name: CardFamilyTypeEnum.WILD, value: -1 }, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, chance: 30, img: UrlConst.WILD,
+    nextCard: graveCard,
   },
-  { id: 0, level: 0, family: { name: CardFamilyTypeEnum.PERSON, value: 0 }, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 20, img: "assets/people/Character Boy.png", },
-  { id: 0, level: 0, family: { name: CardFamilyTypeEnum.PERSON, value: 0 }, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 20, img: "assets/people/Character Cat Girl.png", },
-  { id: 0, level: 0, family: { name: CardFamilyTypeEnum.PERSON, value: 0 }, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 20, img: "assets/people/Character Horn Girl.png", },
-  { id: 0, level: 0, family: { name: CardFamilyTypeEnum.PERSON, value: 0 }, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 20, img: "assets/people/Character Pink Girl.png", },
   {
-    id: -1, level: 0, family: { name: CardFamilyTypeEnum.WILD, value: -1 }, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, chance: 30, img: "assets/resources/diamond.png",
-    nextCard: {
-      id: 0, level: 1, family: { name: CardFamilyTypeEnum.ANIMAL, value: 0 }, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 20, img: "assets/people/pig.png",
-      nextCard: graveCard,
-    },
+    level: 1, family: { name: CardFamilyTypeEnum.ANIMAL, value: 0 }, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 20, img: UrlConst.ANIMAL,
+    nextCard: graveCard,
   },
   zoombieCard,
   coinCard,
   graveCard,
-  zoombieTrappedCard
+  //goldChest
 ]
-
-
 
 export class Card implements ICardData {
   level: number;
@@ -170,10 +185,11 @@ export class Card implements ICardData {
   collected: number;
   state: string = "inactive";
   autoPlaced: boolean = false;
+  preTile: Tile;
 
   constructor(data: ICardData) {
     if (!data) return;
-    this.id = data.id;
+
     this.mergeBy = data.mergeBy;
     this.level = data.level ? data.level : 0;
     this.family = data.family;

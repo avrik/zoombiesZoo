@@ -13,6 +13,7 @@ import { MessagesService } from '../../../../services/messages.service';
 export class TileCardComponent implements OnInit {
   showThinkBubble: boolean;
 
+  @Input() onTerrain: number;
   @Input() card: Card;
   @Input() placed: boolean;
   @Output() collected: EventEmitter<any> = new EventEmitter();

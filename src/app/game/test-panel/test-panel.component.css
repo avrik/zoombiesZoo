@@ -1,0 +1,8 @@
+.container {
+    position: absolute;
+    display: grid;
+    margin-top: 50px;
+    grid-template-columns: 60px 60px 60px;
+    grid-template-rows: 60px 60px 60px;
+    padding: 3px 0 3px 0;
+}

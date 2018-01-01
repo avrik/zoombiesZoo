@@ -20,6 +20,7 @@ import { FormsModule } from "@angular/forms";
 import { ItemsStorePopupComponent } from './game/toolbar/items-store-popup/items-store-popup.component';
 import { ItemsStorePopupItemComponent } from './game/toolbar/items-store-popup/items-store-popup-item/items-store-popup-item.component';
 import { MessagesService } from 'app/services/messages.service';
+import { TestPanelComponent } from './game/test-panel/test-panel.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { MessagesService } from 'app/services/messages.service';
     PopupComponent,
     ItemsStorePopupComponent,
     ItemsStorePopupItemComponent,
+    TestPanelComponent,
     
   ],
   imports: [

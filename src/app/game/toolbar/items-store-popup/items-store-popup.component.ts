@@ -1,3 +1,4 @@
+import { UrlConst } from './../../../consts/url-const';
 import { IBuyItem } from './../../board/tile/tile-buy-popup/buy-item/buy-item';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
@@ -6,20 +7,22 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
   templateUrl: './items-store-popup.component.html',
   styleUrls: ['./items-store-popup.component.css']
 })
-export class ItemsStorePopupComponent  {
+export class ItemsStorePopupComponent {
 
   @Output() buyItem: EventEmitter<any> = new EventEmitter();
-  
+
   items: IBuyItem[] = [
-    { label:"undo",cost: { coin: 1 }, icon: "assets/undo.png", type: 0 },
-    { label:"buy3",cost: { coin: 3 }, icon: "assets/resources/wood.png", type: 0 },
-    { label:"buy3",cost: { coin: 3 }, icon: "assets/resources/bricks.png", type: 0 },
-    { label:"wild",cost: { coin: 6 }, icon: "assets/resources/diamond.png", type: 0 },
+    { label: "brick", cost: { coin: 2 }, icon: UrlConst.BRICK2, type: 0 },
+    { label: "lumber", cost: { coin: 2 }, icon: UrlConst.LUMBER2, type: 1 },
+    { label: "wild", cost: { coin: 3 }, icon: UrlConst.WILD, type: 2 },
+    {  label: "undo", cost: { coin: 1 }, icon: UrlConst.UNDO, type: 3 },
+    { label: "buldoze", cost: { coin: 6 }, icon: UrlConst.BULDOZE, type: 4 },
+    { label: "move", cost: { coin: 6 }, icon: UrlConst.MOVE, type: 5 },
   ]
-  
+
   constructor() { }
 
-  buy(buyItem:IBuyItem) {
+  buy(buyItem: IBuyItem) {
     this.buyItem.emit(buyItem);
   }
 

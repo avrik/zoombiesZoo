@@ -14,5 +14,6 @@ export enum CardFamilyTypeEnum {
     TOWER = 2000,
     STORAGE = 3000,
     ROAD = 4000,
-    WALL = 5000
+    //WALL = 5000,
+    CHURCH = 5000
 }

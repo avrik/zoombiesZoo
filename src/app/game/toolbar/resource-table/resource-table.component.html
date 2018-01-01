@@ -46,18 +46,19 @@
 
 
     <div class="text-box">score :
-        <b class="big-number" style="line-height:40px">{{total| number}}</b>
+        <b class="big-number" style="line-height:40px">{{score| number}}</b>
     </div>
 
     <app-resource-item [amount]="resourceStorage.bricks" [type]="0" icon="assets/resources/brick.png"></app-resource-item>
-    <app-resource-item [amount]="resourceStorage.lumber" [type]="1" icon="assets/resources/wood.png"></app-resource-item>
+    <app-resource-item [amount]="resourceStorage.lumber" [type]="1" icon="assets/resources/lumber1.png"></app-resource-item>
 
     <div>
         <span style="position:absolute;margin-left:21px;margin-top:20px" (click)="openStore()">
             <button style="background-color: #9c7bbf;border: none; height: 35px;" >+</button></span>
         <app-resource-item [amount]="resourceStorage.coins" [type]="2" icon="assets/resources/coin.png"></app-resource-item>
 
-        <items-store-popup *ngIf="showStore" (buyItem)="onBuyItem($event)"></items-store-popup>
+        <tile-buy-popup *ngIf="showStore" [items]="items" (buyItem)="onBuyItem($event)"></tile-buy-popup>
+        <!-- <items-store-popup *ngIf="showStore" (buyItem)="onBuyItem($event)"></items-store-popup> -->
     </div>
 
 
@@ -69,7 +70,7 @@
         <div class="progress-bar">
 
             <div #myBar class="progress-bar-inside" [style.width]="popProgress+'%'">
-                <b style="color:white;line-height: 20px;">{{popProgress | number : '1.0-0'}}%</b>
+                <b style="color:white;">{{popProgress | number : '1.0-0'}}%</b>
             </div>
         </div>
     </div>

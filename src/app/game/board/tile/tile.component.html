@@ -1,13 +1,22 @@
-<tile-buy-popup *ngIf="showStore" (buyItem)="buyItem($event)"></tile-buy-popup>
+<tile-buy-popup *ngIf="showStore" [items]="tile.card?storeItems2:storeItems" (buyItem)="buyItem($event)"></tile-buy-popup>
+
 
 
 <div (click)="clickTile()">
+    <!-- <div style="position:absolute" [@collect]="collectState">
+        <img src="assets/resources/lumber1.png" alt="" height="40">
+    </div> -->
+
     <div style="position:absolute;padding-left:8px" *ngIf="!gameEngine.gameOver" [style.z-index]="getIndex()">
 
         <div class="card-float" [@floatOver]="state" *ngIf="(!tile.card || tile.terrain.type==4) && tile.overMe && currentCard && tile.terrain.clickable">
             <app-tile-card [card]="currentCard"></app-tile-card>
         </div>
-        <app-tile-card *ngIf="tile.card" [placed]="true" [card]="tile.card" (collected)="onCardCollected()"></app-tile-card>
+
+        <div>
+            <app-tile-card *ngIf="tile.card" [placed]="true" [card]="tile.card" [onTerrain]="tile.terrain.type" (collected)="onCardCollected()"></app-tile-card>
+        </div>
+
 
         <div *ngIf="showThinkBubble" style="position:absolute;margin-top:-30px;margin-left:30px">
             <img src="assets/people/SpeechBubble.png" alt="" height="64">

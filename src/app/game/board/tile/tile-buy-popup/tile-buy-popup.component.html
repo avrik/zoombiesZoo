@@ -1,11 +1,11 @@
 <div class="container">
     <div class="header">
-        <span>city improvments</span>
+        <span>{{title}}</span>
         <button style="float:right" (click)="onClose()">x</button>
     </div>
 
     <div class="content">
-        <app-buy-item *ngFor="let item of items;let i = index" [icon]="item.icon" [buyItem]="item" (buy)="buy($event)"></app-buy-item>
+        <app-buy-item *ngFor="let item of items;let i = index" [icon]="item.icon" [buyItem]="item" (buy)="buy($event)" (mouseout)="onMouseOut(item)" (mouseover)="onMouseOver(item) "></app-buy-item>
     </div>
 
 </div>

@@ -1,3 +1,4 @@
+import { UrlConst } from './../../../consts/url-const';
 import { CardTypeEnum } from './../../../enums/card-type-enum.enum';
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
@@ -27,6 +28,17 @@ import { MessagesService } from '../../../services/messages.service';
       })),
       transition('inactive => active', animate('300ms ease-out')),
       transition('active => inactive', animate('300ms ease-out'))
+    ]),
+
+    trigger('collect', [
+      state('inactive', style({
+        transform: 'translateY(140px)'
+      })),
+      state('fly', style({
+        transform: 'translateY(140px)'
+      })),
+      transition('inactive => fly', animate('1300ms ease-out')),
+      transition('fly => inactive', animate('1300ms ease-out'))
     ])
   ]
 })
@@ -37,11 +49,31 @@ export class TileComponent implements OnInit {
   @Input() onBoard: boolean = true;
   @Output() openStore: EventEmitter<any> = new EventEmitter();
   state: string = "inactive";
+
   currentCard: Card;
   showStore: boolean;
   timeout: any;
   resourceStorage: IResourceStorage;
   showThinkBubble: boolean;
+
+  collectState: string = "inactive";
+
+
+  storeItems: IBuyItem[] = [
+
+    { cost: { block: 12, lumber: 6, coin: 0 }, icon: UrlConst.HOUSE1, type: CardFamilyTypeEnum.HOUSE, description: "build to populate the people" },
+    { cost: { block: 9, lumber: 3, coin: 0 }, icon: UrlConst.STORAGE1, type: CardFamilyTypeEnum.STORAGE, description: "build for resource storage" },
+    { cost: { block: 3, lumber: 0, coin: 0 }, icon: UrlConst.ROAD, type: CardFamilyTypeEnum.ROAD, description: "get people into houses" },
+    { cost: { block: 27, lumber: 9, coin: 3 }, icon: UrlConst.CHURCH1, type: CardFamilyTypeEnum.CHURCH, description: "used for trapping zoombies" },
+  ]
+
+  storeItems2: IBuyItem[] = [
+    { cost: { block: 0, lumber: 0, coin: 6 }, icon: UrlConst.MOVE, type: 10, label:'move', description: "move building" },
+  ]
+
+
+
+
 
   constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
     this.gameEngine.resourceStorage$.subscribe(resourceStorage => this.resourceStorage = resourceStorage)
@@ -61,7 +93,10 @@ export class TileComponent implements OnInit {
 
   clickTile() {
     this.tile.overMe = false;
-
+    if (this.tile.terrain.type == TerrainEnum.CITY) {
+      this.showStore = !this.showStore;
+      //this.openStore.emit(this);
+    } else
     if (this.tile.terrain.type == TerrainEnum.CARD_HOLDER) {
       let temp = this.tile.card;
       this.tile.card = this.currentCard;
@@ -81,9 +116,10 @@ export class TileComponent implements OnInit {
             if (this.tile.card.bonus) {
               this.gameEngine.addToStorage(CardFamilyTypeEnum.COIN, this.tile.card.bonus);
             }
-            //this.collected.emit();
 
-            this.tile.overMe = false;
+
+            this.collectState = "fly";
+            //this.tile.overMe = false;
             this.tile.clear();
           } else {
             this.messagesService.postMessage({ title: "No more storage place", message: "build more storage" });
@@ -105,10 +141,7 @@ export class TileComponent implements OnInit {
           this.gameEngine.nextTurn();
           //}, 100);
         }
-        else if (this.tile.terrain.type == TerrainEnum.CITY) {
-          this.showStore = !this.showStore;
-          //this.openStore.emit(this);
-        }
+
   }
 
   buyItem(buyItem: IBuyItem) {
@@ -128,20 +161,11 @@ export class TileComponent implements OnInit {
       if (buyItem.type == CardFamilyTypeEnum.ROAD) {
         // this.tile.terrain = new Terrain(TerrainEnum.ROAD)
         this.tile.setTempTerrain(TerrainEnum.ROAD);
-      } else if (buyItem.type == CardFamilyTypeEnum.WALL) {
-        //this.tile.terrain = new Terrain(TerrainEnum.WALL)
-        this.tile.setTempTerrain(TerrainEnum.WALL);
-      } else if (buyItem.type == CardFamilyTypeEnum.ZOOMBIE_TRAP) {
-        this.tile.setTempTerrain(TerrainEnum.ZOOMBIE_TRAP);
-        //this.tile.card = this.gameEngine.getNewCard(buyItem.type);
-        this.gameEngine.findMatch(this.tile);
       }
       else {
         this.tile.card = this.gameEngine.getNewCard(buyItem.type);
         this.gameEngine.findMatch(this.tile);
       }
-
-
 
       this.gameEngine.updateResourceStorage = testResources;
       this.gameEngine.removeFromResourcesStorage(buyItem.cost.block + buyItem.cost.lumber + buyItem.cost.coin);
@@ -176,7 +200,7 @@ export class TileComponent implements OnInit {
         }, 50);
 
       } else if (this.tile.terrain.type == TerrainEnum.CITY) {
-        this.gameEngine.showCardMatchHint(this.gameEngine.getNewCardByValue(CardFamilyTypeEnum.WILD));
+        this.gameEngine.showCardMatchHint(this.gameEngine.getNewCard(CardFamilyTypeEnum.WILD));
       }
     }
   }

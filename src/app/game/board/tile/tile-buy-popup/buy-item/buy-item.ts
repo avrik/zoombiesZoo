@@ -7,6 +7,7 @@ export interface ICost {
 
 export interface IBuyItem {
     label?:string;
+    description?:string,
     cost: ICost;
     icon: string;
     type: number;
