@@ -5,7 +5,6 @@
     </div>
 
     <div *ngIf="cardHint && cardHint.nextCard">
-
         <div *ngIf="cardHint.family.name>=0" class="card-hint">
             <img [src]="cardHint.img" alt="" height="30">
             <b class="sign">✚</b>
@@ -53,11 +52,14 @@
     <app-resource-item [amount]="resourceStorage.lumber" [type]="1" icon="assets/resources/lumber1.png"></app-resource-item>
 
     <div>
-        <span style="position:absolute;margin-left:21px;margin-top:20px" (click)="openStore()">
-            <button style="background-color: #9c7bbf;border: none; height: 35px;" >+</button></span>
+        <span style="    position: absolute;
+        margin-left: 22px;
+        margin-top: 35px;
+        width: 20px;" (click)="openStore()">
+            <button class="store-btn" >+</button></span>
         <app-resource-item [amount]="resourceStorage.coins" [type]="2" icon="assets/resources/coin.png"></app-resource-item>
 
-        <tile-buy-popup *ngIf="showStore" [items]="items" (buyItem)="onBuyItem($event)"></tile-buy-popup>
+        <tile-buy-popup *ngIf="showStore" [items]="items" title="store" (buyItem)="onBuyItem($event)"></tile-buy-popup>
         <!-- <items-store-popup *ngIf="showStore" (buyItem)="onBuyItem($event)"></items-store-popup> -->
     </div>
 

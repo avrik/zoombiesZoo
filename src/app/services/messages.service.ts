@@ -4,7 +4,7 @@ import { BehaviorSubject } from "rxjs/BehaviorSubject";
 
 export interface IMessageButton {
     label:string;
-    action:Function;
+    action?:Function;
 } 
 
 export interface IMessage {

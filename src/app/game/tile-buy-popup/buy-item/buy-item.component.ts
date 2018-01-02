@@ -1,7 +1,7 @@
-import { IResourceStorage } from 'app/services/game-engine.service';
+import { IResourceStorage, GameEngineService } from 'app/services/game-engine.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ICost, IBuyItem } from './buy-item';
-import { GameEngineService } from '../../../../../services/game-engine.service'
+
 
 @Component({
   selector: 'app-buy-item',
@@ -10,11 +10,11 @@ import { GameEngineService } from '../../../../../services/game-engine.service'
 })
 export class BuyItemComponent implements OnInit {
   @Input() title: string = "";
-  @Input() buyLabel: string = "build";
   @Input() icon: string = ""
   @Input() buyItem: IBuyItem;
   @Output() buy: EventEmitter<IBuyItem> = new EventEmitter();
 
+  
   resourceNeeded: any[] = [];
   resourceStorage: IResourceStorage;
   enabled: boolean;

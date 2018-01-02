@@ -11,6 +11,7 @@ export interface IBuyItem {
     cost: ICost;
     icon: string;
     type: number;
+    amount? :number;
 }
 
 export class BuyItem {

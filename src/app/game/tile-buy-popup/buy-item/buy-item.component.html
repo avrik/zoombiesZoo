@@ -2,10 +2,15 @@
 
     <div style="text-align:center;display:flex">
         <!-- {{title}} -->
+        <span *ngIf="buyItem.amount" class="multi-amount">x{{buyItem.amount}}</span>
         <div [style.opacity]="enabled?1:0.5">
-            <img [src]="icon" alt="" height="40">
+
+            <img [style.padding-left.px]="buyItem.amount?25:0" [src]="icon" alt="" height="40">
+
             <br>
-            <button [disabled]="!enabled" (click)="onBuy()">{{buyLabel}}</button>
+
+            <button [disabled]="!enabled" (click)="onBuy()">{{buyItem.label?buyItem.label:'buy'}}</button>
+
         </div>
 
         <span *ngIf="resourceNeeded" style="margin-left:10px;display:flex;padding:2px">

@@ -20,21 +20,21 @@
 }
 
 .store-btn {
-    background-color: #271e30;
-    border-bottom: 4px solid #191122;
+    background-color: gold;
+    border: none;
+    height: 20px;
     cursor: pointer;
+    border-radius: 5px;
+    border-top: 2px solid greenyellow;
 }
 
 .store-btn:hover {
-    background-color: #484150;
-    border: none;
-    border-bottom: 6px solid #271e30;
+    background-color: rgb(240, 230, 176);
 }
 
 .store-btn:active {
-    border: none;
-    background-color: #362b41;
-    border-top: 6px solid #271e30;
+    background-color: rgb(202, 175, 19);
+    border-top: 2px solid #271e30;
 }
 
 .progress-bar {

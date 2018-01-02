@@ -1,7 +1,7 @@
 <div class="container">
-    <div class="header">
-        <span>{{title}}</span>
-        <button style="float:right" (click)="onClose()">x</button>
+    <div class="header" style="display:flex;justify-content:space-between">
+        <span style="margin-left:5px;line-height:25px">{{description?description:title}}</span>
+        <button style="margin-right:5px" (click)="onClose()">x</button>
     </div>
 
     <div class="content">

@@ -9,7 +9,6 @@ import { Observable } from "rxjs/Observable";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { Tile } from '../game/board/tile/tile';
 import { Card, ICardData, cardCollection } from '../game/cards/card';
-import { ICost } from '../game/board/tile/tile-buy-popup/buy-item/buy-item';
 import { Terrain } from 'app/game/board/tile/terrain';
 import { CardTypeEnum } from 'app/enums/card-type-enum.enum';
 import { BuildingEnum } from '../enums/building-enum.enum';
@@ -150,10 +149,20 @@ export class GameEngineService {
     return arr[Math.floor(Math.random() * arr.length)];
   }
 
-  restart() {
-    this.gameDataModel.tiles.forEach(tile => tile.clear());
-    //this.gameDataModel.currentLevel = null;
-    this.gameDataModel = Object.assign({}, initGameData);
+  start() {
+    let localData: string = localStorage.getItem('gameData')
+    this.gameDataModel = localData ? JSON.parse(localData) : Object.assign({}, initGameData);
+
+    this.restart(true);
+  }
+
+  restart(firstTime: boolean = false) {
+    if (!firstTime) {
+      this.gameDataModel.tiles.forEach(tile => tile.clear());
+      //this.gameDataModel.currentLevel = null;
+      this.gameDataModel = Object.assign({}, initGameData);
+    }
+
 
     // if (!firstTime) {
     this._tiles$.next(Object.assign({}, this.gameDataModel).tiles);
@@ -222,6 +231,10 @@ export class GameEngineService {
     setTimeout(() => {
       this.roundComplete();
     }, 200);
+
+
+    //localStorage.setItem('gameData', JSON.stringify(this.gameDataModel.tiles));
+
   }
 
   roundComplete() {
@@ -402,11 +415,12 @@ export class GameEngineService {
     return false;
   }
 
-
   removeFromResourcesStorage(amount: number) {
     for (let i = 0; i < amount; i++) {
       let storages: Tile[] = this.tilesCities.filter(a => a.card && a.card.family && a.card.family.name == CardFamilyTypeEnum.STORAGE && a.card.collected)
-      storages[0].card.collected--;
+      if (storages && storages.length) {
+        storages[0].card.collected--;
+      }
     }
   }
 
@@ -483,22 +497,44 @@ export class GameEngineService {
 
       matchedTiles.filter(a => a.card).forEach(linked => {
         if (linked.card && linked.card.collected) totalCollected += linked.card.collected;
+        /* if (tile.card.type == CardTypeEnum.BUILDING) {
+          if (linked.card.collected) totalCollected += linked.card.collected;
+        } else {
+          if (linked.card.collected) totalCollected += linked.card.collected;
+        }
+ */
         linked.clear();
       });
 
+
       if (tile.card.nextCard) {
-        if (tile.card.bonus) {
 
-          this.addToStorage(CardFamilyTypeEnum.COIN, tile.card.bonus);
-        }
-
-        let extra: number = (matchedTiles.length - (tile.card.minForNextLevel - 1));// * Math.max(tile.card.bonus, 1);
+        let extra: number = Math.max((matchedTiles.length - (tile.card.minForNextLevel - 1)) * tile.card.collect, 0) // * Math.max(tile.card.bonus, 1);
         tile.card = new Card(tile.card.nextCard)
 
-        if (tile.card.collect) {
-          tile.card.collect += extra * (tile.card.level - 1);
-          tile.card.collected = totalCollected;
+        if (tile.card.bonus) {
+          //this.addToStorage(CardFamilyTypeEnum.COIN, tile.card.bonus);
+          let empties: Tile[] = tile.getAllEmpties();
+          if (empties.length) {
+            empties[0].card = this.getNewCard(CardFamilyTypeEnum.COIN);
+            empties[0].card.collected = tile.card.bonus;
+          }
         }
+
+
+        if (tile.card.type == CardTypeEnum.BUILDING) {
+          if (tile.card.collected) tile.card.collected = totalCollected
+        } else {
+          if (tile.card.collect) {
+            // tile.card.collect += totalCollected;
+            tile.card.collected = tile.card.collect + extra;
+          };// + extra * (tile.card.level);
+        }
+        // debugger;
+        /* if (tile.card.collect) {
+          tile.card.collect += totalCollected + extra * (tile.card.level - 1);
+          tile.card.collected = totalCollected
+        } */
 
         if (extra) {
           const arr = [1, 10, 50, 100, 200, 500, 1000, 2000, 5000];

@@ -1,4 +1,4 @@
-<tile-buy-popup *ngIf="showStore" [items]="tile.card?storeItems2:storeItems" (buyItem)="buyItem($event)"></tile-buy-popup>
+<tile-buy-popup *ngIf="showStore" [items]="tile.card?storeItems2:storeItems" (buyItem)="buyItem($event)" [title]="tile.card?tile.card.family.label+' lvl '+(tile.card.level+1):'city improvments'"></tile-buy-popup>
 
 
 
@@ -7,9 +7,9 @@
         <img src="assets/resources/lumber1.png" alt="" height="40">
     </div> -->
 
-    <div style="position:absolute;padding-left:8px" *ngIf="!gameEngine.gameOver" [style.z-index]="getIndex()">
+    <div style="position:absolute;padding-left:8px" [style.z-index]="getIndex()">
 
-        <div class="card-float" [@floatOver]="state" *ngIf="(!tile.card || tile.terrain.type==4) && tile.overMe && currentCard && tile.terrain.clickable">
+        <div class="card-float" [@floatOver]="state" *ngIf="(!tile.card || tile.terrain.type==4) && tile.overMe && currentCard" [style.opacity]="isSelectd?0.5:1">
             <app-tile-card [card]="currentCard"></app-tile-card>
         </div>
 
@@ -26,7 +26,8 @@
 
 
     <!-- /TERRAIN -->
-    <div class="tile" *ngIf="tile" (mouseover)="overMe()" (mouseout)="outMe()">
+    <!-- <div class="tile" *ngIf="tile" (mouseover)="overMe()" (mouseout)="outMe()"> -->
+    <div class="tile" *ngIf="tile" (mouseover)="onMouseOver()" (mouseout)="outMe()">
         <div class="over" *ngIf="tile.terrain?.clickable && !tile.card"></div>
 
 

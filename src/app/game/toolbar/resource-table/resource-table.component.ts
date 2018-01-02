@@ -1,12 +1,12 @@
 import { UrlConst } from './../../../consts/url-const';
 import { CardFamilyTypeEnum } from 'app/enums/card-family-type-enum.enum';
-import { IBuyItem } from './../../board/tile/tile-buy-popup/buy-item/buy-item';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { GameEngineService } from 'app/services/game-engine.service';
 import { Card } from '../../cards/card';
 import { Resources } from 'app/enums/resources.enum';
 import { GameLevel } from '../../levels/game-level';
 import { IResourceStorage } from '../../../services/game-engine.service';
+import { IBuyItem } from 'app/game/tile-buy-popup/buy-item/buy-item';
 
 @Component({
   selector: 'app-resource-table',
@@ -36,14 +36,14 @@ export class ResourceTableComponent implements OnInit {
   resourceStorage: IResourceStorage;
 
   items: IBuyItem[] = [
-    { label: "brick", cost: { coin: 2 }, icon: UrlConst.BRICK2, type: 0 },
-    { label: "lumber", cost: { coin: 2 }, icon: UrlConst.LUMBER2, type: 1 },
-    { label: "wild", cost: { coin: 3 }, icon: UrlConst.WILD, type: 2 },
-    {  label: "undo", cost: { coin: 1 }, icon: UrlConst.UNDO, type: 3 },
-    { label: "buldoze", cost: { coin: 6 }, icon: UrlConst.BULDOZE, type: 4 },
-    { label: "move", cost: { coin: 6 }, icon: UrlConst.MOVE, type: 5 },
+    { label: "brick", cost: { coin: 2 }, icon: UrlConst.BRICK2, type: 0, amount: 6 ,description:"buy brick"},
+    { label: "lumber", cost: { coin: 2 }, icon: UrlConst.LUMBER2, type: 1, amount: 6,description:"buy lumber" },
+    { label: "wild", cost: { coin: 3 }, icon: UrlConst.WILD, type: 2, amount: 3 ,description:"buy wild-card"},
+    { label: "undo", cost: { coin: 1 }, icon: UrlConst.UNDO, type: 3, amount: 9 ,description:"undo last action"},
+   // { label: "buldoze", cost: { coin: 6 }, icon: UrlConst.BULDOZE, type: 4, amount: 3 },
+    //{ label: "move", cost: { coin: 6 }, icon: UrlConst.MOVE, type: 5 },
   ]
-  
+
   constructor(public gameEngine: GameEngineService) {
     this.gameEngine.currentLevel$.subscribe(currentLevel => {
       this.currentLevel = currentLevel;

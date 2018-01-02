@@ -24,18 +24,18 @@ export const UrlConst = {
 
 
     BRICK1:"assets/resources/rock.png",
-    BRICK2:"assets/resources/brick.png",
-    BRICK3:"assets/resources/bricks.png",
-    BRICK4:"assets/resources/bricks.png",
-    BRICK5:"assets/resources/bricks.png",
-    BRICK6:"assets/resources/bricks.png",
+    BRICK2:"assets/resources/z-brick1.png",
+    BRICK3:"assets/resources/z-brick2.png",
+    BRICK4:"assets/resources/z-brick3.png",
+    BRICK5:"assets/resources/z-brick4.png",
+    BRICK6:"assets/resources/z-brick5.png",
 
     LUMBER1:"assets/resources/tree.png",
-    LUMBER2:"assets/resources/lumber1.png",
-    LUMBER3:"assets/resources/lumber2.png",
-    LUMBER4:"assets/resources/lumber3.png",
-    LUMBER5:"assets/resources/lumber3.png",
-    LUMBER6:"assets/resources/lumber3.png",
+    LUMBER2:"assets/resources/z-lumber1.png",
+    LUMBER3:"assets/resources/z-lumber2.png",
+    LUMBER4:"assets/resources/z-lumber3.png",
+    LUMBER5:"assets/resources/z-lumber4.png",
+    LUMBER6:"assets/resources/z-lumber5.png",
 
     COIN:"assets/resources/coin.png",
     WILD:"assets/resources/diamond.png",

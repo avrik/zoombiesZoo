@@ -1,3 +1,4 @@
+
 import { UrlConst } from './../../../consts/url-const';
 import { CardTypeEnum } from './../../../enums/card-type-enum.enum';
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
@@ -5,7 +6,6 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 import { Tile } from './tile';
 import { GameEngineService, IResourceStorage } from 'app/services/game-engine.service';
 import { ICardData, Card } from '../../cards/card';
-import { IBuyItem } from './tile-buy-popup/buy-item/buy-item';
 import { Terrain } from 'app/game/board/tile/terrain';
 import { Building } from './building';
 import { TerrainEnum } from '../../../enums/terrain.enum';
@@ -13,6 +13,7 @@ import { BuildingEnum } from '../../../enums/building-enum.enum';
 import { MergeTypeEnum } from 'app/enums/merge-type-enum.enum';
 import { CardFamilyTypeEnum } from '../../../enums/card-family-type-enum.enum';
 import { MessagesService } from '../../../services/messages.service';
+import { IBuyItem } from 'app/game/tile-buy-popup/buy-item/buy-item';
 
 @Component({
   selector: 'app-tile',
@@ -48,6 +49,7 @@ export class TileComponent implements OnInit {
   @Input() tile: Tile;
   @Input() onBoard: boolean = true;
   @Output() openStore: EventEmitter<any> = new EventEmitter();
+  @Output() chosen: EventEmitter<boolean> = new EventEmitter();
   state: string = "inactive";
 
   currentCard: Card;
@@ -57,33 +59,37 @@ export class TileComponent implements OnInit {
   showThinkBubble: boolean;
 
   collectState: string = "inactive";
-
+  isSelectd: boolean;
 
   storeItems: IBuyItem[] = [
 
-    { cost: { block: 12, lumber: 6, coin: 0 }, icon: UrlConst.HOUSE1, type: CardFamilyTypeEnum.HOUSE, description: "build to populate the people" },
-    { cost: { block: 9, lumber: 3, coin: 0 }, icon: UrlConst.STORAGE1, type: CardFamilyTypeEnum.STORAGE, description: "build for resource storage" },
-    { cost: { block: 3, lumber: 0, coin: 0 }, icon: UrlConst.ROAD, type: CardFamilyTypeEnum.ROAD, description: "get people into houses" },
-    { cost: { block: 27, lumber: 9, coin: 3 }, icon: UrlConst.CHURCH1, type: CardFamilyTypeEnum.CHURCH, description: "used for trapping zoombies" },
+    { label: 'build', cost: { block: 12, lumber: 6, coin: 0 }, icon: UrlConst.HOUSE1, type: CardFamilyTypeEnum.HOUSE, description: "our people need houses" },
+    { label: 'build', cost: { block: 9, lumber: 3, coin: 0 }, icon: UrlConst.STORAGE1, type: CardFamilyTypeEnum.STORAGE, description: "our resources need storage" },
+    { label: 'build', cost: { block: 3, lumber: 0, coin: 0 }, icon: UrlConst.ROAD, type: CardFamilyTypeEnum.ROAD, description: "roads will direct the people in the right path" },
+    { label: 'build', cost: { block: 27, lumber: 9, coin: 3 }, icon: UrlConst.CHURCH1, type: CardFamilyTypeEnum.CHURCH, description: "cathedrals are used to trap the undead" },
   ]
 
   storeItems2: IBuyItem[] = [
-    { cost: { block: 0, lumber: 0, coin: 6 }, icon: UrlConst.MOVE, type: 10, label:'move', description: "move building" },
+    { cost: { block: 0, lumber: 0, coin: 6 }, icon: UrlConst.MOVE, type: 10, label: 'move', description: "move building" },
+    { cost: { block: 0, lumber: 0, coin: 6 }, icon: UrlConst.BULDOZE, type: 10, label: 'remove', description: "destroy building" },
   ]
-
-
-
-
 
   constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
     this.gameEngine.resourceStorage$.subscribe(resourceStorage => this.resourceStorage = resourceStorage)
     this.gameEngine.currentCard$.subscribe(currentCard => {
       this.currentCard = currentCard;
     });
+
+
   }
 
   ngOnInit(): void {
-
+    this.tile.selected$.subscribe(selected => {
+      this.isSelectd = selected;
+      if (selected) {
+        this.overMe()
+      } else this.outMe();
+    });
   }
 
   onCardCollected() {
@@ -97,50 +103,52 @@ export class TileComponent implements OnInit {
       this.showStore = !this.showStore;
       //this.openStore.emit(this);
     } else
-    if (this.tile.terrain.type == TerrainEnum.CARD_HOLDER) {
-      let temp = this.tile.card;
-      this.tile.card = this.currentCard;
+      if (this.tile.terrain.type == TerrainEnum.CARD_HOLDER) {
+        let temp = this.tile.card;
+        this.tile.card = this.currentCard;
 
-      if (temp) {
-        this.gameEngine.updateCurrentCard = temp;
-      } else {
-        this.gameEngine.setNextValue();
-      }
-      this.overMe();
-    } else
-
-      if (this.tile.card) {
-
-        if (this.tile.card.collect && this.tile.card.type == CardTypeEnum.RESOURCE) {
-          if (this.gameEngine.collectResources(this.tile.card.family.name, this.tile.card.collect)) {
-            if (this.tile.card.bonus) {
-              this.gameEngine.addToStorage(CardFamilyTypeEnum.COIN, this.tile.card.bonus);
-            }
-
-
-            this.collectState = "fly";
-            //this.tile.overMe = false;
-            this.tile.clear();
-          } else {
-            this.messagesService.postMessage({ title: "No more storage place", message: "build more storage" });
-          }
-
-          this.overMe();
+        if (temp) {
+          this.gameEngine.updateCurrentCard = temp;
+        } else {
+          this.gameEngine.setNextValue();
         }
+        this.overMe();
       } else
 
-        if (this.tile.terrain.type == TerrainEnum.RESOURCES) {
+        if (this.tile.card) {
 
-          this.tile.card = this.currentCard;
+          if (this.tile.card.collect && this.tile.card.type == CardTypeEnum.RESOURCE) {
+            if (this.gameEngine.collectResources(this.tile.card.family.name, this.tile.card.collected)) {
+              /* if (this.tile.card.bonus) {
+                this.gameEngine.addToStorage(CardFamilyTypeEnum.COIN, this.tile.card.bonus);
+              } */
 
-          if (this.tile.card.mergeBy == MergeTypeEnum.MATCH) {
-            this.gameEngine.findMatch(this.tile);
+
+              this.collectState = "fly";
+              //this.tile.overMe = false;
+              this.tile.clear();
+            } else {
+              this.messagesService.postMessage({ title: "No more storage place", message: "build more storage" });
+            }
+
+            this.overMe();
           }
+        } else
 
-          // setTimeout(() => {
-          this.gameEngine.nextTurn();
-          //}, 100);
-        }
+          if (this.tile.terrain.type == TerrainEnum.RESOURCES) {
+
+            this.tile.card = this.currentCard;
+
+            if (this.tile.card.mergeBy == MergeTypeEnum.MATCH) {
+              this.gameEngine.findMatch(this.tile);
+            }
+
+            // setTimeout(() => {
+            this.gameEngine.nextTurn();
+            //}, 100);
+
+            this.chosen.emit();
+          }
 
   }
 
@@ -168,7 +176,7 @@ export class TileComponent implements OnInit {
       }
 
       this.gameEngine.updateResourceStorage = testResources;
-      this.gameEngine.removeFromResourcesStorage(buyItem.cost.block + buyItem.cost.lumber + buyItem.cost.coin);
+      this.gameEngine.removeFromResourcesStorage(buyItem.cost.block + buyItem.cost.lumber);
       this.gameEngine.nextTurn();
     } else {
       console.warn("not enough resources!");
@@ -177,15 +185,20 @@ export class TileComponent implements OnInit {
   }
 
   outMe() {
-    this.state = 'inactive';
-    this.tile.overMe = false;
-    clearTimeout(this.timeout);
-    if (this.tile.card) {
-      this.hideCardMatch();
+    if (!this.isSelectd) {
+      this.state = 'inactive';
+      this.tile.overMe = false;
+      clearTimeout(this.timeout);
+      if (this.tile.card) {
+        this.hideCardMatch();
+      }
     }
-
   }
-
+  onMouseOver() {
+    if (!this.isSelectd) {
+      this.overMe();
+    }
+  }
 
   overMe() {
     if (this.tile.card) {

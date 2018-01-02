@@ -1,3 +1,4 @@
+import { TerrainEnum } from './../../enums/terrain.enum';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { GameEngineService } from '../../services/game-engine.service';
 import { TileComponent } from './tile/tile.component';
@@ -15,13 +16,16 @@ export class BoardComponent implements OnInit {
   tiles: Tile[] = [];
   currentCard: Card;
   currentTileClicked: TileComponent;
+  tileOver: Tile;
 
   @ViewChild('tileRef') tileRef: ElementRef;
   @ViewChild('mainBoard') mainBoard: ElementRef;
 
   constructor(public gameEngine: GameEngineService) {
 
-    this.gameEngine.tiles$.subscribe(tiles => this.tiles = tiles);
+    this.gameEngine.tiles$.subscribe(tiles => {
+      this.tiles = tiles;
+    });
     this.gameEngine.currentCard$.subscribe(currentCard => {
       this.currentCard = currentCard;
     });
@@ -30,7 +34,8 @@ export class BoardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.gameEngine.restart();
+    
+    this.selectTileOver();
   }
 
   getCols() {
@@ -41,7 +46,7 @@ export class BoardComponent implements OnInit {
     return str;
   }
 
-  clickEmptySlot() {
+  /* clickEmptySlot() {
     let temp = this.emptySlot.card;
     this.emptySlot.card = this.currentCard;
 
@@ -50,6 +55,25 @@ export class BoardComponent implements OnInit {
     } else {
       this.gameEngine.setNextValue();
     }
+  } */
+
+  onTileClicked(tile: Tile) {
+    this.selectTileOver(tile)
+  }
+
+  selectTileOver(tile: Tile = null) {
+    if (this.tileOver) this.tileOver.select = false;
+
+    let empties: Tile[];
+
+    if (tile) {
+      empties = tile.getAllEmpties().filter(a => a.terrain.type == TerrainEnum.RESOURCES);
+    } else {
+      empties = this.tiles.filter(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
+    }
+
+    this.tileOver = empties[0];
+    if (this.tileOver) this.tileOver.select = true;
   }
 
   onTileOpenStore(event) {
