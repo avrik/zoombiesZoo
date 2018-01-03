@@ -14,6 +14,7 @@ import { MergeTypeEnum } from 'app/enums/merge-type-enum.enum';
 import { CardFamilyTypeEnum } from '../../../enums/card-family-type-enum.enum';
 import { MessagesService } from '../../../services/messages.service';
 import { IBuyItem } from 'app/game/tile-buy-popup/buy-item/buy-item';
+import { MessageType } from '../../../enums/message-type.enum';
 
 @Component({
   selector: 'app-tile',
@@ -49,7 +50,7 @@ export class TileComponent implements OnInit {
   @Input() tile: Tile;
   @Input() onBoard: boolean = true;
   @Output() openStore: EventEmitter<any> = new EventEmitter();
-  @Output() chosen: EventEmitter<boolean> = new EventEmitter();
+  @Output() chosen: EventEmitter<Tile> = new EventEmitter();
   state: string = "inactive";
 
   currentCard: Card;
@@ -65,8 +66,8 @@ export class TileComponent implements OnInit {
 
     { label: 'build', cost: { block: 12, lumber: 6, coin: 0 }, icon: UrlConst.HOUSE1, type: CardFamilyTypeEnum.HOUSE, description: "our people need houses" },
     { label: 'build', cost: { block: 9, lumber: 3, coin: 0 }, icon: UrlConst.STORAGE1, type: CardFamilyTypeEnum.STORAGE, description: "our resources need storage" },
-    { label: 'build', cost: { block: 3, lumber: 0, coin: 0 }, icon: UrlConst.ROAD, type: CardFamilyTypeEnum.ROAD, description: "roads will direct the people in the right path" },
-    { label: 'build', cost: { block: 27, lumber: 9, coin: 3 }, icon: UrlConst.CHURCH1, type: CardFamilyTypeEnum.CHURCH, description: "cathedrals are used to trap the undead" },
+    { label: 'road', cost: { block: 3, lumber: 0, coin: 0 }, icon: UrlConst.ROAD, type: CardFamilyTypeEnum.ROAD, description: "roads will direct the people in the right path" },
+    { label: 'church', cost: { block: 27, lumber: 9, coin: 3 }, icon: UrlConst.CHURCH1, type: CardFamilyTypeEnum.CHURCH, description: "cathedrals are used to trap the undead" },
   ]
 
   storeItems2: IBuyItem[] = [
@@ -79,8 +80,6 @@ export class TileComponent implements OnInit {
     this.gameEngine.currentCard$.subscribe(currentCard => {
       this.currentCard = currentCard;
     });
-
-
   }
 
   ngOnInit(): void {
@@ -128,7 +127,8 @@ export class TileComponent implements OnInit {
               //this.tile.overMe = false;
               this.tile.clear();
             } else {
-              this.messagesService.postMessage({ title: "No more storage place", message: "build more storage" });
+
+              this.messagesService.postMessage({ type: MessageType.TOOLBAR, title: "No more storage place", message: "build more storage" });
             }
 
             this.overMe();
@@ -167,8 +167,7 @@ export class TileComponent implements OnInit {
     if (testResources.bricks >= 0 && testResources.lumber >= 0 && testResources.coins >= 0) {
 
       if (buyItem.type == CardFamilyTypeEnum.ROAD) {
-        // this.tile.terrain = new Terrain(TerrainEnum.ROAD)
-        this.tile.setTempTerrain(TerrainEnum.ROAD);
+        this.tile.terrainTop = new Terrain(TerrainEnum.ROAD)
       }
       else {
         this.tile.card = this.gameEngine.getNewCard(buyItem.type);
@@ -180,7 +179,7 @@ export class TileComponent implements OnInit {
       this.gameEngine.nextTurn();
     } else {
       console.warn("not enough resources!");
-      this.messagesService.postMessage({ title: "not enough resources!" })
+      this.messagesService.postMessage({ title: "not enough resources!", type: MessageType.TOOLBAR })
     }
   }
 
@@ -195,6 +194,7 @@ export class TileComponent implements OnInit {
     }
   }
   onMouseOver() {
+    //this.chosen.emit(this.tile);
     if (!this.isSelectd) {
       this.overMe();
     }

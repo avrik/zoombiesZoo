@@ -1,0 +1,18 @@
+.sign {
+    margin: 0 3px 0 3px;
+}
+
+.card-hint {
+    display: flex;
+    line-height: 30px;
+    justify-content: center;
+    /* text-align: center; */
+    color: rgb(107, 228, 117);
+    font-size: 12px;
+}
+
+.title {
+    padding: 0;
+    margin: 2px;
+    color: gold;
+}

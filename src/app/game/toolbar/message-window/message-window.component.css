@@ -1,0 +1,8 @@
+.container {
+    background-color: red;
+    width: 270px;
+    height: 200px;
+    color: gold;
+    z-index: 9999999;
+    position: absolute;
+}

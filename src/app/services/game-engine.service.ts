@@ -509,7 +509,9 @@ export class GameEngineService {
 
       if (tile.card.nextCard) {
 
-        let extra: number = Math.max((matchedTiles.length - (tile.card.minForNextLevel - 1)) * tile.card.collect, 0) // * Math.max(tile.card.bonus, 1);
+        let extra: number = matchedTiles.length - (tile.card.minForNextLevel - 1) // * Math.max(tile.card.bonus, 1);
+        let bonus:number = tile.card.collect?extra * tile.card.collect:extra;
+        
         tile.card = new Card(tile.card.nextCard)
 
         if (tile.card.bonus) {
@@ -521,13 +523,12 @@ export class GameEngineService {
           }
         }
 
-
         if (tile.card.type == CardTypeEnum.BUILDING) {
           if (tile.card.collected) tile.card.collected = totalCollected
         } else {
           if (tile.card.collect) {
             // tile.card.collect += totalCollected;
-            tile.card.collected = tile.card.collect + extra;
+            tile.card.collected = tile.card.collect + bonus;
           };// + extra * (tile.card.level);
         }
         // debugger;
@@ -536,9 +537,9 @@ export class GameEngineService {
           tile.card.collected = totalCollected
         } */
 
-        if (extra) {
+        if (bonus) {
           const arr = [1, 10, 50, 100, 200, 500, 1000, 2000, 5000];
-          this.addToStorage(CardFamilyTypeEnum.COIN, (extra / 100) * (arr[(tile.card.level - 1)]));
+          this.addToStorage(CardFamilyTypeEnum.COIN, (bonus / 100) * (arr[(tile.card.level - 1)]));
         }
 
         this.findMatch(tile);

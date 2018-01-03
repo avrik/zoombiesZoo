@@ -24,6 +24,8 @@ import { MessagesService } from 'app/services/messages.service';
 import { TestPanelComponent } from './game/test-panel/test-panel.component';
 import { BuyItemComponent } from 'app/game/tile-buy-popup/buy-item/buy-item.component';
 import { TileBuyPopupComponent } from 'app/game/tile-buy-popup/tile-buy-popup.component';
+import { TitleScreenComponent } from './game/toolbar/title-screen/title-screen.component';
+import { MessageWindowComponent } from './game/toolbar/message-window/message-window.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +43,8 @@ import { TileBuyPopupComponent } from 'app/game/tile-buy-popup/tile-buy-popup.co
     /* ItemsStorePopupComponent,
     ItemsStorePopupItemComponent, */
     TestPanelComponent,
+    TitleScreenComponent,
+    MessageWindowComponent,
     
   ],
   imports: [

@@ -1,0 +1,40 @@
+.container {
+    display: grid;
+    grid-template-columns: 210px 270px 210px;
+    grid-template-rows: 30px 55px;
+    justify-content: center;
+    background-color: #796e6e;
+    padding: 1px 0 1px 0;
+}
+
+.text-box {
+    border-top: 2px solid #4e1010;
+    background-color: #443258;
+    color: gold;
+    font-size: 12px;
+    border-radius: 5px;
+    padding-top: 2px;
+    margin: 2px;
+}
+
+.progress-bar {
+    border: 1px solid #160728!important;
+    border-radius: 5px;
+    margin: 3px 10px;
+    background-color: #160728;
+}
+
+.progress-bar-inside {
+    background-color: #37a91c!important;
+    box-shadow: inset 2px -4px 4px 0px #367b26;
+    border-radius: 5px;
+    height: 15px;
+    /* width:10%; */
+    text-align: center;
+    line-height: 15px;
+}
+
+.big-number {
+    font-size: 16px;
+    color: white;
+}
