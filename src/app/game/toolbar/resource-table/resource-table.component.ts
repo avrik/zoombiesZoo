@@ -1,12 +1,9 @@
-import { UrlConst } from './../../../consts/url-const';
-import { CardFamilyTypeEnum } from 'app/enums/card-family-type-enum.enum';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { GameEngineService } from 'app/services/game-engine.service';
-import { Card } from '../../cards/card';
-import { Resources } from 'app/enums/resources.enum';
-import { GameLevel } from '../../levels/game-level';
 import { IResourceStorage } from '../../../services/game-engine.service';
 import { IBuyItem } from 'app/game/tile-buy-popup/buy-item/buy-item';
+import { UrlConst } from '../../../consts/url-const';
+import { GameEngineService } from 'app/services/game-engine.service';
+import { CardFamilyTypeEnum } from 'app/enums/card-family-type-enum.enum';
 
 @Component({
   selector: 'app-resource-table',
@@ -14,25 +11,8 @@ import { IBuyItem } from 'app/game/tile-buy-popup/buy-item/buy-item';
   styleUrls: ['./resource-table.component.css']
 })
 export class ResourceTableComponent implements OnInit {
-  @ViewChild('myBar') myBar: ElementRef;
-  collected: Card[] = [];
-
-  lumber: number = 0;
-  blocks: number = 0;
-  coins: number = 0;
-  wheat: number = 0;
-
-  years: number;
-  score: number = 0;
-  population: number;
-  currentCard: Card;
 
   showStore: boolean;
-
-  popProgress: number = 0;
-  cardHint: Card;
-  currentLevel: GameLevel;
-
   resourceStorage: IResourceStorage;
 
   items: IBuyItem[] = [
@@ -45,57 +25,11 @@ export class ResourceTableComponent implements OnInit {
   ]
 
   constructor(public gameEngine: GameEngineService) {
-    this.gameEngine.currentLevel$.subscribe(currentLevel => {
-      this.currentLevel = currentLevel;
-      setTimeout(() => {
-        this.popProgress = 0;
-      }, 1000);
-    });
-    this.gameEngine.cardHint$.subscribe(cardHint => this.cardHint = cardHint);
-    this.gameEngine.currentCard$.subscribe(currentCard => this.currentCard = currentCard);
-    this.gameEngine.tiles$.subscribe(tiles => {
-      if (tiles) {
-        let arr = tiles.filter(a => a.card && !a.card.autoPlaced).map(a => a.card.value)
-        if (arr.length) this.score = arr.reduce((prev, cur) => prev + cur);
-      }
-
-    })
-    this.gameEngine.years$.subscribe(years => { this.years = years })
-    this.gameEngine.population$.subscribe(population => {
-
-      if (!isNaN(population)) {
-        this.population = population;
-        //this.move(Math.round(this.population*100/100));
-        let percent: number = this.population;
-        if (this.currentLevel) this.popProgress = (this.population / this.currentLevel.goal) * 100;
-
-        //if (this.myBar) this.myBar.nativeElement.style.width = percent + '%';
-      }
-
-    }
-    )
+  
     this.gameEngine.resourceStorage$.subscribe(resourceStorage => this.resourceStorage = resourceStorage)
   }
 
-
-  move(target: number) {
-    console.log('1111 ' + target)
-    if (!this.myBar) return;
-    let width = this.myBar.nativeElement.style.width;
-
-    let frame = () => {
-      if (width >= target) {
-
-      } else {
-        width++;
-        this.myBar.nativeElement.style.width = width + '%';
-        setTimeout(() => {
-          frame();
-        }, 100);
-      }
-    }
-
-    frame()
+  ngOnInit() {
   }
 
   openStore() {
@@ -119,13 +53,7 @@ export class ResourceTableComponent implements OnInit {
       case 2:
         this.gameEngine.updateCurrentCard = this.gameEngine.getNewCard(CardFamilyTypeEnum.WILD)
         break;
-
-
     }
-  }
-
-
-  ngOnInit() {
   }
 
 }

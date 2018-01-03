@@ -11,7 +11,8 @@ export class ResourceItemComponent implements OnInit {
   @Input() type: number;
   @Input() amount: number;
   @Input() icon: string;
-  @Input() bonus: number;
+  //@Input() bonus: number;
+
   constructor(private gameEngine: GameEngineService) { }
 
   ngOnInit() {

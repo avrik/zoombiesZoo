@@ -12,7 +12,7 @@ export class Tile {
     card: Card;
     overMe: boolean;
     terrain: Terrain;
-    terrainTemp: Terrain;
+    terrainTop: Terrain;
     building: Building;
     private _selected$: BehaviorSubject<boolean>;
 
@@ -56,7 +56,7 @@ export class Tile {
         return collector;
     }
 
-    setTempTerrain(value: number) {
+    /* setTempTerrain(value: number) {
         this.terrainTemp = new Terrain(this.terrain.type);
         this.terrain = new Terrain(value);
     }
@@ -66,7 +66,7 @@ export class Tile {
             this.terrain = this.terrainTemp;
             this.terrainTemp = null;
         }
-    }
+    } */
 
     clear() {
 

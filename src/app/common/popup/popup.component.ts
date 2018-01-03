@@ -8,12 +8,11 @@ import { MessagesService, IMessage } from '../../services/messages.service';
   styleUrls: ['./popup.component.css']
 })
 export class PopupComponent implements OnInit {
-  message:IMessage;
+  message: IMessage;
 
-  constructor(private messagesService:MessagesService) 
-  { 
-    this.messagesService.currentMessage$.subscribe(message=>{
-      this.message = message;
+  constructor(private messagesService: MessagesService) {
+    this.messagesService.currentMessage$.subscribe(message => {
+      if (message && message.type == 0) this.message = message;
     })
   }
 
@@ -24,7 +23,7 @@ export class PopupComponent implements OnInit {
     this.messagesService.postMessage(null);
   }
 
-  butnClicked(butnItem:IMessageButton) {
+  butnClicked(butnItem: IMessageButton) {
     if (butnItem.action) butnItem.action();
     this.messagesService.postMessage(null);
 

@@ -1,1 +1,37 @@
-<app-resource-table></app-resource-table>
+<!-- <app-resource-table></app-resource-table> -->
+
+<div class="container">
+
+    <div class="text-box">day :
+        <b class="big-number">{{years| number}}</b>
+    </div>
+    
+    <title-screen></title-screen>
+
+
+    <div class="text-box">
+        citzens :
+        <b class="big-number">{{population | number}}</b>
+        <!-- <b class="big-number">{{population}} in city </b> -->
+    </div>
+
+
+    <div class="text-box">score :
+        <b class="big-number" style="line-height:40px">{{score| number}}</b>
+    </div>
+
+    <app-resource-table></app-resource-table>
+
+    <div class="text-box">
+        <!-- goal :
+        <b class="big-number">{{currentLevel?.goal}}</b> citzens -->
+        goal :
+        <b class="big-number">{{currentLevel?.goal}}</b>
+        <div class="progress-bar">
+
+            <div #myBar class="progress-bar-inside" [style.width]="popProgress+'%'">
+                <b style="color:white;">{{popProgress | number : '1.0-0'}}%</b>
+            </div>
+        </div>
+    </div>
+</div>

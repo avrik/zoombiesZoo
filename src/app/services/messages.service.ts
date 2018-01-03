@@ -8,6 +8,7 @@ export interface IMessageButton {
 } 
 
 export interface IMessage {
+  type:number;
   title:string;
   message?:string;
   butns?:IMessageButton[];

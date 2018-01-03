@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { GameEngineService } from '../services/game-engine.service';
 import { MessagesService } from '../services/messages.service';
 import { GameLevel } from 'app/game/levels/game-level';
+import { MessageType } from '../enums/message-type.enum';
 
 @Component({
   selector: 'app-game',
@@ -38,7 +39,7 @@ export class GameComponent implements OnInit {
       if (currentLevel && currentLevel.index > 0) {
         if (this.currentLevel) {
           this.messagesService.postMessage({
-            title: `level ${currentLevel.index} completed!`, message: `Congratulations\nyou have reached the ${this.currentLevel.goal} population goal`
+            type:MessageType.CURTAIN,title: `level ${currentLevel.index} completed!`, message: `Congratulations\nyou have reached the ${this.currentLevel.goal} population goal`
             , butns: [{ label: 'next level' }]
           });
         }
@@ -48,14 +49,14 @@ export class GameComponent implements OnInit {
   }
 
   ngOnInit() {
-    /* setTimeout(() => {
-      this.messagesService.postMessage({ title: "this is a new game", message: `Congratulations \nyou have reached`, butns: [{ label: 'ok', action: null }, { label: 'cancel', action: null }] });
-    }, 500); */
+    setTimeout(() => {
+      this.messagesService.postMessage({type:MessageType.TOOLBAR, title: "Welcome", message: `start your new town`, butns: [{ label: 'ok', action: null }, { label: 'cancel', action: null }] });
+    }, 500);
     this.gameEngine.start();
   }
 
   gameOver() {
-    this.messagesService.postMessage({ title: "GAME OVER", butns: [{ label: "start over", action: a => { this.restart() } }] })
+    this.messagesService.postMessage({type:MessageType.POPUP, title: "GAME OVER", butns: [{ label: "start over", action: a => { this.restart() } }] })
   }
 
   restart() {
