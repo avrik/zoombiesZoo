@@ -31,12 +31,10 @@ const familyLumber: ICardFamily = { name: CardFamilyTypeEnum.LUMBER, value: 10 }
 const familyCoin: ICardFamily = { name: CardFamilyTypeEnum.COIN, value: 50 };
 const familyPerson: ICardFamily = { name: CardFamilyTypeEnum.PERSON, value: 100 };
 
-const familyRoad: ICardFamily = { label: 'road', name: CardFamilyTypeEnum.ROAD, value: 200 };
-//const familyWall: ICardFamily = { name: CardFamilyTypeEnum.WALL, value: 500 };
-//const familyTower: ICardFamily = { label:'road',name: CardFamilyTypeEnum.TOWER, value: 2000 };
+const familyRoad: ICardFamily = { label: 'road', name: CardFamilyTypeEnum.ROAD, value: 90 };
+const familyHouse: ICardFamily = { label: 'house', name: CardFamilyTypeEnum.HOUSE, value: 1200 };
+const familyStorage: ICardFamily = { label: 'storage', name: CardFamilyTypeEnum.STORAGE, value: 900 };
 const familyChurch: ICardFamily = { label: 'church', name: CardFamilyTypeEnum.CHURCH, value: 5000 };
-const familyHouse: ICardFamily = { label: 'house', name: CardFamilyTypeEnum.HOUSE, value: 1000 };
-const familyStorage: ICardFamily = { label: 'storage', name: CardFamilyTypeEnum.STORAGE, value: 1500 };
 
 //[3,8,27,81,243,72,2187,6561,19683,59049]
 const coinCard: ICardData = { level: 0, family: familyCoin, mergeBy: MergeTypeEnum.MATCH, collect: 1, type: CardTypeEnum.RESOURCE, img: UrlConst.COIN };
@@ -68,7 +66,6 @@ const graveCard: ICardData = {
   level: 2, family: { name: CardFamilyTypeEnum.GRAVE, value: 1 }, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, img: UrlConst.GRAVE,
   nextCard: zoombieCard
 }
-
 
 export const cardCollection: ICardData[] = [
   /* {
