@@ -349,12 +349,13 @@ export class GameEngineService {
     } else {
 
       let empties: Tile[] = tile.getAllEmpties().filter(a => (a.terrain.walkable));
+
       switch (tile.terrain.type) {
         case TerrainEnum.BRIDGE:
           empties = empties.filter(a => (a.terrain.type != TerrainEnum.RESOURCES));
           break;
         case TerrainEnum.CITY:
-        case TerrainEnum.ROAD:
+       // case TerrainEnum.ROAD:
           empties = empties.filter(a => (a.terrain.type != TerrainEnum.BRIDGE));
           break;
       }
@@ -381,7 +382,7 @@ export class GameEngineService {
       return true;
     } else {
       let empties: Tile[] = tile.getAllEmpties().filter(a => (a.terrain.walkable));
-      let foundRoad: Tile = empties.find(a => a.terrain.type == TerrainEnum.ROAD && a != tile.card.preTile);
+      let foundRoad: Tile = empties.find(a => a.terrainTop && a.terrainTop.type == TerrainEnum.ROAD && a != tile.card.preTile);
       if (foundRoad) {
         empties = [foundRoad];
       } else {
@@ -390,7 +391,7 @@ export class GameEngineService {
             empties = empties.filter(a => (a.terrain.type != TerrainEnum.RESOURCES));
             break;
           case TerrainEnum.CITY:
-          case TerrainEnum.ROAD:
+         // case TerrainEnum.ROAD:
             empties = empties.filter(a => (a.terrain.type != TerrainEnum.BRIDGE));
             break;
         }
@@ -524,7 +525,7 @@ export class GameEngineService {
         }
 
         if (tile.card.type == CardTypeEnum.BUILDING) {
-          if (tile.card.collected) tile.card.collected = totalCollected
+          tile.card.collected = totalCollected;
         } else {
           if (tile.card.collect) {
             // tile.card.collect += totalCollected;

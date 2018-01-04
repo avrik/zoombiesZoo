@@ -1,6 +1,5 @@
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-
 import { Card } from '../../cards/card';
 import { Terrain } from './terrain';
 import { Building } from './building';
