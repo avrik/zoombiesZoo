@@ -42,15 +42,15 @@ const coinCard: ICardData = { level: 0, family: familyCoin, mergeBy: MergeTypeEn
 const churchCard: ICardData = {
   level: 0, family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 1, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH1,
   nextCard: {
-    level: 1, family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 3, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH2,
+    level: 1, family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 6, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH2,
     nextCard: {
-      level: 2, family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 9, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH3,
+      level: 2, family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 24, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH3,
       nextCard: {
-        level: 3, family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 27, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH4,
+        level: 3, family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 84, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH4,
         nextCard: {
-          level: 4, family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 81, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH5,
+          level: 4, family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 241, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH5,
           nextCard: {
-            level: 5, family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 243, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH6,
+            level: 5, family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 723, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH6,
           }
         }
       }

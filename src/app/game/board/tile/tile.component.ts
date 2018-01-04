@@ -67,7 +67,7 @@ export class TileComponent implements OnInit {
     { label: 'build', cost: { block: 12, lumber: 6, coin: 0 }, icon: UrlConst.HOUSE1, type: CardFamilyTypeEnum.HOUSE, description: "our people need houses" },
     { label: 'build', cost: { block: 9, lumber: 3, coin: 0 }, icon: UrlConst.STORAGE1, type: CardFamilyTypeEnum.STORAGE, description: "our resources need storage" },
     { label: 'road', cost: { block: 3, lumber: 0, coin: 0 }, icon: UrlConst.ROAD, type: CardFamilyTypeEnum.ROAD, description: "roads will direct the people in the right path" },
-    { label: 'church', cost: { block: 27, lumber: 9, coin: 3 }, icon: UrlConst.CHURCH1, type: CardFamilyTypeEnum.CHURCH, description: "cathedrals are used to trap the undead" },
+    { label: 'church', cost: { block: 21, lumber: 12, coin: 3 }, icon: UrlConst.CHURCH1, type: CardFamilyTypeEnum.CHURCH, description: "cathedrals are used to trap the undead" },
   ]
 
   storeItems2: IBuyItem[] = [
@@ -157,11 +157,18 @@ export class TileComponent implements OnInit {
     this.showStore = false;
     if (!buyItem) return;
 
-    let testResources: IResourceStorage =
+    if (buyItem.type == CardFamilyTypeEnum.ROAD) {
+      this.tile.terrainTop = new Terrain(TerrainEnum.ROAD)
+    }
+    else {
+      this.tile.card = this.gameEngine.getNewCard(buyItem.type);
+      this.gameEngine.findMatch(this.tile);
+    }
+    /* let testResources: IResourceStorage =
       {
-        bricks: this.resourceStorage.bricks - buyItem.cost.block,
-        lumber: this.resourceStorage.lumber - buyItem.cost.lumber,
-        coins: this.resourceStorage.coins - buyItem.cost.coin
+        bricks: buyItem.cost.block ? this.resourceStorage.bricks - buyItem.cost.block : this.resourceStorage.bricks,
+        lumber: buyItem.cost.lumber ? this.resourceStorage.lumber - buyItem.cost.lumber : this.resourceStorage.lumber,
+        coins: buyItem.cost.coin ? this.resourceStorage.coins - buyItem.cost.coin : this.resourceStorage.coins
       }
 
     if (testResources.bricks >= 0 && testResources.lumber >= 0 && testResources.coins >= 0) {
@@ -175,12 +182,13 @@ export class TileComponent implements OnInit {
       }
 
       this.gameEngine.updateResourceStorage = testResources;
-      this.gameEngine.removeFromResourcesStorage(buyItem.cost.block + buyItem.cost.lumber);
+      let total: number = 0;
+      if (buyItem.cost.block) total = + buyItem.cost.block;
+      if (buyItem.cost.lumber) total = + buyItem.cost.lumber;
+
+      this.gameEngine.removeFromResourcesStorage(total); */
       this.gameEngine.nextTurn();
-    } else {
-      console.warn("not enough resources!");
-      this.messagesService.postMessage({ title: "not enough resources!", type: MessageType.TOOLBAR })
-    }
+    
   }
 
   outMe() {

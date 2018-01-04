@@ -5,7 +5,7 @@
     <div class="text-box">day :
         <b class="big-number">{{years| number}}</b>
     </div>
-    
+
     <title-screen></title-screen>
 
 
@@ -25,8 +25,19 @@
     <div class="text-box">
         <!-- goal :
         <b class="big-number">{{currentLevel?.goal}}</b> citzens -->
-        goal :
-        <b class="big-number">{{currentLevel?.goal}}</b>
+
+        <div style="display:flex;justify-content:space-around">
+            <span>
+                level :
+                <b class="big-number">{{currentLevel?.index+1}}</b>
+            </span>
+            <span>
+                goal :
+                <b class="big-number">{{currentLevel?.goal}}</b>
+                <img src="assets/people/Character Boy.png" alt="" height="30" style="position:absolute;margin:-27px 0 0 27px">
+            </span>
+        </div>
+
         <div class="progress-bar">
 
             <div #myBar class="progress-bar-inside" [style.width]="popProgress+'%'">

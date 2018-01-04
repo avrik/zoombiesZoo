@@ -1,12 +1,12 @@
 export const UrlConst = {
     ROAD:"assets/buildings/Stone Block.png",
 
-    CHURCH1:"assets/buildings/church.png",
-    CHURCH2:"assets/buildings/church.png",
-    CHURCH3:"assets/buildings/church.png",
-    CHURCH4:"assets/buildings/church.png",
-    CHURCH5:"assets/buildings/church.png",
-    CHURCH6:"assets/buildings/church.png",
+    CHURCH1:"assets/buildings/church1.png",
+    CHURCH2:"assets/buildings/church2.png",
+    CHURCH3:"assets/buildings/church3.png",
+    CHURCH4:"assets/buildings/church3.png",
+    CHURCH5:"assets/buildings/church3.png",
+    CHURCH6:"assets/buildings/church3.png",
 
     HOUSE1:"assets/buildings/house.png",
     HOUSE2:"assets/buildings/house2.png",

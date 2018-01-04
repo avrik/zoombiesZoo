@@ -22,12 +22,15 @@ export class ToolbarComponent implements OnInit {
 
   popProgress: number = 0;
   currentLevel: GameLevel;
+  //prevLevel: GameLevel;
   timeout: any;
   populationTarget: number;
-
+  popCount:number;
   constructor(public gameEngine: GameEngineService) {
     this.gameEngine.currentLevel$.subscribe(currentLevel => {
       if (currentLevel) {
+        this.popCount=0;
+        //this.prevLevel = this.currentLevel?this.currentLevel:currentLevel;
         this.populationTarget = this.currentLevel ? currentLevel.goal - this.currentLevel.goal : currentLevel.goal;
         this.currentLevel = currentLevel;
         setTimeout(() => {
@@ -57,7 +60,10 @@ export class ToolbarComponent implements OnInit {
 
         if (this.currentLevel) {
           //let percent: number = Math.round(this.population / this.currentLevel.goal * 100);
-          let percent: number = Math.round((this.population) / (this.currentLevel.goal) * 100);
+          this.popCount++;
+          let percent: number = Math.round(this.popCount / this.populationTarget * 100);
+          //let percent: number = Math.round((this.population-this.prevLevel.goal) / (this.currentLevel.goal - this.prevLevel.goal) * 100);
+  
           //this.popProgress = percent;
           console.log("PERCENT!!! " + percent)
           this.move(percent)

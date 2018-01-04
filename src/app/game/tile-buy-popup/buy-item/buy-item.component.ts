@@ -1,3 +1,5 @@
+import { MessageType } from './../../../enums/message-type.enum';
+import { MessagesService } from 'app/services/messages.service';
 import { IResourceStorage, GameEngineService } from 'app/services/game-engine.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ICost, IBuyItem } from './buy-item';
@@ -14,12 +16,12 @@ export class BuyItemComponent implements OnInit {
   @Input() buyItem: IBuyItem;
   @Output() buy: EventEmitter<IBuyItem> = new EventEmitter();
 
-  
+
   resourceNeeded: any[] = [];
   resourceStorage: IResourceStorage;
   enabled: boolean;
 
-  constructor(private gameEngine: GameEngineService) {
+  constructor(private gameEngine: GameEngineService, private messagesService:MessagesService) {
 
   }
 
@@ -38,15 +40,32 @@ export class BuyItemComponent implements OnInit {
           (!this.buyItem.cost.lumber || resourceStorage.lumber >= this.buyItem.cost.lumber) &&
           (!this.buyItem.cost.coin || resourceStorage.coins >= this.buyItem.cost.coin)
         ) ? true : false;
-
       }
-
     })
   }
 
 
   onBuy() {
-    this.buy.emit(this.buyItem)
-  }
 
+    let testResources: IResourceStorage =
+      {
+        bricks: this.buyItem.cost.block ? this.resourceStorage.bricks - this.buyItem.cost.block : this.resourceStorage.bricks,
+        lumber: this.buyItem.cost.lumber ? this.resourceStorage.lumber - this.buyItem.cost.lumber : this.resourceStorage.lumber,
+        coins: this.buyItem.cost.coin ? this.resourceStorage.coins - this.buyItem.cost.coin : this.resourceStorage.coins
+      }
+
+    if (testResources.bricks >= 0 && testResources.lumber >= 0 && testResources.coins >= 0) {
+
+      this.gameEngine.updateResourceStorage = testResources;
+      let total: number = 0;
+      if (this.buyItem.cost.block) total = + this.buyItem.cost.block;
+      if (this.buyItem.cost.lumber) total = + this.buyItem.cost.lumber;
+
+      this.gameEngine.removeFromResourcesStorage(total);
+
+      this.buy.emit(this.buyItem);
+    } else{
+      this.messagesService.postMessage({ title: "not enough resources!", type: MessageType.TOOLBAR })
+    }
+  }
 }

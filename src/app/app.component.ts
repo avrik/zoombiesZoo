@@ -5,14 +5,14 @@ import { MessagesService, IMessage } from './services/messages.service';
 //TODOS :
 
 // + handle score
-// + princing
+// + pricing
 // + move building implementation
 // + undo implementation
 // + save game state implementation
 // + restart game fixing
 // + fix next card hinting
 // + gold reward handling
-// + progress bar animation
+// ++ progress bar animation
 // + add match hint on rollover
 // + add remove resource/bomb card
 // + fix curtain animation
@@ -27,6 +27,8 @@ import { MessagesService, IMessage } from './services/messages.service';
 // + locale
 // + redesign & animations
 // + redux
+// + sounds & music
+// + effects
 
 @Component({
   selector: 'app-root',
