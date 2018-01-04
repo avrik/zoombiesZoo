@@ -9,7 +9,7 @@ import { MessagesService, IMessage } from '../../../services/messages.service';
     trigger('show', [
       state('in', style({
         overflow: 'hidden',
-        height: '120px'
+        height: '90px'
       })),
       state('out', style({
         overflow: 'hidden',

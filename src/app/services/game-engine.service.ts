@@ -34,7 +34,7 @@ export interface IResourceStorage {
 }
 
 const initResourcesStorage: IResourceStorage = { bricks: 0, lumber: 0, coins: 0, maxStorage: 0 };
-const initGameData: IGameModel = {
+const gameStateInit: IGameModel = {
   tiles: [],
   gameOver: false,
   turn: 0,
@@ -52,8 +52,8 @@ export class GameEngineService {
   private tilesMatches: Tile[] = [];
   private tilesCities: Tile[] = [];
 
-  private prevGameDataModel: IGameModel;;
-  private gameDataModel: IGameModel = initGameData;
+  private prevGameState: IGameModel;;
+  private gameState: IGameModel = gameStateInit;
 
   private _tiles$: BehaviorSubject<Tile[]>;
   private _cardHint$: BehaviorSubject<Card>;
@@ -72,21 +72,21 @@ export class GameEngineService {
   get years$(): Observable<number> { return this._years$.asObservable(); }
 
   set updateCurrentCard(card: Card) {
-    this.prevGameDataModel = Object.assign({}, this).gameDataModel;
-    this.gameDataModel.currentCard = card;
-    this._currentCard$.next(Object.assign({}, this.gameDataModel).currentCard);
+    this.prevGameState = Object.assign({}, this).gameState;
+    this.gameState.currentCard = card;
+    this._currentCard$.next(Object.assign({}, this.gameState).currentCard);
   }
 
   set updatePopulation(amount: number) {
     //this.population += amount;
-    this.gameDataModel.population += amount;
-    this._population$.next(this.gameDataModel.population);
+    this.gameState.population += amount;
+    this._population$.next(this.gameState.population);
   }
 
   set updateResourceStorage(storage: IResourceStorage) {
     // this.resourceStorage = storage;
-    this.gameDataModel.resourceStorage = storage;
-    this._resourceStorage$.next(Object.assign({}, this.gameDataModel).resourceStorage);
+    this.gameState.resourceStorage = storage;
+    this._resourceStorage$.next(Object.assign({}, this.gameState).resourceStorage);
   }
 
   constructor() {
@@ -116,7 +116,7 @@ export class GameEngineService {
           this.tilesCities.push(newTile);
         }
 
-        this.gameDataModel.tiles.push(newTile);
+        this.gameState.tiles.push(newTile);
         this.tilesPos[i][j] = newTile;
       }
     }
@@ -130,7 +130,7 @@ export class GameEngineService {
 
     this.getTileByCord(0, this.totalRows - 1).terrain = new Terrain(TerrainEnum.CARD_HOLDER);
 
-    this.gameDataModel.tiles.forEach(tile => {
+    this.gameState.tiles.forEach(tile => {
       let tileLeft = this.getTileOnPos(tile.col - 1, tile.row);
       if (tileLeft) tile.linked.push(tileLeft);
       let tileRight = this.getTileOnPos(tile.col + 1, tile.row);
@@ -147,28 +147,28 @@ export class GameEngineService {
   }
 
   getRandomTile(tilesFiltered: Tile[] = null): Tile {
-    let arr: Tile[] = tilesFiltered ? tilesFiltered : this.gameDataModel.tiles;
+    let arr: Tile[] = tilesFiltered ? tilesFiltered : this.gameState.tiles;
     return arr[Math.floor(Math.random() * arr.length)];
   }
 
   start() {
     let localData: string = localStorage.getItem('gameData')
-    this.gameDataModel = localData ? JSON.parse(localData) : Object.assign({}, initGameData);
+    this.gameState = localData ? JSON.parse(localData) : Object.assign({}, gameStateInit);
 
     this.restart(true);
   }
 
   restart(firstTime: boolean = false) {
     if (!firstTime) {
-      this.gameDataModel.tiles.forEach(tile => tile.clear());
-      this.gameDataModel = Object.assign({}, initGameData);
+      this.gameState.tiles.forEach(tile => tile.clear());
+      this.gameState = Object.assign({}, gameStateInit);
     }
 
-    this._tiles$.next(Object.assign({}, this.gameDataModel).tiles);
-    //this._resourceStorage$.next(Object.assign({}, this.gameDataModel).resourceStorage);
-    this._currentLevel$.next(this.gameDataModel.currentLevel);
-    this._population$.next(this.gameDataModel.population);
-    this._years$.next(this.gameDataModel.turn);
+    this._tiles$.next(Object.assign({}, this.gameState).tiles);
+    //this._resourceStorage$.next(Object.assign({}, this.gameState).resourceStorage);
+    this._currentLevel$.next(this.gameState.currentLevel);
+    this._population$.next(this.gameState.population);
+    this._years$.next(this.gameState.turn);
 
     this.updateResourceStorage = initResourcesStorage;
 
@@ -178,9 +178,9 @@ export class GameEngineService {
   }
 
   setNextLevel() {
-    this.gameDataModel.currentLevel = new GameLevel(this.gameDataModel.currentLevel);
-    this._currentLevel$.next(Object.assign({}, this.gameDataModel).currentLevel)
-    console.log("NEW LEVEL = " + this.gameDataModel.currentLevel.index);
+    this.gameState.currentLevel = new GameLevel(this.gameState.currentLevel);
+    this._currentLevel$.next(Object.assign({}, this.gameState).currentLevel)
+    console.log("NEW LEVEL = " + this.gameState.currentLevel.index);
   }
 
   placeRandomResources() {
@@ -210,7 +210,7 @@ export class GameEngineService {
   }
 
   nextTurn() {
-    this.gameDataModel.tiles.filter(tile => tile.card && tile.card.type == CardTypeEnum.WALKER).forEach(tile => {
+    this.gameState.tiles.filter(tile => tile.card && tile.card.type == CardTypeEnum.WALKER).forEach(tile => {
       tile.card.age++;
       tile.card.moved = false;
     });
@@ -218,23 +218,23 @@ export class GameEngineService {
     this.moveWalkers();
     this.trapWalkers();
 
-    this.gameDataModel.turn++;
-    this._years$.next(this.gameDataModel.turn);
+    this.gameState.turn++;
+    this._years$.next(this.gameState.turn);
     this.setNextValue();
 
-    this._tiles$.next(Object.assign({}, this.gameDataModel).tiles);
+    this._tiles$.next(Object.assign({}, this.gameState).tiles);
 
     setTimeout(() => {
       this.roundComplete();
     }, 200);
 
 
-    //localStorage.setItem('gameData', JSON.stringify(this.gameDataModel.tiles));
+    //localStorage.setItem('gameData', JSON.stringify(this.gameState.tiles));
 
   }
 
   roundComplete() {
-    if (this.gameDataModel.population >= this.gameDataModel.currentLevel.goal) {
+    if (this.gameState.population >= this.gameState.currentLevel.goal) {
       this.setNextLevel();
     }
   }
@@ -247,7 +247,7 @@ export class GameEngineService {
 
   moveWalkers() {
     let actionTaken: boolean = false;
-    let walkers: Tile[] = this.gameDataModel.tiles.filter(tile => tile.card && tile.card.type === CardTypeEnum.WALKER && !tile.card.moved);
+    let walkers: Tile[] = this.gameState.tiles.filter(tile => tile.card && tile.card.type === CardTypeEnum.WALKER && !tile.card.moved);
     let people: Tile[] = walkers.filter(a => a.card.family.name == CardFamilyTypeEnum.PERSON);
     let animals: Tile[] = walkers.filter(a => a.card.family.name == CardFamilyTypeEnum.ANIMAL);
     let zoombies: Tile[] = walkers.filter(a => a.card.family.name == CardFamilyTypeEnum.ZOOMBIE);
@@ -424,13 +424,13 @@ export class GameEngineService {
   collectResources(type: number, amount: number): boolean {
     let collected: boolean = this.addToStorage(type, amount);
 
-    this._tiles$.next(Object.assign({}, this.gameDataModel).tiles);
+    this._tiles$.next(Object.assign({}, this.gameState).tiles);
     return collected;
   }
 
   addToStorage(type: number, amount: number): boolean {
 
-    let newResources: IResourceStorage = this.gameDataModel.resourceStorage;
+    let newResources: IResourceStorage = this.gameState.resourceStorage;
 
     if (type == CardFamilyTypeEnum.COIN) {
       newResources.coins += amount;
@@ -587,12 +587,12 @@ export class GameEngineService {
 
 
   doUndo() {
-    this.gameDataModel = Object.assign({}, this).prevGameDataModel;
+    this.gameState = Object.assign({}, this).prevGameState;
 
-    this._currentCard$.next(Object.assign({}, this.gameDataModel).currentCard);
-    this._tiles$.next(Object.assign({}, this.gameDataModel).tiles);
-    this._population$.next(Object.assign({}, this.gameDataModel).population);
-    this._years$.next(Object.assign({}, this.gameDataModel).turn);
+    this._currentCard$.next(Object.assign({}, this.gameState).currentCard);
+    this._tiles$.next(Object.assign({}, this.gameState).tiles);
+    this._population$.next(Object.assign({}, this.gameState).population);
+    this._years$.next(Object.assign({}, this.gameState).turn);
   }
 
   showCardMatchHint(card: Card) {

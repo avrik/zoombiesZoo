@@ -14,7 +14,7 @@ import { Card } from 'app/game/cards/card';
   styleUrls: ['./toolbar.component.css']
 })
 export class ToolbarComponent implements OnInit {
-  @ViewChild('myBar') myBar: ElementRef;
+  //@ViewChild('myBar') myBar: ElementRef;
 
   years: number;
   score: number = 0;
@@ -22,21 +22,24 @@ export class ToolbarComponent implements OnInit {
 
   popProgress: number = 0;
   currentLevel: GameLevel;
-  //resourceStorage: IResourceStorage;
-
-  /* items: IBuyItem[] = [
-    { label: "brick", cost: { coin: 2 }, icon: UrlConst.BRICK2, type: 0, amount: 6 ,description:"buy brick"},
-    { label: "lumber", cost: { coin: 2 }, icon: UrlConst.LUMBER2, type: 1, amount: 6,description:"buy lumber" },
-    { label: "wild", cost: { coin: 3 }, icon: UrlConst.WILD, type: 2, amount: 3 ,description:"buy wild-card"},
-    { label: "undo", cost: { coin: 1 }, icon: UrlConst.UNDO, type: 3, amount: 9 ,description:"undo last action"},
-  ] */
+  timeout: any;
+  populationTarget: number;
 
   constructor(public gameEngine: GameEngineService) {
     this.gameEngine.currentLevel$.subscribe(currentLevel => {
-      this.currentLevel = currentLevel;
-      setTimeout(() => {
-        this.popProgress = 0;
-      }, 1000);
+      if (currentLevel) {
+        this.populationTarget = this.currentLevel ? currentLevel.goal - this.currentLevel.goal : currentLevel.goal;
+        this.currentLevel = currentLevel;
+        setTimeout(() => {
+          //this.popProgress = 0;
+          this.move(0);
+          /* setTimeout(() => {
+            let percent: number = Math.round(this.population / this.currentLevel.goal * 100);
+            this.move(percent)
+          }, 2000); */
+        }, 1500);
+      }
+
     });
 
     this.gameEngine.tiles$.subscribe(tiles => {
@@ -51,9 +54,14 @@ export class ToolbarComponent implements OnInit {
       if (!isNaN(population)) {
         this.population = population;
         //this.move(Math.round(this.population*100/100));
-        let percent: number = this.population;
-        if (this.currentLevel) this.popProgress = (this.population / this.currentLevel.goal) * 100;
 
+        if (this.currentLevel) {
+          //let percent: number = Math.round(this.population / this.currentLevel.goal * 100);
+          let percent: number = Math.round((this.population) / (this.currentLevel.goal) * 100);
+          //this.popProgress = percent;
+          console.log("PERCENT!!! " + percent)
+          this.move(percent)
+        }
         //if (this.myBar) this.myBar.nativeElement.style.width = percent + '%';
       }
 
@@ -66,18 +74,20 @@ export class ToolbarComponent implements OnInit {
   }
 
   move(target: number) {
-    if (!this.myBar) return;
-    let width = this.myBar.nativeElement.style.width;
-
+    clearTimeout(this.timeout);
     let frame = () => {
-      if (width >= target) {
+      if (target == 0 && this.popProgress > 0) {
+        this.popProgress--;
 
-      } else {
-        width++;
-        this.myBar.nativeElement.style.width = width + '%';
-        setTimeout(() => {
+        this.timeout = setTimeout(() => {
           frame();
-        }, 100);
+        }, 10);
+      } else if (this.popProgress < target) {
+        this.popProgress++;
+
+        this.timeout = setTimeout(() => {
+          frame();
+        }, 10);
       }
     }
 
