@@ -52,6 +52,7 @@ export class GameEngineService {
   private tilesMatches: Tile[] = [];
   private tilesCities: Tile[] = [];
 
+  private prevGameDataModel: IGameModel;;
   private gameDataModel: IGameModel = initGameData;
 
   private _tiles$: BehaviorSubject<Tile[]>;
@@ -71,6 +72,7 @@ export class GameEngineService {
   get years$(): Observable<number> { return this._years$.asObservable(); }
 
   set updateCurrentCard(card: Card) {
+    this.prevGameDataModel = Object.assign({}, this).gameDataModel;
     this.gameDataModel.currentCard = card;
     this._currentCard$.next(Object.assign({}, this.gameDataModel).currentCard);
   }
@@ -159,26 +161,20 @@ export class GameEngineService {
   restart(firstTime: boolean = false) {
     if (!firstTime) {
       this.gameDataModel.tiles.forEach(tile => tile.clear());
-      //this.gameDataModel.currentLevel = null;
       this.gameDataModel = Object.assign({}, initGameData);
     }
 
-
-    // if (!firstTime) {
     this._tiles$.next(Object.assign({}, this.gameDataModel).tiles);
-    this._resourceStorage$.next(Object.assign({}, this.gameDataModel).resourceStorage);
+    //this._resourceStorage$.next(Object.assign({}, this.gameDataModel).resourceStorage);
     this._currentLevel$.next(this.gameDataModel.currentLevel);
     this._population$.next(this.gameDataModel.population);
     this._years$.next(this.gameDataModel.turn);
-    //this.updateResourceStorage = initResourcesStorage;
-    //}
 
     this.updateResourceStorage = initResourcesStorage;
 
     this.setNextLevel();
     this.placeRandomResources();
     this.setNextValue();
-    //this.gameDataModel = initGameData;
   }
 
   setNextLevel() {
@@ -355,7 +351,7 @@ export class GameEngineService {
           empties = empties.filter(a => (a.terrain.type != TerrainEnum.RESOURCES));
           break;
         case TerrainEnum.CITY:
-       // case TerrainEnum.ROAD:
+          // case TerrainEnum.ROAD:
           empties = empties.filter(a => (a.terrain.type != TerrainEnum.BRIDGE));
           break;
       }
@@ -391,7 +387,7 @@ export class GameEngineService {
             empties = empties.filter(a => (a.terrain.type != TerrainEnum.RESOURCES));
             break;
           case TerrainEnum.CITY:
-         // case TerrainEnum.ROAD:
+            // case TerrainEnum.ROAD:
             empties = empties.filter(a => (a.terrain.type != TerrainEnum.BRIDGE));
             break;
         }
@@ -511,8 +507,8 @@ export class GameEngineService {
       if (tile.card.nextCard) {
 
         let extra: number = matchedTiles.length - (tile.card.minForNextLevel - 1) // * Math.max(tile.card.bonus, 1);
-        let bonus:number = tile.card.collect?extra * tile.card.collect:extra;
-        
+        let bonus: number = tile.card.collect ? extra * tile.card.collect : extra;
+
         tile.card = new Card(tile.card.nextCard)
 
         if (tile.card.bonus) {
@@ -550,45 +546,28 @@ export class GameEngineService {
 
   handleWild(tile: Tile) {
 
-    let optionsForWild: Tile[] = tile.linked.filter(a => a.card && a.card.mergeBy == MergeTypeEnum.MATCH);//.map(a => a.card);
-    let selectedCard: Card = null;
-
+    let optionsForWild: Tile[] = tile.linked.filter(a => a.card && a.card.mergeBy == MergeTypeEnum.MATCH);
+    optionsForWild = optionsForWild.filter(a=>{
+      tile.card = a.card;
+      return this.getLinkedGroup(a).length >= a.card.minForNextLevel;
+    })
     optionsForWild.sort((a, b) => {
-      if (a.card.level < b.card.level) { return -1 }
-      if (a.card.level > b.card.level) { return 1 }
+      if (a.card.family != b.card.family) {
+        if (a.card.value > b.card.value) return -1;
+        if (b.card.value > a.card.value) return 1;
+      }
+      else if (a.card.family == b.card.family) {
+        if (a.card.level == (b.card.level - 1)) return -1;
+        if (b.card.level == (a.card.level - 1)) return 1;
+
+        if (a.card.level > b.card.level) return -1;
+        if (b.card.level > a.card.level) return 1;
+      }
+
       return 0;
     });
 
-    if (optionsForWild.length) {
-      // let groupScore: number = 0;
-
-      optionsForWild.forEach(tileInList => {
-        tile.card = tileInList.card;
-        let groupForMatch: Tile[] = this.getLinkedGroup(tileInList);
-        if (groupForMatch.length >= tileInList.card.minForNextLevel) {
-          // let score: number = groupForMatch.map(a => a.card.value).reduce((prev, cur) => prev + cur);
-
-          if (!selectedCard) {
-            selectedCard = tileInList.card;
-          } else {
-            if (selectedCard.family != tileInList.card.family && tileInList.card.value > selectedCard.value) {
-              selectedCard = tileInList.card;
-            }
-            else
-              if (selectedCard.family == tileInList.card.family) {
-                if (tileInList.card.level == selectedCard.level - 1) selectedCard = tileInList.card;
-              }
-            /* else
-              if (tileInList.card.family.value > selectedCard.family.value) {
-                selectedCard = tileInList.card;
-              } */
-          }
-
-        }
-      })
-    }
-
-    tile.card = selectedCard ? selectedCard : this.getNewCard(CardFamilyTypeEnum.GRAVE);
+    tile.card = optionsForWild.length ? optionsForWild[0].card : this.getNewCard(CardFamilyTypeEnum.GRAVE);
   }
 
   getNewCard(familyName: number, level: number = 0): Card {
@@ -608,7 +587,12 @@ export class GameEngineService {
 
 
   doUndo() {
-    this._tiles$.last
+    this.gameDataModel = Object.assign({}, this).prevGameDataModel;
+
+    this._currentCard$.next(Object.assign({}, this.gameDataModel).currentCard);
+    this._tiles$.next(Object.assign({}, this.gameDataModel).tiles);
+    this._population$.next(Object.assign({}, this.gameDataModel).population);
+    this._years$.next(Object.assign({}, this.gameDataModel).turn);
   }
 
   showCardMatchHint(card: Card) {

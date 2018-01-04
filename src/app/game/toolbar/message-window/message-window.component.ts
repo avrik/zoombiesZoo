@@ -16,12 +16,12 @@ import { MessagesService, IMessage } from '../../../services/messages.service';
         height: '0px',
       })),
       transition('in => out', animate('300ms ease-out')),
-      transition('out => in', animate('300ms ease-out'))
+      transition('out => in', animate('300ms ease-in'))
     ])
   ]
 })
 export class MessageWindowComponent implements OnInit {
-  state: string='out';
+  state: string='';
   currentMessage: IMessage;
 
   constructor(private messagesService: MessagesService) {
@@ -39,6 +39,7 @@ export class MessageWindowComponent implements OnInit {
   }
 
   ngOnInit() {
+   this.state = "out";
   }
 
 }

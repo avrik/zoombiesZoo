@@ -1,4 +1,6 @@
-<div *ngIf="currentMessage" class="container" [@show]="state">
-  <h3>{{currentMessage.title}}</h3>
-  {{currentMessage.message}}
+<div class="container" [@show]="state">
+  <span *ngIf="currentMessage">
+    <h3>{{currentMessage.title}}</h3>
+    {{currentMessage.message}}
+  </span>
 </div>

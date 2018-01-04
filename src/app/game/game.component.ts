@@ -28,8 +28,8 @@ export class GameComponent implements OnInit {
         this.totalMax = Math.max(this.total, this.totalMax);
         localStorage.setItem('totalMax', this.totalMax.toString())
 
-        if (tiles.filter(a => a.terrain.type == TerrainEnum.RESOURCES && !a.card).length == 0 ||
-          tiles.filter(a => a.terrain.type == TerrainEnum.CITY && !a.card).length == 0) {
+        if (tiles.filter(a => (a.terrain.type == TerrainEnum.RESOURCES || a.terrain.type == TerrainEnum.CARD_HOLDER) && !a.card).length == 0 ||
+          tiles.filter(a => a.terrain.type == TerrainEnum.CITY  && !a.card).length == 0) {
           this.gameOver();
         }
       }
@@ -50,10 +50,11 @@ export class GameComponent implements OnInit {
 
   ngOnInit() {
     setTimeout(() => {
-      this.messagesService.postMessage({type:MessageType.TOOLBAR, title: "Welcome", message: `start your new town`, butns: [{ label: 'ok', action: null }, { label: 'cancel', action: null }] });
-    }, 500);
+      this.messagesService.postMessage({type:MessageType.CURTAIN, title: "Welcome", message: `start your new town`, butns: [{ label: 'ok', action: null }, { label: 'cancel', action: null }] });
+    }, 1500);
     this.gameEngine.start();
   }
+
 
   gameOver() {
     this.messagesService.postMessage({type:MessageType.POPUP, title: "GAME OVER", butns: [{ label: "start over", action: a => { this.restart() } }] })
