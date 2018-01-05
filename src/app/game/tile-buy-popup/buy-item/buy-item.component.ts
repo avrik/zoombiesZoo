@@ -38,7 +38,8 @@ export class BuyItemComponent implements OnInit {
         this.enabled = (
           (!this.buyItem.cost.block || resourceStorage.bricks >= this.buyItem.cost.block) &&
           (!this.buyItem.cost.lumber || resourceStorage.lumber >= this.buyItem.cost.lumber) &&
-          (!this.buyItem.cost.coin || resourceStorage.coins >= this.buyItem.cost.coin)
+          (!this.buyItem.cost.coin || resourceStorage.coins >= this.buyItem.cost.coin) &&
+          (this.buyItem.amount>0 || isNaN(this.buyItem.amount))
         ) ? true : false;
       }
     })
@@ -58,10 +59,13 @@ export class BuyItemComponent implements OnInit {
 
       this.gameEngine.updateResourceStorage = testResources;
       let total: number = 0;
-      if (this.buyItem.cost.block) total = + this.buyItem.cost.block;
-      if (this.buyItem.cost.lumber) total = + this.buyItem.cost.lumber;
+      if (this.buyItem.cost.block) total += this.buyItem.cost.block;
+      if (this.buyItem.cost.lumber) total += this.buyItem.cost.lumber;
 
       this.gameEngine.removeFromResourcesStorage(total);
+      if (this.buyItem.amount) {
+        this.buyItem.amount--;
+      }
 
       this.buy.emit(this.buyItem);
     } else{

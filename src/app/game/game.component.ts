@@ -4,6 +4,7 @@ import { GameEngineService } from '../services/game-engine.service';
 import { MessagesService } from '../services/messages.service';
 import { GameLevel } from 'app/game/levels/game-level';
 import { MessageType } from '../enums/message-type.enum';
+import { Tile } from './board/tile/tile';
 
 @Component({
   selector: 'app-game',
@@ -28,10 +29,14 @@ export class GameComponent implements OnInit {
         this.totalMax = Math.max(this.total, this.totalMax);
         localStorage.setItem('totalMax', this.totalMax.toString())
 
-        if (tiles.filter(a => (a.terrain.type == TerrainEnum.RESOURCES || a.terrain.type == TerrainEnum.CARD_HOLDER) && !a.card).length == 0 ||
-          tiles.filter(a => a.terrain.type == TerrainEnum.CITY  && !a.card).length == 0) {
+        let availableTilesInField:Tile[] = tiles.filter(a => a.terrain && (a.terrain.type == TerrainEnum.RESOURCES || a.terrain.type == TerrainEnum.CARD_HOLDER) && !a.card);
+        let availableTilesInCity:Tile[] = tiles.filter(a => a.terrain && (a.terrain.type == TerrainEnum.CITY) && !a.card);
+
+        if (!availableTilesInField.length || !availableTilesInCity.length) {
           this.gameOver();
         }
+
+        
       }
     })
 
@@ -39,7 +44,7 @@ export class GameComponent implements OnInit {
       if (currentLevel && currentLevel.index > 0) {
         if (this.currentLevel) {
           this.messagesService.postMessage({
-            type:MessageType.CURTAIN,title: `level ${currentLevel.index} completed!`, message: `Congratulations\nyou have reached the ${this.currentLevel.goal} population goal`
+            type:MessageType.CURTAIN,title: "Well done! ", message:`level ${currentLevel.index} completed!`
             , butns: [{ label: 'next level' }]
           });
         }
@@ -49,9 +54,9 @@ export class GameComponent implements OnInit {
   }
 
   ngOnInit() {
-    setTimeout(() => {
+    /* setTimeout(() => {
       this.messagesService.postMessage({type:MessageType.CURTAIN, title: "Welcome", message: `start your new town`, butns: [{ label: 'ok', action: null }, { label: 'cancel', action: null }] });
-    }, 1500);
+    }, 1500); */
     this.gameEngine.start();
   }
 

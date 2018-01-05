@@ -16,7 +16,12 @@ export class TitleScreenComponent implements OnInit {
   message: IMessage;
 
   constructor(private gameEngine: GameEngineService, private messageService: MessagesService) {
-    this.gameEngine.cardHint$.subscribe(cardHint => this.cardHint = cardHint);
+    this.gameEngine.cardHint$.subscribe(cardHint => {
+      this.cardHint = cardHint;
+      if (this.cardHint && this.cardHint.family.name==100) {
+        debugger;
+      } 
+    });
     this.gameEngine.currentCard$.subscribe(currentCard => this.currentCard = currentCard);
 
     this.messageService.currentMessage$.subscribe(message => {

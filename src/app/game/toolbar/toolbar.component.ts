@@ -2,7 +2,6 @@
 import { CardFamilyTypeEnum } from 'app/enums/card-family-type-enum.enum';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { GameEngineService, IResourceStorage } from 'app/services/game-engine.service';
-import { Resources } from 'app/enums/resources.enum';
 import { IBuyItem } from 'app/game/tile-buy-popup/buy-item/buy-item';
 import { GameLevel } from '../levels/game-level';
 import { UrlConst } from '../../consts/url-const';

@@ -2,7 +2,6 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Card } from '../../cards/card';
 import { Terrain } from './terrain';
-import { Building } from './building';
 import { MergeTypeEnum } from 'app/enums/merge-type-enum.enum';
 
 export class Tile {
@@ -12,7 +11,7 @@ export class Tile {
     overMe: boolean;
     terrain: Terrain;
     terrainTop: Terrain;
-    building: Building;
+    state: number = 0;
     private _selected$: BehaviorSubject<boolean>;
 
     constructor(public col: number = -1, public row: number = -1) {
@@ -55,20 +54,14 @@ export class Tile {
         return collector;
     }
 
-    /* setTempTerrain(value: number) {
-        this.terrainTemp = new Terrain(this.terrain.type);
-        this.terrain = new Terrain(value);
-    }
-
-    removeTempTerrain() {
-        if (this.terrainTemp) {
-            this.terrain = this.terrainTemp;
-            this.terrainTemp = null;
-        }
-    } */
-
     clear() {
 
         this.card = null;
+    }
+
+    reset() {
+        this.clear();
+        this.terrainTop = null;
+        this.overMe = false;
     }
 }

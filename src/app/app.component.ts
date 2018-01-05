@@ -6,7 +6,7 @@ import { MessagesService, IMessage } from './services/messages.service';
 
 // + handle score
 // + pricing
-// + move building implementation
+// ++ move building implementation
 // + undo implementation
 // + save game state implementation
 // + restart game fixing
@@ -15,10 +15,10 @@ import { MessagesService, IMessage } from './services/messages.service';
 // ++ progress bar animation
 // + add match hint on rollover
 // + add remove resource/bomb card
-// + fix curtain animation
+// ++ fix curtain animation
 // + add game settings
 // + high score
-
+// + add seasons (winter ,spring...)
 
 
 // MAJOR ISSUES

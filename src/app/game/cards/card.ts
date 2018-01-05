@@ -2,8 +2,6 @@ import { Tile } from './../board/tile/tile';
 import { UrlConst } from './../../consts/url-const';
 import { MergeTypeEnum } from '../../enums/merge-type-enum.enum';
 import { CardTypeEnum } from '../../enums/card-type-enum.enum';
-import { ResourceEnum } from '../../enums/resource-enum.enum';
-import { BuildingEnum } from '../../enums/building-enum.enum';
 import { CardFamilyTypeEnum } from '../../enums/card-family-type-enum.enum';
 
 interface ICardFamily {

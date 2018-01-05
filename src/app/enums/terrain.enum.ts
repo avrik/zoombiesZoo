@@ -4,6 +4,7 @@ export enum TerrainEnum {
     WATER = 2,
     
     BRIDGE = 3,
+    CARD_HOLDER_OPEN = 4.5,
     CARD_HOLDER = 4,
     ROAD = 5,
     WALL = 6,

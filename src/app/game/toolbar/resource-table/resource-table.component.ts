@@ -16,10 +16,10 @@ export class ResourceTableComponent implements OnInit {
   resourceStorage: IResourceStorage;
 
   items: IBuyItem[] = [
-    { label: "brick", cost: { coin: 2 }, icon: UrlConst.BRICK2, type: 0, amount: 6 ,description:"buy brick"},
-    { label: "lumber", cost: { coin: 2 }, icon: UrlConst.LUMBER2, type: 1, amount: 6,description:"buy lumber" },
-    { label: "wild", cost: { coin: 3 }, icon: UrlConst.WILD, type: 2, amount: 3 ,description:"buy wild-card"},
-    { label: "undo", cost: { coin: 0 }, icon: UrlConst.UNDO, type: 3, amount: 9 ,description:"undo last action"},
+    { label: "brick", cost: { coin: 3 }, icon: UrlConst.BRICK2, type: 0, amount: 6 ,description:"buy brick"},
+    { label: "lumber", cost: { coin: 3 }, icon: UrlConst.LUMBER2, type: 1, amount: 6,description:"buy lumber" },
+    { label: "wild", cost: { coin: 6 }, icon: UrlConst.WILD, type: 2, amount: 3 ,description:"buy wild-card"},
+    { label: "undo", cost: { coin: 6 }, icon: UrlConst.UNDO, type: 3, amount: 6 ,description:"undo last action"},
    // { label: "buldoze", cost: { coin: 6 }, icon: UrlConst.BULDOZE, type: 4, amount: 3 },
     //{ label: "move", cost: { coin: 6 }, icon: UrlConst.MOVE, type: 5 },
   ]

@@ -11,10 +11,15 @@ export class Terrain {
             case TerrainEnum.ZOOMBIE_TRAP:
                 this.url = "assets/buildings/Selector.png";
                 break;
+            case TerrainEnum.CARD_HOLDER_OPEN:
+                this.walkable = false;
+    
+                this.url = "assets/resources/Chest Open.png";
+                break;
             case TerrainEnum.CARD_HOLDER:
                 this.walkable = false;
                 //this.url = "assets/terrain/Stone Block Tall.png";
-                this.url = "assets/resources/Chest Open.png";
+                this.url = "assets/resources/Chest Closed.png";
                 break;
             case TerrainEnum.BRIDGE:
                 this.clickable = false;

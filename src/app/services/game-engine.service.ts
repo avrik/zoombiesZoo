@@ -11,10 +11,9 @@ import { Tile } from '../game/board/tile/tile';
 import { Card, ICardData, cardCollection } from '../game/cards/card';
 import { Terrain } from 'app/game/board/tile/terrain';
 import { CardTypeEnum } from 'app/enums/card-type-enum.enum';
-import { BuildingEnum } from '../enums/building-enum.enum';
 import { MergeTypeEnum } from 'app/enums/merge-type-enum.enum';
-import { ResourceEnum } from 'app/enums/resource-enum.enum';
 import { GameLevel } from '../game/levels/game-level';
+import { TileState } from '../enums/tile-state.enum';
 
 interface IGameModel {
   turn: number,
@@ -48,6 +47,7 @@ export class GameEngineService {
   totalRows: number = 11;
   totalCols: number = 5;
 
+  pendingTileBuilding:Tile;
   private tilesPos: any[] = [];
   private tilesMatches: Tile[] = [];
   private tilesCities: Tile[] = [];
@@ -127,6 +127,7 @@ export class GameEngineService {
     this.getTileByCord(2, middle).terrain = new Terrain(TerrainEnum.WATER);
     this.getTileByCord(3, middle).terrain = new Terrain(TerrainEnum.BRIDGE);
     this.getTileByCord(4, middle).terrain = new Terrain(TerrainEnum.WATER);
+    this.getTileByCord(2, 2).terrain = new Terrain(TerrainEnum.WATER);
 
     this.getTileByCord(0, this.totalRows - 1).terrain = new Terrain(TerrainEnum.CARD_HOLDER);
 
@@ -160,11 +161,11 @@ export class GameEngineService {
 
   restart(firstTime: boolean = false) {
     if (!firstTime) {
-      this.gameState.tiles.forEach(tile => tile.clear());
+      this.gameState.tiles.forEach(tile => tile.reset());
       this.gameState = Object.assign({}, gameStateInit);
     }
-
-    this._tiles$.next(Object.assign({}, this.gameState).tiles);
+    this.updateBoard();
+    //this._tiles$.next(Object.assign({}, this.gameState).tiles);
     //this._resourceStorage$.next(Object.assign({}, this.gameState).resourceStorage);
     this._currentLevel$.next(this.gameState.currentLevel);
     this._population$.next(this.gameState.population);
@@ -193,7 +194,7 @@ export class GameEngineService {
       tile.card.autoPlaced = true;
     }
 
-    let arr: Tile[] = this.tilesCities.filter(a => a.row > 0 && a.row < (this.totalRows / 2 - 2) && a.linked.length > 3);
+    let arr: Tile[] = this.tilesCities.filter(a => a.terrain.type == TerrainEnum.CITY && a.row > 0 && a.row < (this.totalRows / 2 - 2) && a.linked.length > 3);
     let randTile: Tile = this.getRandomTile(arr.filter(a => !a.card));
     randTile.card = this.getNewCard(CardFamilyTypeEnum.STORAGE);
     randTile.card.autoPlaced = true;
@@ -209,6 +210,10 @@ export class GameEngineService {
     return this.tilesPos[col][row];
   }
 
+  updateBoard() {
+    this._tiles$.next(Object.assign({}, this.gameState).tiles);
+  }
+
   nextTurn() {
     this.gameState.tiles.filter(tile => tile.card && tile.card.type == CardTypeEnum.WALKER).forEach(tile => {
       tile.card.age++;
@@ -222,7 +227,7 @@ export class GameEngineService {
     this._years$.next(this.gameState.turn);
     this.setNextValue();
 
-    this._tiles$.next(Object.assign({}, this.gameState).tiles);
+    this.updateBoard();
 
     setTimeout(() => {
       this.roundComplete();
@@ -371,7 +376,7 @@ export class GameEngineService {
       let rand: number = Math.floor(Math.random() * (housesAround.length));
       let moveToTile: Tile = housesAround.find((item, index) => index == rand);
       //tile.card.moved = true;
-      console.log("POPULATE HOUSE!!!!");
+      //console.log("POPULATE HOUSE!!!!");
       tile.clear();
       moveToTile.card.collected++;
       this.updatePopulation = 1;
@@ -424,7 +429,8 @@ export class GameEngineService {
   collectResources(type: number, amount: number): boolean {
     let collected: boolean = this.addToStorage(type, amount);
 
-    this._tiles$.next(Object.assign({}, this.gameState).tiles);
+    //this._tiles$.next(Object.assign({}, this.gameState).tiles);
+    this.updateBoard();
     return collected;
   }
 
@@ -547,7 +553,7 @@ export class GameEngineService {
   handleWild(tile: Tile) {
 
     let optionsForWild: Tile[] = tile.linked.filter(a => a.card && a.card.mergeBy == MergeTypeEnum.MATCH);
-    optionsForWild = optionsForWild.filter(a=>{
+    optionsForWild = optionsForWild.filter(a => {
       tile.card = a.card;
       return this.getLinkedGroup(a).length >= a.card.minForNextLevel;
     })
@@ -588,11 +594,29 @@ export class GameEngineService {
 
   doUndo() {
     this.gameState = Object.assign({}, this).prevGameState;
-
+    this.updateBoard();
     this._currentCard$.next(Object.assign({}, this.gameState).currentCard);
-    this._tiles$.next(Object.assign({}, this.gameState).tiles);
+    //this._tiles$.next(Object.assign({}, this.gameState).tiles);
     this._population$.next(Object.assign({}, this.gameState).population);
     this._years$.next(Object.assign({}, this.gameState).turn);
+  }
+
+  moveTileBuilding(tile: Tile) {
+    this.gameState.tiles.forEach(a => a.state = TileState.DISABLED);
+
+    let moveOptions: Tile[] = this.tilesCities.filter(a => a.terrain.type==TerrainEnum.CITY && !a.card);
+    moveOptions.forEach(a => {
+      a.state = TileState.WAIT_FOR_MOVE;
+    })
+
+    this.pendingTileBuilding = tile;
+    this.updateBoard();
+  }
+
+  moveBuildingDone() {
+    this.pendingTileBuilding.clear();
+    this.gameState.tiles.forEach(a => a.state = TileState.REGULAR);
+    this.updateBoard();
   }
 
   showCardMatchHint(card: Card) {

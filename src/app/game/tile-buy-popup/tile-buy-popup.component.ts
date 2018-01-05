@@ -1,7 +1,6 @@
 
 import { IBuyItem } from './buy-item/buy-item';
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { BuildingEnum } from 'app/enums/building-enum.enum';
 import { CardFamilyTypeEnum } from 'app/enums/card-family-type-enum.enum';
 
 @Component({

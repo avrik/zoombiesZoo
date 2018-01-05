@@ -1,8 +1,7 @@
 <tile-buy-popup *ngIf="showStore && tile.card" [items]="storeItems2" (buyItem)="buyItem($event)" [title]="tile.card.family.label+' lvl '+(tile.card.level+1)"></tile-buy-popup>
 <tile-buy-popup *ngIf="showStore && !tile.card" [items]="storeItems" (buyItem)="buyItem($event)" [title]="'city improvments'"></tile-buy-popup>
 
-
-<div (click)="clickTile()">
+<div (click)="clickTile()" [style.opacity]="tile.state==-1?0.1:1" [style.pointer-events]="tile.state==-1?none:pointer">
     <!-- <div style="position:absolute" [@collect]="collectState">
         <img src="assets/resources/lumber1.png" alt="" height="40">
     </div> -->
@@ -30,7 +29,7 @@
         <div class="over" *ngIf="tile.terrain?.clickable && !tile.card"></div>
 
 
-        <div class="terrain">
+        <div class="terrain" [style.margin-top.px]="tile.terrain.type==4?-45:-32">
             <!-- <img *ngIf="tile.building" [src]="tile.building.url" alt="" width="64"> -->
             <img [src]="tile.terrainTop?tile.terrainTop.url:tile.terrain.url" alt="" width="64">
         </div>

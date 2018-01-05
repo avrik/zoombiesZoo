@@ -1,4 +1,4 @@
-import { BuildingEnum } from '../../../enums/building-enum.enum';
+
 import { CardFamilyTypeEnum } from 'app/enums/card-family-type-enum.enum';
 export class Building {
     url: string;

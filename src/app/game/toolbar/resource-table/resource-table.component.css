@@ -1,27 +1,30 @@
 .container {
     display: grid;
-    grid-template-columns: 90px 90px 90px;
+    grid-template-columns: 80px 80px 80px 30px;
 
 }
 
 .store-btn {
     background-color: gold;
-    border: none;
-    height: 20px;
-    width: 20px;
+    /* border: none; */
+    /* height: 20px; */
+    /* width: 20px; */
     cursor: pointer;
-    border-radius: 5px;
-    border-top: 2px solid greenyellow;
-    position: absolute;
-    margin-left: 22px;
-    margin-top: 28px;
+    border-radius: 0 5px 5px 0;
+    border-bottom: 3px solid greenyellow;
+    /* position: absolute; */
+    /* margin-left: 22px; */
+    /* margin-top: 28px; */
+    height: 80%;
+    margin: 2px;
+    color: rgb(179, 155, 20);
 }
 
 .store-btn:hover {
-    background-color: rgb(240, 230, 176);
+    color: red;
 }
 
 .store-btn:active {
-    background-color: rgb(202, 175, 19);
-    border-top: 2px solid #271e30;
+    border-top: 3px solid rgb(212, 183, 17);
+    border-bottom: none;
 }

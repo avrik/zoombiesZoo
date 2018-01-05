@@ -34,7 +34,7 @@ export class BoardComponent implements OnInit {
   }
 
   ngOnInit() {
-    
+
     this.selectTileOver();
   }
 
@@ -58,7 +58,10 @@ export class BoardComponent implements OnInit {
   } */
 
   onTileClicked(tile: Tile) {
-    this.selectTileOver(tile)
+    this.selectTileOver(tile);
+    if (this.currentTileClicked) {
+      this.currentTileClicked.showStore = false;
+    }
   }
 
   selectTileOver(tile: Tile = null) {
@@ -77,7 +80,9 @@ export class BoardComponent implements OnInit {
   }
 
   onTileOpenStore(event) {
-    if (this.currentTileClicked) this.currentTileClicked.showStore = false;
+    if (this.currentTileClicked) {
+      this.currentTileClicked.showStore = false;
+    }
     this.currentTileClicked = event;
   }
 

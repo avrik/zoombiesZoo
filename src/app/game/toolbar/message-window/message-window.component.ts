@@ -9,14 +9,14 @@ import { MessagesService, IMessage } from '../../../services/messages.service';
     trigger('show', [
       state('in', style({
         overflow: 'hidden',
-        height: '90px'
+        transform: 'translateY(0%)'
       })),
       state('out', style({
         overflow: 'hidden',
-        height: '0px',
+        transform: 'translateY(-100%)'
       })),
-      transition('in => out', animate('300ms ease-out')),
-      transition('out => in', animate('300ms ease-in'))
+      transition('in => out', animate('200ms ease-out')),
+      transition('out => in', animate('200ms ease-out'))
     ])
   ]
 })
@@ -32,7 +32,7 @@ export class MessageWindowComponent implements OnInit {
 
         setTimeout(() => {
           this.state = 'out';
-        }, 2000);
+        }, 2500);
       }
     }
     )
