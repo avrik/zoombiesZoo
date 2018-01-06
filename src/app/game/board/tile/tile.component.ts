@@ -1,8 +1,8 @@
-
+import { TileCardComponent } from './tile-card/tile-card.component';
 import { UrlConst } from './../../../consts/url-const';
 import { CardTypeEnum } from './../../../enums/card-type-enum.enum';
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { trigger, state, style, transition, animate } from '@angular/animations';
+import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef } from '@angular/core';
+import { trigger, state, style, transition, animate, keyframes } from '@angular/animations';
 import { Tile } from './tile';
 import { GameEngineService, IResourceStorage } from 'app/services/game-engine.service';
 import { ICardData, Card } from '../../cards/card';
@@ -42,16 +42,30 @@ import { TileState } from '../../../enums/tile-state.enum';
       transition('inactive => fly', animate('1300ms ease-out')),
       transition('fly => inactive', animate('1300ms ease-out'))
     ])
+    ,
+
+    trigger('moveAnimation', [
+      state('up', style({ transform: 'translateY(-50px)' })),
+      state('down', style({ transform: 'translateY(50px)' })),
+      state('left', style({ transform: 'translateX(-50px)' })),
+      state('right', style({ transform: 'translateX(50px)' })),
+      transition('* => up', animate('200ms ease-out')),
+      transition('* => down', animate('200ms ease-out')),
+      transition('* => left', animate('200ms ease-out')),
+      transition('* => right', animate('200ms ease-out')),
+
+    ])
   ]
 })
 
 export class TileComponent implements OnInit {
-
+  @ViewChild('cardRef') cardRef: ElementRef;
   @Input() tile: Tile;
   @Input() onBoard: boolean = true;
   @Output() openStore: EventEmitter<any> = new EventEmitter();
   @Output() chosen: EventEmitter<Tile> = new EventEmitter();
   state: string = "inactive";
+  moveState: string = "idle";
 
   currentCard: Card;
   showStore: boolean;
@@ -71,7 +85,7 @@ export class TileComponent implements OnInit {
   ]
 
   storeItems2: IBuyItem[] = [
-    { cost: { block: 0, lumber: 0, coin: 2}, icon: UrlConst.MOVE, type: 10, label: 'move', description: "move me" },
+    { cost: { block: 0, lumber: 0, coin: 2 }, icon: UrlConst.MOVE, type: 10, label: 'move', description: "move me" },
     //{ cost: { block: 0, lumber: 0, coin: 6 }, icon: UrlConst.BULDOZE, type: 10, label: 'remove', description: "destroy building" },
   ]
 
@@ -80,6 +94,8 @@ export class TileComponent implements OnInit {
     this.gameEngine.currentCard$.subscribe(currentCard => {
       this.currentCard = currentCard;
     });
+
+
   }
 
   ngOnInit(): void {
@@ -89,6 +105,25 @@ export class TileComponent implements OnInit {
         this.overMe()
       } else this.outMe();
     });
+
+    this.tile.move$.subscribe(move => {
+      if (move) {
+        if (move == "up") this.cardRef.nativeElement.style.marginTop = "50px"
+        if (move == "down") this.cardRef.nativeElement.style.marginTop = "-50px"
+        if (move == "left") this.cardRef.nativeElement.style.marginLeft = "50px"
+        if (move == "right") this.cardRef.nativeElement.style.marginLeft = "-50px"
+        this.moveState = move;
+
+        setTimeout(() => {
+          this.cardRef.nativeElement.style.marginTop = 0;
+          this.cardRef.nativeElement.style.marginLeft = 0;
+          this.moveState = "idle";
+        }, 200);
+      }
+    })
+
+
+
   }
 
   onCardCollected() {
@@ -100,8 +135,7 @@ export class TileComponent implements OnInit {
     this.tile.overMe = false;
     if (this.tile.terrain.type == TerrainEnum.CITY) {
 
-      if (this.tile.state == TileState.WAIT_FOR_MOVE) 
-      {
+      if (this.tile.state == TileState.WAIT_FOR_MOVE) {
         this.tile.card = this.gameEngine.pendingTileBuilding.card;
         this.gameEngine.moveBuildingDone();
         this.gameEngine.findMatch(this.tile);
@@ -242,7 +276,9 @@ export class TileComponent implements OnInit {
 
   }
 
-
+  get gotCard():boolean{
+    return this.tile.card?true:false;
+  }
 
 
   goUp() {
@@ -260,7 +296,7 @@ export class TileComponent implements OnInit {
   }
 
   getIndex() {
-    return this.tile.col * 100;
+    return this.tile.col * 10;
   }
 
 }

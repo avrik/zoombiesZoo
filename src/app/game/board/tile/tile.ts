@@ -13,15 +13,21 @@ export class Tile {
     terrainTop: Terrain;
     state: number = 0;
     private _selected$: BehaviorSubject<boolean>;
+    private _move$: BehaviorSubject<string>;
 
     constructor(public col: number = -1, public row: number = -1) {
         this.terrain = new Terrain();
         this._selected$ = <BehaviorSubject<boolean>>new BehaviorSubject(false);
+        this._move$ = <BehaviorSubject<string>>new BehaviorSubject("");
     }
 
 
     get selected$(): Observable<boolean> { return this._selected$.asObservable(); }
+    get move$(): Observable<string> { return this._move$.asObservable(); }
+
+    set moveMe(value: string) { this._move$.next(value) };
     set select(value: boolean) { this._selected$.next(value) };
+
     getAllEmpties(): Tile[] {
         return this.linked.filter(a => !a.card);
     }

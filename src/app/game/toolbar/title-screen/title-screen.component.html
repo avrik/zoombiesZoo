@@ -2,32 +2,32 @@
 
 <div class="card-hint" *ngIf="message">{{message.title}}</div>
 
-<div *ngIf="!message && cardHint && cardHint.nextCard">
-  <div *ngIf="cardHint.family.name>=0" class="card-hint">
-    <img [src]="cardHint.img" alt="" height="30">
-    <b class="sign">✚</b>
-    <img [src]="cardHint.img" alt="" height="30">
-    <b class="sign">✚</b>
-    <img [src]="cardHint.img" alt="" height="30">
-    <b class="sign">=</b>
+<div *ngIf="!message && isCardHint==true && cardHint.nextCard!=null">
+    <div *ngIf="cardHint.family.name>=0" class="card-hint">
+        <img [src]="cardHint.img" alt="" height="30">
+        <b class="sign">✚</b>
+        <img [src]="cardHint.img" alt="" height="30">
+        <b class="sign">✚</b>
+        <img [src]="cardHint.img" alt="" height="30">
+        <b class="sign">=</b>
 
-    <img [src]="cardHint.nextCard.img" alt="" height="30">
-    <span *ngIf="cardHint.nextCard.bonus">
+        <img [src]="cardHint.nextCard.img" alt="" height="30">
+        <span *ngIf="cardHint.nextCard.bonus">
       <img src="assets/resources/coin.png" alt="" height="30">
     </span>
-  </div>
+    </div>
 
-  <div *ngIf="(cardHint.family.name==-1) || (cardHint.family.name==100)" class="card-hint">
-    <img src="assets/buildings/house.png" alt="" height="30">
-    <b class="sign">⬅</b>
+    <div *ngIf="(cardHint.family.name==-1) || (cardHint.family.name==100)" class="card-hint">
+        <img src="assets/buildings/house.png" alt="" height="30">
+        <b class="sign">⬅</b>
 
-    <img src="assets/people/Character Boy.png" alt="" height="30">
-  </div>
+        <img src="assets/people/Character Boy.png" alt="" height="30">
+    </div>
 </div>
 
 
-<div *ngIf="!message && !cardHint && currentCard">
-  <span class="card-hint" style="margin-right:30px">
+<div *ngIf="!message && isCardHint==false && currentCard!=null">
+    <span class="card-hint" style="margin-right:30px">
     <img [src]="currentCard.img" alt="" height="30">
   </span>
 </div>

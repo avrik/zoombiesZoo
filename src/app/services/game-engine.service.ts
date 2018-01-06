@@ -47,7 +47,7 @@ export class GameEngineService {
   totalRows: number = 11;
   totalCols: number = 5;
 
-  pendingTileBuilding:Tile;
+  pendingTileBuilding: Tile;
   private tilesPos: any[] = [];
   private tilesMatches: Tile[] = [];
   private tilesCities: Tile[] = [];
@@ -127,7 +127,7 @@ export class GameEngineService {
     this.getTileByCord(2, middle).terrain = new Terrain(TerrainEnum.WATER);
     this.getTileByCord(3, middle).terrain = new Terrain(TerrainEnum.BRIDGE);
     this.getTileByCord(4, middle).terrain = new Terrain(TerrainEnum.WATER);
-    this.getTileByCord(2, 2).terrain = new Terrain(TerrainEnum.WATER);
+    //this.getTileByCord(2, 2).terrain = new Terrain(TerrainEnum.WATER);
 
     this.getTileByCord(0, this.totalRows - 1).terrain = new Terrain(TerrainEnum.CARD_HOLDER);
 
@@ -375,11 +375,12 @@ export class GameEngineService {
     if (housesAround.length) {
       let rand: number = Math.floor(Math.random() * (housesAround.length));
       let moveToTile: Tile = housesAround.find((item, index) => index == rand);
-      //tile.card.moved = true;
-      //console.log("POPULATE HOUSE!!!!");
+      
       tile.clear();
+  
       moveToTile.card.collected++;
       this.updatePopulation = 1;
+
       return true;
     } else {
       let empties: Tile[] = tile.getAllEmpties().filter(a => (a.terrain.walkable));
@@ -392,7 +393,6 @@ export class GameEngineService {
             empties = empties.filter(a => (a.terrain.type != TerrainEnum.RESOURCES));
             break;
           case TerrainEnum.CITY:
-            // case TerrainEnum.ROAD:
             empties = empties.filter(a => (a.terrain.type != TerrainEnum.BRIDGE));
             break;
         }
@@ -411,7 +411,13 @@ export class GameEngineService {
       tile.card.moved = true;
       moveToTile.card = tile.card;
       moveToTile.card.preTile = tile;
+
+      if (moveToTile.col < tile.col) moveToTile.moveMe = "up";
+      if (moveToTile.col > tile.col) moveToTile.moveMe = "down";
+      if (moveToTile.row < tile.row) moveToTile.moveMe = "left";
+      if (moveToTile.row > tile.row) moveToTile.moveMe = "right";
       tile.clear();
+
       return true;
     }
     return false;
@@ -604,7 +610,7 @@ export class GameEngineService {
   moveTileBuilding(tile: Tile) {
     this.gameState.tiles.forEach(a => a.state = TileState.DISABLED);
 
-    let moveOptions: Tile[] = this.tilesCities.filter(a => a.terrain.type==TerrainEnum.CITY && !a.card);
+    let moveOptions: Tile[] = this.tilesCities.filter(a => a.terrain.type == TerrainEnum.CITY && !a.card);
     moveOptions.forEach(a => {
       a.state = TileState.WAIT_FOR_MOVE;
     })

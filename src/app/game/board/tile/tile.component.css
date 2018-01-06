@@ -1,5 +1,5 @@
 .tile {
-    width: 64px;
+    /* width: 64px; */
     height: 50px;
     cursor: pointer;
     /* position: absolute; */
@@ -14,7 +14,7 @@
 }
 
 .terrain {
-    margin-top: -32px;
+    /* margin-top: -32px; */
     pointer-events: none;
     /* position: absolute; */
 }
@@ -31,7 +31,6 @@
     opacity: .1;
 }
 
-
 .block {
-    opacity:0.5;
+    opacity: 0.5;
 }

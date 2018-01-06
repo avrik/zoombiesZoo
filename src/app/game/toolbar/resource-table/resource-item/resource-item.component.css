@@ -1,20 +1,18 @@
-
 .container {
     color: gold;
     background-color: rgb(22, 7, 39);
     border-radius: 5px;
     margin: 2px 1px 0 1px;
     height: 50px;
-  
 }
 
 .box {
-    width:inherit;
-    border-radius:inherit;
+    width: inherit;
+    border-radius: inherit;
     /* border-bottom: 2px solid rgb(75, 70, 70); */
     background-color: rgb(74, 13, 142);
     /* padding:1px; */
     font-size: 12px;
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     border-bottom: 1px solid #8541d4;
 }

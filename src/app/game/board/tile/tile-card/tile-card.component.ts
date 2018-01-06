@@ -18,35 +18,13 @@ export class TileCardComponent implements OnInit {
   @Input() placed: boolean;
   @Output() collected: EventEmitter<any> = new EventEmitter();
 
-  constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) { }
+  constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) 
+  { 
+    
+  }
 
   ngOnInit() {
   }
 
- /*  clickTileCard() {
-    if (this.card.collect && this.card.type == CardTypeEnum.RESOURCE) {
-      if (this.gameEngine.addToStorage(this.card.family.name, this.card.collect)) {
-        if (this.card.bonus) {
-          this.gameEngine.addToStorage(CardFamilyTypeEnum.COIN, this.card.bonus);
-        }
-        this.collected.emit();
-      } else {
-        this.messagesService.postMessage({ title: "No more storage place", message: "build more storage" });
-      }
-    }
-  }
-
-  hideCardMatch() {
-    this.gameEngine.showCardMatchHint(null);
-    this.showThinkBubble = false;
-  }
-  showCardMatch() {
-    if (this.card.nextCard) {
-      this.gameEngine.showCardMatchHint(this.card);
-    } else if (this.card.family.name == CardFamilyTypeEnum.PERSON) {
-      this.showThinkBubble = true;
-    }
-
-  } */
 
 }

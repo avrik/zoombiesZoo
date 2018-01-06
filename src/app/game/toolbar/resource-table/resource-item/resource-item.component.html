@@ -1,7 +1,10 @@
 <div class="container">
-    <div class="box">{{amount | number}}
+    <!-- <div class="box" [style.color]="state=='in'?'rgb(22, 7, 39)':'gold'" [style.background-color]="state=='in'?'gold':'rgb(74, 13, 142)'">{{amount | number}} -->
+    <div class="box">x{{amount | number}}
         <!-- <button *ngIf="type>=0" style="position:absolute;margin-left: 15px" (click)="onClick()">+</button> -->
     </div>
-    <img [src]="icon" alt="" height="35">
+    <div [@animate]="state">
+        <img [src]="icon" alt="" height="35">
+    </div>
     <!-- <button style="position:absolute;margin-left: -8px;margin-top: 20px;">+</button> -->
 </div>

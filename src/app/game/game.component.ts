@@ -1,3 +1,4 @@
+import { environment } from './../../environments/environment';
 import { TerrainEnum } from './../enums/terrain.enum';
 import { Component, OnInit } from '@angular/core';
 import { GameEngineService } from '../services/game-engine.service';
@@ -16,6 +17,7 @@ export class GameComponent implements OnInit {
   totalMax: number = 0;
   currentLevel: GameLevel;
 
+  debug:boolean
   constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
 
     let fromStorage = localStorage.getItem('totalMax')
@@ -54,6 +56,7 @@ export class GameComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.debug = !environment.production;
     /* setTimeout(() => {
       this.messagesService.postMessage({type:MessageType.CURTAIN, title: "Welcome", message: `start your new town`, butns: [{ label: 'ok', action: null }, { label: 'cancel', action: null }] });
     }, 1500); */

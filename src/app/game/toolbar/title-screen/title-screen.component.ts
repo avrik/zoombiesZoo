@@ -38,4 +38,7 @@ export class TitleScreenComponent implements OnInit {
   ngOnInit() {
   }
 
+  get isCardHint():boolean {
+    return this.cardHint?true:false;
+  }
 }

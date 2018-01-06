@@ -6,7 +6,7 @@
     text-align: center;
     top: 20%;
     left: 40%;
-    z-index: 100000;
+    z-index: 1000;
     box-shadow: 2px 2px black;
 }
 
