@@ -10,16 +10,17 @@ import { MessagesService, IMessage } from './services/messages.service';
 // + undo implementation
 // + save game state implementation
 // + restart game fixing
-// + fix next card hinting
+// ++ fix next card hinting
 // + gold reward handling
 // ++ progress bar animation
-// + add match hint on rollover
+// + add match hint animation on rollover
 // + add remove resource/bomb card
 // ++ fix curtain animation
-// + add game settings
+// + add game settings button + window
 // + high score
 // + add seasons (winter ,spring...)
-
+// + tutorial
+// + score count animation
 
 // MAJOR ISSUES
 

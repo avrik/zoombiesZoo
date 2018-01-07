@@ -22,27 +22,16 @@ import { TileState } from '../../../enums/tile-state.enum';
   styleUrls: ['./tile.component.css'],
   animations: [
     trigger('floatOver', [
-      state('inactive', style({
+      state('down', style({
         transform: 'scale(1)'
       })),
-      state('active', style({
+      state('up', style({
         transform: 'scale(1.2)'
       })),
-      transition('inactive => active', animate('300ms ease-out')),
-      transition('active => inactive', animate('300ms ease-out'))
+      transition('* => up', animate('300ms ease-out')),
+      transition('* => down', animate('300ms ease-out')),
+      transition('up => down', animate('300ms ease-out'))
     ]),
-
-    trigger('collect', [
-      state('inactive', style({
-        transform: 'translateY(140px)'
-      })),
-      state('fly', style({
-        transform: 'translateY(140px)'
-      })),
-      transition('inactive => fly', animate('1300ms ease-out')),
-      transition('fly => inactive', animate('1300ms ease-out'))
-    ])
-    ,
 
     trigger('moveAnimation', [
       state('up', style({ transform: 'translateY(-50px)' })),
@@ -54,6 +43,23 @@ import { TileState } from '../../../enums/tile-state.enum';
       transition('* => left', animate('200ms ease-out')),
       transition('* => right', animate('200ms ease-out')),
 
+      state('upAndClear', style({ transform: 'translateY(-50px)' })),
+      state('downAndClear', style({ transform: 'translateY(50px)' })),
+      state('leftAndClear', style({ transform: 'translateX(-50px)' })),
+      state('rightAndClear', style({ transform: 'translateX(50px)' })),
+      transition('* => upAndClear', animate('100ms ease-out')),
+      transition('* => downAndClear', animate('100ms ease-out')),
+      transition('* => leftAndClear', animate('100ms ease-out')),
+      transition('* => rightAndClear', animate('100ms ease-out')),
+
+      state('upLeftAndClear', style({ transform: 'translateY(-50px) translateX(-50px)' })),
+      state('upRightAndClear', style({ transform: 'translateY(-50px) translateX(50px)' })),
+      state('downLeftAndClear', style({ transform: 'translateY(50px) translateX(-50px)' })),
+      state('downRightAndClear', style({ transform: 'translateY(50px) translateX(50px)' })),
+      transition('* => upLeftAndClear', animate('100ms ease-out')),
+      transition('* => upRightAndClear', animate('100ms ease-out')),
+      transition('* => downLeftAndClear', animate('100ms ease-out')),
+      transition('* => downRightAndClear', animate('100ms ease-out')),
     ])
   ]
 })
@@ -64,7 +70,7 @@ export class TileComponent implements OnInit {
   @Input() onBoard: boolean = true;
   @Output() openStore: EventEmitter<any> = new EventEmitter();
   @Output() chosen: EventEmitter<Tile> = new EventEmitter();
-  state: string = "inactive";
+  floatState: string = "";
   moveState: string = "idle";
 
   currentCard: Card;
@@ -72,8 +78,6 @@ export class TileComponent implements OnInit {
   timeout: any;
   resourceStorage: IResourceStorage;
   showThinkBubble: boolean;
-
-  collectState: string = "inactive";
   isSelectd: boolean;
 
   storeItems: IBuyItem[] = [
@@ -121,9 +125,6 @@ export class TileComponent implements OnInit {
         }, 200);
       }
     })
-
-
-
   }
 
   onCardCollected() {
@@ -161,12 +162,6 @@ export class TileComponent implements OnInit {
 
           if (this.tile.card.collect && this.tile.card.type == CardTypeEnum.RESOURCE) {
             if (this.gameEngine.collectResources(this.tile.card.family.name, this.tile.card.collected)) {
-              /* if (this.tile.card.bonus) {
-                this.gameEngine.addToStorage(CardFamilyTypeEnum.COIN, this.tile.card.bonus);
-              } */
-
-              this.collectState = "fly";
-              //this.tile.overMe = false;
               this.tile.clear();
             } else {
 
@@ -223,7 +218,7 @@ export class TileComponent implements OnInit {
     }
 
     if (!this.isSelectd) {
-      this.state = 'inactive';
+      this.floatState = 'inactive';
       this.tile.overMe = false;
       clearTimeout(this.timeout);
       if (this.tile.card) {
@@ -247,19 +242,14 @@ export class TileComponent implements OnInit {
     } else {
       if (this.tile.terrain.type == TerrainEnum.RESOURCES || this.tile.terrain.type == TerrainEnum.CARD_HOLDER) {
         this.tile.overMe = true;
+        this.floatState = 'up';
 
-        this.timeout = setTimeout(() => {
-          this.state = 'active';
-          this.goDown();
-        }, 50);
 
       } else if (this.tile.terrain.type == TerrainEnum.CITY) {
         this.gameEngine.showCardMatchHint(this.gameEngine.getNewCard(CardFamilyTypeEnum.WILD));
       }
     }
   }
-
-
 
   hideCardMatch() {
     this.gameEngine.showCardMatchHint(null);
@@ -273,30 +263,27 @@ export class TileComponent implements OnInit {
       this.showThinkBubble = true;
       this.gameEngine.showCardMatchHint(this.gameEngine.getNewCard(CardFamilyTypeEnum.WILD));
     }
-
   }
 
-  get gotCard():boolean{
-    return this.tile.card?true:false;
+  get gotCard(): boolean {
+    return this.tile.card ? true : false;
   }
 
-
-  goUp() {
-    this.timeout = setTimeout(() => {
-      this.state = 'active';
-      this.goDown();
-    }, 320);
-  }
-
-  goDown() {
-    this.timeout = setTimeout(() => {
-      this.state = 'inactive';
-      this.goUp()
-    }, 320);
+  onFloatDone(event) {
+    if (event.toState == 'up') {
+      this.floatState = 'down';
+    } else if (event.toState == 'down') {
+      this.floatState = 'up';
+    } else
+      this.floatState = "";
   }
 
   getIndex() {
     return this.tile.col * 10;
+  }
+
+  onMoveDone(event) {
+    if (event.toState.indexOf('AndClear') != -1) this.tile.clear();
   }
 
 }

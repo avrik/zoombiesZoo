@@ -343,9 +343,12 @@ export class GameEngineService {
       let rand: number = Math.floor(Math.random() * (churchsAround.length));
       let moveToTile: Tile = churchsAround.find((item, index) => index == rand);
 
-      tile.clear();
+      //tile.clear();
       moveToTile.card.collected++;
-      this.findMatch(moveToTile);
+
+      this.moveAndClear(tile, moveToTile);
+
+      //this.findMatch(moveToTile);
       return true;
     } else {
 
@@ -356,7 +359,6 @@ export class GameEngineService {
           empties = empties.filter(a => (a.terrain.type != TerrainEnum.RESOURCES));
           break;
         case TerrainEnum.CITY:
-          // case TerrainEnum.ROAD:
           empties = empties.filter(a => (a.terrain.type != TerrainEnum.BRIDGE));
           break;
       }
@@ -375,12 +377,13 @@ export class GameEngineService {
     if (housesAround.length) {
       let rand: number = Math.floor(Math.random() * (housesAround.length));
       let moveToTile: Tile = housesAround.find((item, index) => index == rand);
-      
-      tile.clear();
-  
+
+      //tile.clear();
+      //tile.card.moved = true;
       moveToTile.card.collected++;
       this.updatePopulation = 1;
 
+      this.moveAndClear(tile, moveToTile);
       return true;
     } else {
       let empties: Tile[] = tile.getAllEmpties().filter(a => (a.terrain.walkable));
@@ -402,7 +405,18 @@ export class GameEngineService {
     }
   }
 
+  moveAndClear(from: Tile, to: Tile) {
+    from.card.moved = true;
+    if (to.col < from.col && to.row < from.row) { from.moveMe = "upLeftAndClear"; return }
+    if (to.col < from.col && to.row > from.row) { from.moveMe = "upRightAndClear"; return }
+    if (to.col > from.col && to.row < from.row) { from.moveMe = "downLeftAndClear"; return }
+    if (to.col > from.col && to.row > from.row) { from.moveMe = "downRightAndClear"; return }
 
+    if (to.col < from.col) { from.moveMe = "upAndClear"; return }
+    if (to.col > from.col) { from.moveMe = "downAndClear"; return }
+    if (to.row < from.row) { from.moveMe = "leftAndClear"; return }
+    if (to.row > from.row) { from.moveMe = "rightAndClear"; return }
+  }
 
   moveToRandomSpot(tile: Tile, empties: Tile[]): boolean {
     if (empties.length) {
@@ -512,7 +526,12 @@ export class GameEngineService {
           if (linked.card.collected) totalCollected += linked.card.collected;
         }
  */
-        linked.clear();
+        //linked.clear();
+        this.moveAndClear(linked, tile)
+        /* if (linked.col < tile.col) linked.moveMe = "downAndClear";
+        if (linked.col > tile.col) linked.moveMe = "upAndClear";
+        if (linked.row < tile.row) linked.moveMe = "rightAndClear";
+        if (linked.row > tile.row) linked.moveMe = "leftAndClear"; */
       });
 
 

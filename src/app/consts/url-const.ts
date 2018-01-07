@@ -15,7 +15,7 @@ export const UrlConst = {
     HOUSE5:"assets/buildings/house3.png",
     HOUSE6:"assets/buildings/house3.png",
 
-    STORAGE1:"assets/buildings/storage1.png",
+    STORAGE1:"assets/buildings/storage.png",
     STORAGE2:"assets/buildings/storage.png",
     STORAGE3:"assets/buildings/storage.png",
     STORAGE4:"assets/buildings/storage.png",
