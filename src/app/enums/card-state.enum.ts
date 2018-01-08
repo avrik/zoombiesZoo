@@ -1,4 +1,4 @@
-export enum TileState {
+export enum CardState {
     REGULAR = 0,
     WAIT_FOR_MOVE = 1,
     DISABLED = -1,

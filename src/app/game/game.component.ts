@@ -46,7 +46,7 @@ export class GameComponent implements OnInit {
       if (currentLevel && currentLevel.index > 0) {
         if (this.currentLevel) {
           this.messagesService.postMessage({
-            type:MessageType.CURTAIN,title: "Well done! ", message:`level ${currentLevel.index} completed!`
+            type:MessageType.CURTAIN,title: "Well done! ", message:`level ${currentLevel.index} completed!\n${currentLevel.reward.coins} coin rewarded`
             , butns: [{ label: 'next level' }]
           });
         }

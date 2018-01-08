@@ -42,7 +42,7 @@ export class ToolbarComponent implements OnInit {
     this.gameEngine.tiles$.subscribe(tiles => {
       if (tiles) {
         let arr = tiles.filter(a => a.card && !a.card.autoPlaced).map(a => a.card.value)
-        if (arr.length) this.score = arr.reduce((prev, cur) => prev + cur);
+        if (arr && arr.length) this.score = arr.reduce((prev, cur) => prev?prev + cur:cur);
       }
     })
     this.gameEngine.years$.subscribe(years => { this.years = years })

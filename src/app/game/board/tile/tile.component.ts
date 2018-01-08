@@ -1,3 +1,4 @@
+import { CardState } from './../../../enums/card-state.enum';
 import { TileCardComponent } from './tile-card/tile-card.component';
 import { UrlConst } from './../../../consts/url-const';
 import { CardTypeEnum } from './../../../enums/card-type-enum.enum';
@@ -117,6 +118,7 @@ export class TileComponent implements OnInit {
         if (move == "left") this.cardRef.nativeElement.style.marginLeft = "50px"
         if (move == "right") this.cardRef.nativeElement.style.marginLeft = "-50px"
         this.moveState = move;
+        //this.tile.state = TileState.MOVING;
 
         setTimeout(() => {
           this.cardRef.nativeElement.style.marginTop = 0;
@@ -173,20 +175,17 @@ export class TileComponent implements OnInit {
         } else
 
           if (this.tile.terrain.type == TerrainEnum.RESOURCES) {
+            this.gameEngine.placeCardOnBoard(this.tile, this.currentCard);
 
-            this.tile.card = this.currentCard;
+            /* this.tile.card = this.currentCard;
 
             if (this.tile.card.mergeBy == MergeTypeEnum.MATCH) {
               this.gameEngine.findMatch(this.tile);
-            }
+            } */
 
-            // setTimeout(() => {
-            this.gameEngine.nextTurn();
-            //}, 100);
-
+            //this.gameEngine.nextTurn();
             this.chosen.emit();
           }
-
   }
 
   buyItem(buyItem: IBuyItem) {
@@ -203,12 +202,14 @@ export class TileComponent implements OnInit {
       if (buyItem.type == CardFamilyTypeEnum.ROAD) {
         this.tile.terrainTop = new Terrain(TerrainEnum.ROAD)
       }
-      else {
-        this.tile.card = this.gameEngine.getNewCard(buyItem.type);
-        this.gameEngine.findMatch(this.tile);
-      }
+     // else {
+        //this.tile.card = this.gameEngine.getNewCard(buyItem.type);
+        //this.gameEngine.findMatch(this.tile);
 
-      this.gameEngine.nextTurn();
+        this.gameEngine.placeCardOnBoard(this.tile, this.gameEngine.getNewCard(buyItem.type))
+     // }
+
+      //this.gameEngine.nextTurn();
     }
   }
 
@@ -283,7 +284,14 @@ export class TileComponent implements OnInit {
   }
 
   onMoveDone(event) {
-    if (event.toState.indexOf('AndClear') != -1) this.tile.clear();
+    this.tile.state = TileState.REGULAR;
+    if (this.tile.card) this.tile.card.state = CardState.DONE;
+
+    if (event.toState.indexOf('AndClear') != -1) {
+      this.tile.clear();
+    }
+
+    this.gameEngine.updateBoard();
   }
 
 }

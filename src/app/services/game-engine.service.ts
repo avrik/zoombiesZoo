@@ -1,3 +1,5 @@
+import { CardState } from './../enums/card-state.enum';
+
 
 import { CardFamilyTypeEnum } from './../enums/card-family-type-enum.enum';
 import { IResourceStorage } from 'app/services/game-engine.service';
@@ -48,6 +50,8 @@ export class GameEngineService {
   totalCols: number = 5;
 
   pendingTileBuilding: Tile;
+
+  private pendingPlacement: boolean;
   private tilesPos: any[] = [];
   private tilesMatches: Tile[] = [];
   private tilesCities: Tile[] = [];
@@ -73,20 +77,18 @@ export class GameEngineService {
 
   set updateCurrentCard(card: Card) {
     this.prevGameState = Object.assign({}, this).gameState;
-    this.gameState.currentCard = card;
-    this._currentCard$.next(Object.assign({}, this.gameState).currentCard);
+    this.gameState.currentCard = Object.assign({}, card);
+    this._currentCard$.next(card);
   }
 
   set updatePopulation(amount: number) {
-    //this.population += amount;
     this.gameState.population += amount;
     this._population$.next(this.gameState.population);
   }
 
   set updateResourceStorage(storage: IResourceStorage) {
-    // this.resourceStorage = storage;
-    this.gameState.resourceStorage = storage;
-    this._resourceStorage$.next(Object.assign({}, this.gameState).resourceStorage);
+    this.gameState.resourceStorage = Object.assign({}, storage);
+    this._resourceStorage$.next(this.gameState.resourceStorage);
   }
 
   constructor() {
@@ -99,6 +101,17 @@ export class GameEngineService {
     this._years$ = <BehaviorSubject<number>>new BehaviorSubject(0);
 
     this.generateWorld();
+
+    this.tiles$.subscribe(tiles => {
+      if (tiles) {
+        let done: number = tiles.filter(a => a.card && a.card.state != CardState.DONE).length;
+        if (done === 0) {
+          setTimeout(() => {
+            this.roundComplete();
+          }, 10);
+        }
+      }
+    })
   }
 
   generateWorld() {
@@ -163,19 +176,21 @@ export class GameEngineService {
     if (!firstTime) {
       this.gameState.tiles.forEach(tile => tile.reset());
       this.gameState = Object.assign({}, gameStateInit);
+      this._currentLevel$.next(this.gameState.currentLevel);
+      this._population$.next(this.gameState.population);
+      this._years$.next(this.gameState.turn);
+      
     }
+
     this.updateBoard();
+    this.updateResourceStorage = initResourcesStorage;
     //this._tiles$.next(Object.assign({}, this.gameState).tiles);
     //this._resourceStorage$.next(Object.assign({}, this.gameState).resourceStorage);
-    this._currentLevel$.next(this.gameState.currentLevel);
-    this._population$.next(this.gameState.population);
-    this._years$.next(this.gameState.turn);
-
-    this.updateResourceStorage = initResourcesStorage;
+    //this.updateResourceStorage = initResourcesStorage;
 
     this.setNextLevel();
     this.placeRandomResources();
-    this.setNextValue();
+    //this.setNextValue();
   }
 
   setNextLevel() {
@@ -211,37 +226,45 @@ export class GameEngineService {
   }
 
   updateBoard() {
+
     this._tiles$.next(Object.assign({}, this.gameState).tiles);
   }
 
-  nextTurn() {
-    this.gameState.tiles.filter(tile => tile.card && tile.card.type == CardTypeEnum.WALKER).forEach(tile => {
-      tile.card.age++;
-      tile.card.moved = false;
-    });
+
+  placeCardOnBoard(tile: Tile, card: Card) {
+
+    this.updateCurrentCard = null;
+    this.pendingPlacement = false;
+    if (card.family.name != CardFamilyTypeEnum.ROAD) {
+      tile.card = card;
+      if (tile.card.mergeBy == MergeTypeEnum.MATCH) {
+        this.findMatch(tile);
+      }
+    }
 
     this.moveWalkers();
-    this.trapWalkers();
+    this.gameState.tiles.filter(tile => tile.card && tile.card.state == CardState.REGULAR).forEach(tile => tile.card.state = CardState.DONE);
+    this.updateBoard();
 
     this.gameState.turn++;
     this._years$.next(this.gameState.turn);
-    this.setNextValue();
-
-    this.updateBoard();
-
-    setTimeout(() => {
-      this.roundComplete();
-    }, 200);
-
-
-    //localStorage.setItem('gameData', JSON.stringify(this.gameState.tiles));
-
-  }
-
-  roundComplete() {
     if (this.gameState.population >= this.gameState.currentLevel.goal) {
       this.setNextLevel();
     }
+  }
+
+  /* nextTurn() {
+    setTimeout(() => {
+      this.roundComplete();
+    }, 50);
+  } */
+
+  roundComplete() {
+    this.gameState.tiles.filter(tile => tile.card).forEach(tile => {
+      tile.card.age++;
+      tile.card.state = CardState.REGULAR;
+    });
+    this.setNextValue();
   }
 
   getCityTile(): Tile {
@@ -252,7 +275,8 @@ export class GameEngineService {
 
   moveWalkers() {
     let actionTaken: boolean = false;
-    let walkers: Tile[] = this.gameState.tiles.filter(tile => tile.card && tile.card.type === CardTypeEnum.WALKER && !tile.card.moved);
+    let walkers: Tile[] = this.gameState.tiles.filter(tile => tile.card && tile.card.type === CardTypeEnum.WALKER && tile.card.state == CardState.REGULAR);
+
     let people: Tile[] = walkers.filter(a => a.card.family.name == CardFamilyTypeEnum.PERSON);
     let animals: Tile[] = walkers.filter(a => a.card.family.name == CardFamilyTypeEnum.ANIMAL);
     let zoombies: Tile[] = walkers.filter(a => a.card.family.name == CardFamilyTypeEnum.ZOOMBIE);
@@ -263,6 +287,8 @@ export class GameEngineService {
 
     if (actionTaken) {
       this.moveWalkers();
+    } else {
+      this.trapWalkers();
     }
   }
 
@@ -328,14 +354,18 @@ export class GameEngineService {
 
   }
 
-  findGraveMatches() {
-    let actionTaken: boolean;
+  /* findGraveMatches() {
+
     let graves: Tile[] = this.tilesMatches.filter(tile => (tile.card && tile.card.family.name === CardFamilyTypeEnum.GRAVE));
-    graves.sort((a, b) => a.card.age > a.card.age ? 0 : 1);
+    graves.sort((a, b) => {
+     if  (a.card.age > a.card.age) return -1;
+     if  (a.card.age < a.card.age) return 1;
+     return 0;
+    });
     graves.forEach(grave => {
       this.findMatch(grave);
     })
-  }
+  } */
 
   moveZoombiesToRandomEmpty(tile: Tile): boolean {
     let churchsAround: Tile[] = tile.getCardsAround().filter(a => a.card.family.name == CardFamilyTypeEnum.CHURCH && a.card.collected < a.card.collect)
@@ -406,7 +436,8 @@ export class GameEngineService {
   }
 
   moveAndClear(from: Tile, to: Tile) {
-    from.card.moved = true;
+    //from.card.moved = true;
+    from.card.state = CardState.MOVING;
     if (to.col < from.col && to.row < from.row) { from.moveMe = "upLeftAndClear"; return }
     if (to.col < from.col && to.row > from.row) { from.moveMe = "upRightAndClear"; return }
     if (to.col > from.col && to.row < from.row) { from.moveMe = "downLeftAndClear"; return }
@@ -422,7 +453,8 @@ export class GameEngineService {
     if (empties.length) {
       let rand: number = Math.floor(Math.random() * (empties.length));
       let moveToTile: Tile = empties.find((item, index) => index == rand);
-      tile.card.moved = true;
+      // tile.card.moved = true;
+      tile.card.state = CardState.MOVING;
       moveToTile.card = tile.card;
       moveToTile.card.preTile = tile;
 
@@ -487,7 +519,6 @@ export class GameEngineService {
         return false;
       }
     }
-
   }
 
   setNextValue() {
@@ -520,20 +551,9 @@ export class GameEngineService {
 
       matchedTiles.filter(a => a.card).forEach(linked => {
         if (linked.card && linked.card.collected) totalCollected += linked.card.collected;
-        /* if (tile.card.type == CardTypeEnum.BUILDING) {
-          if (linked.card.collected) totalCollected += linked.card.collected;
-        } else {
-          if (linked.card.collected) totalCollected += linked.card.collected;
-        }
- */
-        //linked.clear();
-        this.moveAndClear(linked, tile)
-        /* if (linked.col < tile.col) linked.moveMe = "downAndClear";
-        if (linked.col > tile.col) linked.moveMe = "upAndClear";
-        if (linked.row < tile.row) linked.moveMe = "rightAndClear";
-        if (linked.row > tile.row) linked.moveMe = "leftAndClear"; */
-      });
 
+        this.moveAndClear(linked, tile)
+      });
 
       if (tile.card.nextCard) {
 
@@ -544,7 +564,7 @@ export class GameEngineService {
 
         if (tile.card.bonus) {
           //this.addToStorage(CardFamilyTypeEnum.COIN, tile.card.bonus);
-          let empties: Tile[] = tile.getAllEmpties();
+          let empties: Tile[] = tile.getAllEmpties().filter(a=>a.terrain.type==TerrainEnum.RESOURCES);
           if (empties.length) {
             empties[0].card = this.getNewCard(CardFamilyTypeEnum.COIN);
             empties[0].card.collected = tile.card.bonus;

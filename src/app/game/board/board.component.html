@@ -1,13 +1,3 @@
-<!-- <div *ngIf="gameEngine.gameOver" style="margin-top:10px">
-  <button (click)="gameEngine.restart()">Start Over</button>
-</div> -->
-
-
-
-<div>
-    <div class="container" #mainBoard [ngStyle]="{'grid-template-columns': getCols() }">
-        <app-tile *ngFor="let tile of tiles" [tile]="tile" (chosen)="onTileClicked(tile)" (openStore)="onTileOpenStore($event)"></app-tile>
-        <!-- <app-tile [data]="emptySlot" style="margin-top:10px" (click)="clickEmptySlot()"></app-tile> -->
-    </div>
-    <!-- <app-board-bg></app-board-bg> -->
+<div class="container" #mainBoard [ngStyle]="{'grid-template-columns': getCols() }">
+    <app-tile *ngFor="let tile of tiles" [tile]="tile" (chosen)="onTileClicked(tile)" (openStore)="onTileOpenStore($event)"></app-tile>
 </div>

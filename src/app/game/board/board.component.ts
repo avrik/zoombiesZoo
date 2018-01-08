@@ -12,14 +12,14 @@ import { Card } from '../cards/card';
   styleUrls: ['./board.component.css']
 })
 export class BoardComponent implements OnInit {
-  emptySlot: Tile;
   tiles: Tile[] = [];
   currentCard: Card;
   currentTileClicked: TileComponent;
   tileOver: Tile;
+  lastTileClicked: Tile;
 
-  @ViewChild('tileRef') tileRef: ElementRef;
-  @ViewChild('mainBoard') mainBoard: ElementRef;
+  //@ViewChild('tileRef') tileRef: ElementRef;
+  //@ViewChild('mainBoard') mainBoard: ElementRef;
 
   constructor(public gameEngine: GameEngineService) {
 
@@ -28,13 +28,11 @@ export class BoardComponent implements OnInit {
     });
     this.gameEngine.currentCard$.subscribe(currentCard => {
       this.currentCard = currentCard;
+      if (this.lastTileClicked) this.selectTileOver(this.lastTileClicked);
     });
-
-    this.emptySlot = new Tile();
   }
 
   ngOnInit() {
-
     this.selectTileOver();
   }
 
@@ -46,19 +44,9 @@ export class BoardComponent implements OnInit {
     return str;
   }
 
-  /* clickEmptySlot() {
-    let temp = this.emptySlot.card;
-    this.emptySlot.card = this.currentCard;
-
-    if (temp) {
-      this.gameEngine.updateCurrentCard = temp;
-    } else {
-      this.gameEngine.setNextValue();
-    }
-  } */
-
   onTileClicked(tile: Tile) {
-    this.selectTileOver(tile);
+    this.lastTileClicked = tile
+    //this.selectTileOver(tile);
     if (this.currentTileClicked) {
       this.currentTileClicked.showStore = false;
     }
@@ -70,7 +58,8 @@ export class BoardComponent implements OnInit {
     let empties: Tile[];
 
     if (tile) {
-      empties = tile.getAllEmpties().filter(a => a.terrain.type == TerrainEnum.RESOURCES);
+      empties = !tile.card?[tile]:tile.getAllEmpties().filter(a => a.terrain.type == TerrainEnum.RESOURCES);
+    
     } else {
       empties = this.tiles.filter(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
     }

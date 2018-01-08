@@ -179,7 +179,7 @@ export class Card implements ICardData {
   id: number;
   mergeBy: number;
   collected: number;
-  state: string = "inactive";
+  state: number = 0;
   autoPlaced: boolean = false;
   preTile: Tile;
 

@@ -1,3 +1,5 @@
+import { CardState } from './../../../enums/card-state.enum';
+import { TileState } from './../../../enums/tile-state.enum';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Card } from '../../cards/card';
@@ -19,13 +21,19 @@ export class Tile {
         this.terrain = new Terrain();
         this._selected$ = <BehaviorSubject<boolean>>new BehaviorSubject(false);
         this._move$ = <BehaviorSubject<string>>new BehaviorSubject("");
+        this.state = TileState.REGULAR;
     }
 
 
     get selected$(): Observable<boolean> { return this._selected$.asObservable(); }
     get move$(): Observable<string> { return this._move$.asObservable(); }
 
-    set moveMe(value: string) { this._move$.next(value) };
+    set moveMe(value: string) { 
+        this.state = TileState.MOVING; 
+        this.card.state = CardState.MOVING;
+        this._move$.next(value) 
+    };
+    
     set select(value: boolean) { this._selected$.next(value) };
 
     getAllEmpties(): Tile[] {
@@ -63,6 +71,7 @@ export class Tile {
     clear() {
 
         this.card = null;
+        this.state = TileState.REGULAR;
     }
 
     reset() {
