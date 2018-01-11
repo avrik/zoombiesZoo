@@ -1,10 +1,10 @@
 
 <div class="container">
-    <div *ngIf="card.collect && card.type == 0" class="count-frame">
+    <div *ngIf="card.collect && (card.type == 0 || card.type == 4)" class="count-frame">
         <div class="collect-box">x{{card.collected}}</div>
     </div>
 
-    <div *ngIf="card.collect && card.type == 1" class="count-frame" style="border:none;">
+    <div *ngIf="card.collect && (card.type == 1 )" class="count-frame" style="border:none;">
         <div class="collect-box">{{card.collected | number : '1.0-0'}}/{{card.collect | number : '1.0-0'}}</div>
     </div>
 

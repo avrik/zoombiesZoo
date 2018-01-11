@@ -4,6 +4,7 @@ export enum CardFamilyTypeEnum {
     LUMBER = 1,
     COIN = 10,
 
+    BOMB = 5,
     PERSON = 100,
     ANIMAL = 200,
     GRAVE = 300,

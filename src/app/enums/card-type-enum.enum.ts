@@ -3,4 +3,5 @@ export enum CardTypeEnum {
     BUILDING = 1,
     WALKER = 2,
     TERRAIN = 3,
+    BOMB = 4,
 }

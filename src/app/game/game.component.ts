@@ -6,6 +6,7 @@ import { MessagesService } from '../services/messages.service';
 import { GameLevel } from 'app/game/levels/game-level';
 import { MessageType } from '../enums/message-type.enum';
 import { Tile } from './board/tile/tile';
+import { CardFamilyTypeEnum } from 'app/enums/card-family-type-enum.enum';
 
 @Component({
   selector: 'app-game',
@@ -13,23 +14,23 @@ import { Tile } from './board/tile/tile';
   styleUrls: ['./game.component.css']
 })
 export class GameComponent implements OnInit {
-  total: number;
-  totalMax: number = 0;
+  //total: number;
+  //totalMax: number = 0;
   currentLevel: GameLevel;
 
   debug:boolean
   constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
 
-    let fromStorage = localStorage.getItem('totalMax')
-    this.totalMax = parseFloat(fromStorage)
+    //let fromStorage = localStorage.getItem('totalMax')
+    //this.totalMax = parseFloat(fromStorage)
 
     this.gameEngine.tiles$.subscribe(tiles => {
       if (tiles) {
-        this.total = 0;
-        tiles.filter(a => a.card && a.card.value > 0).forEach(a => this.total += a.card.value);
+        //this.total = 0;
+        //tiles.filter(a => a.card && a.card.value > 0).forEach(a => this.total += a.card.value);
 
-        this.totalMax = Math.max(this.total, this.totalMax);
-        localStorage.setItem('totalMax', this.totalMax.toString())
+        //this.totalMax = Math.max(this.total, this.totalMax);
+        //localStorage.setItem('totalMax', this.totalMax.toString())
 
         let availableTilesInField:Tile[] = tiles.filter(a => a.terrain && (a.terrain.type == TerrainEnum.RESOURCES || a.terrain.type == TerrainEnum.CARD_HOLDER) && !a.card);
         let availableTilesInCity:Tile[] = tiles.filter(a => a.terrain && (a.terrain.type == TerrainEnum.CITY) && !a.card);
@@ -49,6 +50,10 @@ export class GameComponent implements OnInit {
             type:MessageType.CURTAIN,title: "Well done! ", message:`level ${currentLevel.index} completed!\n${currentLevel.reward.coins} coin rewarded`
             , butns: [{ label: 'next level' }]
           });
+
+          //if (currentLevel.reward.coins)  this.gameEngine.addToStorage(CardFamilyTypeEnum.COIN, currentLevel.reward.coins)
+          //if (currentLevel.reward.lumber)  this.gameEngine.addToStorage(CardFamilyTypeEnum.LUMBER, currentLevel.reward.lumber)
+          //if (currentLevel.reward.bricks)  this.gameEngine.addToStorage(CardFamilyTypeEnum.BRICK, currentLevel.reward.bricks)
         }
       }
       this.currentLevel = currentLevel

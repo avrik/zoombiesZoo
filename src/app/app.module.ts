@@ -26,6 +26,8 @@ import { BuyItemComponent } from 'app/game/tile-buy-popup/buy-item/buy-item.comp
 import { TileBuyPopupComponent } from 'app/game/tile-buy-popup/tile-buy-popup.component';
 import { TitleScreenComponent } from './game/toolbar/title-screen/title-screen.component';
 import { MessageWindowComponent } from './game/toolbar/message-window/message-window.component';
+import { LumberComponent } from './game/item-view/lumber/lumber.component';
+import { ItemImgComponent } from './game/item-view/item-img/item-img.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +47,8 @@ import { MessageWindowComponent } from './game/toolbar/message-window/message-wi
     TestPanelComponent,
     TitleScreenComponent,
     MessageWindowComponent,
+    LumberComponent,
+    ItemImgComponent,
     
   ],
   imports: [

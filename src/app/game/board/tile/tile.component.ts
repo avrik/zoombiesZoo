@@ -16,6 +16,8 @@ import { MessagesService } from '../../../services/messages.service';
 import { IBuyItem } from 'app/game/tile-buy-popup/buy-item/buy-item';
 import { MessageType } from '../../../enums/message-type.enum';
 import { TileState } from '../../../enums/tile-state.enum';
+import * as createjs from 'createjs-module';
+import { Tween, Stage } from 'createjs-module';
 
 @Component({
   selector: 'app-tile',
@@ -31,7 +33,8 @@ import { TileState } from '../../../enums/tile-state.enum';
       })),
       transition('* => up', animate('300ms ease-out')),
       transition('* => down', animate('300ms ease-out')),
-      transition('up => down', animate('300ms ease-out'))
+      transition('up => down', animate('300ms ease-out')),
+      transition('down => up', animate('300ms ease-out'))
     ]),
 
     trigger('moveAnimation', [
@@ -61,18 +64,32 @@ import { TileState } from '../../../enums/tile-state.enum';
       transition('* => upRightAndClear', animate('100ms ease-out')),
       transition('* => downLeftAndClear', animate('100ms ease-out')),
       transition('* => downRightAndClear', animate('100ms ease-out')),
+    ]),
+    trigger('scaleAnimation', [
+      state('up', style({ transform: 'scale(1)' })),
+      state('down', style({ transform: 'scale(.5)' })),
+      transition('* => up', animate('50ms ease-out')),
+      transition('* => down', animate('50ms ease-out'))
+    ]),
+    trigger('collectAnimation', [
+      state('collect', style({ transform: `translateY(-300%) translateX(-150%)`, opacity:'0.5' })),
+      transition('* => collect', animate('250ms ease-in')),
+
     ])
   ]
 })
 
 export class TileComponent implements OnInit {
   @ViewChild('cardRef') cardRef: ElementRef;
+  @ViewChild('resourceRef') resourceRef: ElementRef;
   @Input() tile: Tile;
   @Input() onBoard: boolean = true;
   @Output() openStore: EventEmitter<any> = new EventEmitter();
   @Output() chosen: EventEmitter<Tile> = new EventEmitter();
   floatState: string = "";
   moveState: string = "idle";
+  scaleState: string = "";
+  colloectAnimationState: string = "";
 
   currentCard: Card;
   showStore: boolean;
@@ -80,9 +97,8 @@ export class TileComponent implements OnInit {
   resourceStorage: IResourceStorage;
   showThinkBubble: boolean;
   isSelectd: boolean;
-
+  collectedIcon:string;
   storeItems: IBuyItem[] = [
-
     { label: 'house', cost: { block: 12, lumber: 6, coin: 0 }, icon: UrlConst.HOUSE1, type: CardFamilyTypeEnum.HOUSE, description: "our people need houses" },
     { label: 'storage', cost: { block: 9, lumber: 3, coin: 0 }, icon: UrlConst.STORAGE1, type: CardFamilyTypeEnum.STORAGE, description: "our resources need storage" },
     { label: 'road', cost: { block: 3, lumber: 0, coin: 0 }, icon: UrlConst.ROAD, type: CardFamilyTypeEnum.ROAD, description: "roads will direct the people in the right path" },
@@ -99,9 +115,9 @@ export class TileComponent implements OnInit {
     this.gameEngine.currentCard$.subscribe(currentCard => {
       this.currentCard = currentCard;
     });
-
-
   }
+
+
 
   ngOnInit(): void {
     this.tile.selected$.subscribe(selected => {
@@ -134,6 +150,12 @@ export class TileComponent implements OnInit {
     this.tile.clear();
   }
 
+  doCollectAnimation() {
+    //this.collectedIcon = "lumber";
+    //let tween:Tween = createjs.Tween.get(this.resourceRef, { loop: true });
+    //tween.to({ x: 400 }, 2000)
+  }
+
   clickTile() {
     this.tile.overMe = false;
     if (this.tile.terrain.type == TerrainEnum.CITY) {
@@ -142,6 +164,7 @@ export class TileComponent implements OnInit {
         this.tile.card = this.gameEngine.pendingTileBuilding.card;
         this.gameEngine.moveBuildingDone();
         this.gameEngine.findMatch(this.tile);
+        this.gameEngine.updateBoard();
       } else {
         this.showStore = !this.showStore;
         this.openStore.emit(this);
@@ -161,9 +184,17 @@ export class TileComponent implements OnInit {
       } else
 
         if (this.tile.card) {
+          //this.collectedIcon = "lumber";
+          //this.colloectAnimationState = "collect";
+          this.doCollectAnimation();
+         
 
           if (this.tile.card.collect && this.tile.card.type == CardTypeEnum.RESOURCE) {
             if (this.gameEngine.collectResources(this.tile.card.family.name, this.tile.card.collected)) {
+              
+              
+              
+              
               this.tile.clear();
             } else {
 
@@ -175,15 +206,10 @@ export class TileComponent implements OnInit {
         } else
 
           if (this.tile.terrain.type == TerrainEnum.RESOURCES) {
+            //this.scaleState="down";
             this.gameEngine.placeCardOnBoard(this.tile, this.currentCard);
-
-            /* this.tile.card = this.currentCard;
-
-            if (this.tile.card.mergeBy == MergeTypeEnum.MATCH) {
-              this.gameEngine.findMatch(this.tile);
-            } */
-
-            //this.gameEngine.nextTurn();
+     
+            
             this.chosen.emit();
           }
   }
@@ -221,12 +247,13 @@ export class TileComponent implements OnInit {
     if (!this.isSelectd) {
       this.floatState = 'inactive';
       this.tile.overMe = false;
-      clearTimeout(this.timeout);
+      //clearTimeout(this.timeout);
       if (this.tile.card) {
         this.hideCardMatch();
       }
     }
   }
+  
   onMouseOver() {
     //this.chosen.emit(this.tile);
     if (this.tile.terrain.type == TerrainEnum.CARD_HOLDER) {
@@ -244,7 +271,6 @@ export class TileComponent implements OnInit {
       if (this.tile.terrain.type == TerrainEnum.RESOURCES || this.tile.terrain.type == TerrainEnum.CARD_HOLDER) {
         this.tile.overMe = true;
         this.floatState = 'up';
-
 
       } else if (this.tile.terrain.type == TerrainEnum.CITY) {
         this.gameEngine.showCardMatchHint(this.gameEngine.getNewCard(CardFamilyTypeEnum.WILD));
@@ -281,6 +307,19 @@ export class TileComponent implements OnInit {
 
   getIndex() {
     return this.tile.col * 10;
+  }
+  
+  onCollectDone(event) {
+    this.colloectAnimationState="";
+    this.collectedIcon="";
+  }
+
+  onScaleDone(event) {
+    
+    if (event.toState == "down")
+    {
+      this.scaleState="up";
+    }
   }
 
   onMoveDone(event) {

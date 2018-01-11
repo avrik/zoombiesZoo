@@ -9,4 +9,5 @@ export enum TerrainEnum {
     ROAD = 5,
     WALL = 6,
     ZOOMBIE_TRAP=10,
+    EXPLOSION=11,
 }

@@ -1,8 +1,8 @@
 <tile-buy-popup *ngIf="showStore" [items]="items" title="store" (buyItem)="onBuyItem($event)"></tile-buy-popup>
 <div class="container">
-    <app-resource-item [amount]="resourceStorage.bricks" [type]="0" icon="assets/resources/brick.png"></app-resource-item>
-    <app-resource-item [amount]="resourceStorage.lumber" [type]="1" icon="assets/resources/lumber1.png"></app-resource-item>
-    <app-resource-item [amount]="resourceStorage.coins" [type]="2" icon="assets/resources/coin.png"></app-resource-item>
+    <app-resource-item [amount]="resourceStorage.bricks" [type]="0" icon="brick"></app-resource-item>
+    <app-resource-item [amount]="resourceStorage.lumber" [type]="1" icon="lumber"></app-resource-item>
+    <app-resource-item [amount]="resourceStorage.coins" [type]="2" icon="coin"></app-resource-item>
 
         <div class="store-btn" (click)="openStore()">
             <p><b>+</b></p>

@@ -23,6 +23,7 @@
         "@angular/router": "^4.0.0",
         "angular-particle": "^1.0.4",
         "core-js": "^2.4.1",
+        "createjs-module": "^0.8.3",
         "ng2-popup": "^0.4.0",
         "proton": "^0.5.0",
         "redux": "^3.7.2",

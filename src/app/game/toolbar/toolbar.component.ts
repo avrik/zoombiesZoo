@@ -42,7 +42,13 @@ export class ToolbarComponent implements OnInit {
     this.gameEngine.tiles$.subscribe(tiles => {
       if (tiles) {
         let arr = tiles.filter(a => a.card && !a.card.autoPlaced).map(a => a.card.value)
-        if (arr && arr.length) this.score = arr.reduce((prev, cur) => prev?prev + cur:cur);
+        if (arr && arr.length) {
+          this.score = arr.reduce((prev, cur) => prev ? prev + cur : cur);
+          this.score += this.gameEngine.gameState.population * 50;
+          this.score += this.gameEngine.gameState.resourceStorage.bricks * this.gameEngine.getNewCard(CardFamilyTypeEnum.BRICK, 1).value
+          this.score += this.gameEngine.gameState.resourceStorage.lumber * this.gameEngine.getNewCard(CardFamilyTypeEnum.LUMBER, 1).value
+          this.score += this.gameEngine.gameState.resourceStorage.coins * this.gameEngine.getNewCard(CardFamilyTypeEnum.COIN, 1).value
+        }
       }
     })
     this.gameEngine.years$.subscribe(years => { this.years = years })
@@ -55,7 +61,7 @@ export class ToolbarComponent implements OnInit {
         if (this.currentLevel) {
 
           this.popCount++;
-          let percent: number = Math.min(Math.round(this.popCount / this.populationTarget * 100),100);
+          let percent: number = Math.min(Math.round(this.popCount / this.populationTarget * 100), 100);
 
           console.log("PERCENT!!! " + percent)
           this.move(percent)

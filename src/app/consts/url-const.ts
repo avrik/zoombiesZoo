@@ -48,6 +48,7 @@ export const UrlConst = {
     ZOOMBIE:"assets/people/zombiePig.png",
     ANIMAL:"assets/people/pig.png",
     GRAVE:"assets/resources/grave.png",
+    BOMB:"assets/resources/tnt.png",
     UNDO:"assets/undo.png",
     BULDOZE:"assets/buldoze.png",
     MOVE:"assets/crane.png",
