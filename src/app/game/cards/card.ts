@@ -21,7 +21,7 @@ export interface ICardData {
   img?: string;
   collect?: number;
   collected?: number;
-  bonus?: number;
+  reward?: number;
 }
 
 
@@ -67,7 +67,7 @@ const graveCard: ICardData = {
 }
 
 const tntCard: ICardData = {
-  level: 0, family: { name: CardFamilyTypeEnum.BOMB, value: 0 }, mergeBy: MergeTypeEnum.NONE, type: CardTypeEnum.BOMB, img: UrlConst.BOMB, collect: 3, collected: 3, chance: 50
+  level: 0, family: { name: CardFamilyTypeEnum.BOMB, value: 0 }, mergeBy: MergeTypeEnum.NONE, type: CardTypeEnum.BOMB, img: UrlConst.BOMB, collect: 3, collected: 3, chance: 10
 }
 export const cardCollection: ICardData[] = [
   {
@@ -117,11 +117,11 @@ export const cardCollection: ICardData[] = [
       nextCard: {
         level: 2, family: familyBrick, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 3, img: UrlConst.BRICK3,
         nextCard: {
-          level: 3, family: familyBrick, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 9, bonus: 1, img: UrlConst.BRICK4,
+          level: 3, family: familyBrick, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 9, reward: 1, img: UrlConst.BRICK4,
           nextCard: {
-            level: 4, family: familyBrick, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 27, bonus: 3, img: UrlConst.BRICK5,
+            level: 4, family: familyBrick, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 27, reward: 3, img: UrlConst.BRICK5,
             nextCard: {
-              level: 5, family: familyBrick, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 81, bonus: 9, img: UrlConst.BRICK6,
+              level: 5, family: familyBrick, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 81, reward: 9, img: UrlConst.BRICK6,
             }
           }
         }
@@ -135,11 +135,11 @@ export const cardCollection: ICardData[] = [
       nextCard: {
         level: 2, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 3, img: UrlConst.LUMBER3,
         nextCard: {
-          level: 3, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 9, bonus: 1, img: UrlConst.LUMBER4,
+          level: 3, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 9, reward: 1, img: UrlConst.LUMBER4,
           nextCard: {
-            level: 3, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 27, bonus: 3, img: UrlConst.LUMBER5,
+            level: 3, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 27, reward: 3, img: UrlConst.LUMBER5,
             nextCard: {
-              level: 3, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 81, bonus: 9, img: UrlConst.LUMBER6
+              level: 3, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 81, reward: 9, img: UrlConst.LUMBER6
             }
           }
         }
@@ -173,9 +173,8 @@ export class Card implements ICardData {
   nextCard?: ICardData;
   chance?: number;
   age: number;
-  bonus: number;
+  reward: number;
   img: string;
-  moved: boolean;
   collect: number;
   id: number;
   mergeBy: number;
@@ -197,8 +196,7 @@ export class Card implements ICardData {
     this.chance = data.chance;
     this.img = data.img;
     this.collect = data.collect ? data.collect : 0;
-    this.bonus = data.bonus ? data.bonus : 0;
-    this.moved = false;
+    this.reward = data.reward ? data.reward : 0;
     this.value = (Math.max((this.level * this.level * 10), 1) * this.family.value);
     this.collected = data.collected ? data.collected : 0;
   }

@@ -106,8 +106,8 @@ export class TileComponent implements OnInit {
   ]
 
   storeItems2: IBuyItem[] = [
-    { cost: { block: 0, lumber: 0, coin: 2 }, icon: UrlConst.MOVE, type: 10, label: 'move', description: "move me" },
-    //{ cost: { block: 0, lumber: 0, coin: 6 }, icon: UrlConst.BULDOZE, type: 10, label: 'remove', description: "destroy building" },
+    { cost: { block: 0, lumber: 0, coin: 2}, icon: UrlConst.MOVE, type: 10, label: 'move', description: "move me" },
+    { label: 'road', cost: { block: 3, lumber: 0, coin: 0 }, icon: UrlConst.ROAD, type: CardFamilyTypeEnum.ROAD, description: "add road" },
   ]
 
   constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
@@ -184,17 +184,10 @@ export class TileComponent implements OnInit {
       } else
 
         if (this.tile.card) {
-          //this.collectedIcon = "lumber";
-          //this.colloectAnimationState = "collect";
           this.doCollectAnimation();
-         
 
           if (this.tile.card.collect && this.tile.card.type == CardTypeEnum.RESOURCE) {
             if (this.gameEngine.collectResources(this.tile.card.family.name, this.tile.card.collected)) {
-              
-              
-              
-              
               this.tile.clear();
             } else {
 
@@ -208,8 +201,6 @@ export class TileComponent implements OnInit {
           if (this.tile.terrain.type == TerrainEnum.RESOURCES) {
             //this.scaleState="down";
             this.gameEngine.placeCardOnBoard(this.tile, this.currentCard);
-     
-            
             this.chosen.emit();
           }
   }
