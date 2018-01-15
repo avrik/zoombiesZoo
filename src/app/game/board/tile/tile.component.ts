@@ -16,8 +16,8 @@ import { MessagesService } from '../../../services/messages.service';
 import { IBuyItem } from 'app/game/tile-buy-popup/buy-item/buy-item';
 import { MessageType } from '../../../enums/message-type.enum';
 import { TileState } from '../../../enums/tile-state.enum';
-import * as createjs from 'createjs-module';
-import { Tween, Stage } from 'createjs-module';
+//import * as createjs from 'createjs-module';
+//import { Tween, Stage } from 'createjs-module';
 
 @Component({
   selector: 'app-tile',
@@ -72,7 +72,7 @@ import { Tween, Stage } from 'createjs-module';
       transition('* => down', animate('50ms ease-out'))
     ]),
     trigger('collectAnimation', [
-      state('collect', style({ transform: `translateY(-300%) translateX(-150%)`, opacity:'0.5' })),
+      state('collect', style({ transform: `translateY(-300%) translateX(-150%)`, opacity: '0.5' })),
       transition('* => collect', animate('250ms ease-in')),
 
     ])
@@ -97,7 +97,7 @@ export class TileComponent implements OnInit {
   resourceStorage: IResourceStorage;
   showThinkBubble: boolean;
   isSelectd: boolean;
-  collectedIcon:string;
+  collectedIcon: string;
   storeItems: IBuyItem[] = [
     { label: 'house', cost: { block: 12, lumber: 6, coin: 0 }, icon: UrlConst.HOUSE1, type: CardFamilyTypeEnum.HOUSE, description: "our people need houses" },
     { label: 'storage', cost: { block: 9, lumber: 3, coin: 0 }, icon: UrlConst.STORAGE1, type: CardFamilyTypeEnum.STORAGE, description: "our resources need storage" },
@@ -106,7 +106,7 @@ export class TileComponent implements OnInit {
   ]
 
   storeItems2: IBuyItem[] = [
-    { cost: { block: 0, lumber: 0, coin: 2}, icon: UrlConst.MOVE, type: 10, label: 'move', description: "move me" },
+    { cost: { block: 0, lumber: 0, coin: 2 }, icon: UrlConst.MOVE, type: 10, label: 'move', description: "move me" },
     { label: 'road', cost: { block: 3, lumber: 0, coin: 0 }, icon: UrlConst.ROAD, type: CardFamilyTypeEnum.ROAD, description: "add road" },
   ]
 
@@ -219,12 +219,12 @@ export class TileComponent implements OnInit {
       if (buyItem.type == CardFamilyTypeEnum.ROAD) {
         this.tile.terrainTop = new Terrain(TerrainEnum.ROAD)
       }
-     // else {
-        //this.tile.card = this.gameEngine.getNewCard(buyItem.type);
-        //this.gameEngine.findMatch(this.tile);
+      // else {
+      //this.tile.card = this.gameEngine.getNewCard(buyItem.type);
+      //this.gameEngine.findMatch(this.tile);
 
-        this.gameEngine.placeCardOnBoard(this.tile, this.gameEngine.getNewCard(buyItem.type))
-     // }
+      this.gameEngine.placeCardOnBoard(this.tile, this.gameEngine.getNewCard(buyItem.type))
+      // }
 
       //this.gameEngine.nextTurn();
     }
@@ -244,7 +244,7 @@ export class TileComponent implements OnInit {
       }
     }
   }
-  
+
   onMouseOver() {
     //this.chosen.emit(this.tile);
     if (this.tile.terrain.type == TerrainEnum.CARD_HOLDER) {
@@ -299,29 +299,31 @@ export class TileComponent implements OnInit {
   getIndex() {
     return this.tile.col * 10;
   }
-  
+
   onCollectDone(event) {
-    this.colloectAnimationState="";
-    this.collectedIcon="";
+    this.colloectAnimationState = "";
+    this.collectedIcon = "";
   }
 
   onScaleDone(event) {
-    
-    if (event.toState == "down")
-    {
-      this.scaleState="up";
+
+    if (event.toState == "down") {
+      this.scaleState = "up";
     }
   }
 
   onMoveDone(event) {
-    this.tile.state = TileState.REGULAR;
-    if (this.tile.card) this.tile.card.state = CardState.DONE;
+    //this.tile.state = TileState.REGULAR;
+    if (this.tile.card) {
+      this.tile.card.state = CardState.DONE;
 
-    if (event.toState.indexOf('AndClear') != -1) {
-      this.tile.clear();
+      if (event.toState.indexOf('AndClear') != -1) {
+        this.tile.clear();
+      }
+
+      this.gameEngine.updateBoard();
     }
 
-    this.gameEngine.updateBoard();
   }
 
 }

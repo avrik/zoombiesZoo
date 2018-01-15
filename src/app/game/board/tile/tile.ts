@@ -1,3 +1,4 @@
+import { CardTypeEnum } from 'app/enums/card-type-enum.enum';
 import { CardState } from './../../../enums/card-state.enum';
 import { TileState } from './../../../enums/tile-state.enum';
 import { Observable } from 'rxjs/Observable';
@@ -28,13 +29,20 @@ export class Tile {
     get selected$(): Observable<boolean> { return this._selected$.asObservable(); }
     get move$(): Observable<string> { return this._move$.asObservable(); }
 
-    set moveMe(value: string) { 
-        this.state = TileState.MOVING; 
+    set moveMe(value: string) {
+        this.state = TileState.MOVING;
         this.card.state = CardState.MOVING;
-        this._move$.next(value) 
+        this._move$.next(value)
     };
-    
+
     set select(value: boolean) { this._selected$.next(value) };
+
+    isCardTrapped(): boolean {
+        if (!this.card || this.card.type != CardTypeEnum.WALKER) return false;
+
+        return this.linked.filter(a => !a.card || (a.card && a.card.type == CardTypeEnum.WALKER)).length ? false : true;
+        //return this.getAllEmpties().length?false:true;
+    }
 
     getAllEmpties(): Tile[] {
         return this.linked.filter(a => !a.card);

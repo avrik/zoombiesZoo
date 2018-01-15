@@ -18,17 +18,17 @@ export class BoardComponent implements OnInit {
   tileOver: Tile;
   lastTileClicked: Tile;
 
-  //@ViewChild('tileRef') tileRef: ElementRef;
-  //@ViewChild('mainBoard') mainBoard: ElementRef;
-
   constructor(public gameEngine: GameEngineService) {
 
     this.gameEngine.tiles$.subscribe(tiles => {
       this.tiles = tiles;
     });
     this.gameEngine.currentCard$.subscribe(currentCard => {
-      this.currentCard = currentCard;
-      if (this.lastTileClicked) this.selectTileOver(this.lastTileClicked);
+      if (currentCard != this.currentCard) {
+        this.currentCard = currentCard;
+        if (this.lastTileClicked && this.currentCard) this.selectTileOver(this.lastTileClicked);
+      }
+
     });
   }
 
@@ -45,6 +45,7 @@ export class BoardComponent implements OnInit {
   }
 
   onTileClicked(tile: Tile) {
+
     this.lastTileClicked = tile
     //this.selectTileOver(tile);
     if (this.currentTileClicked) {
@@ -53,19 +54,23 @@ export class BoardComponent implements OnInit {
   }
 
   selectTileOver(tile: Tile = null) {
-    if (this.tileOver) this.tileOver.select = false;
+    // if (this.tileOver) this.tileOver.select = false;
+    //console.log("selectTileOver!!!1");
 
     let empties: Tile[];
 
     if (tile) {
-      empties = !tile.card?[tile]:tile.getAllEmpties().filter(a => a.terrain.type == TerrainEnum.RESOURCES);
-    
+      empties = !tile.card ? [tile] : tile.getAllEmpties().filter(a => a.terrain.type == TerrainEnum.RESOURCES);
+
     } else {
       empties = this.tiles.filter(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
     }
 
-    this.tileOver = empties[0];
-    if (this.tileOver) this.tileOver.select = true;
+    if (empties.length) {
+      if (this.tileOver) this.tileOver.select = false;
+      this.tileOver = empties[0];
+      this.tileOver.select = true;
+    }
   }
 
   onTileOpenStore(event) {

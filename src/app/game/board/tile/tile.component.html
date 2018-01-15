@@ -1,16 +1,15 @@
 <tile-buy-popup *ngIf="showStore && gotCard==true" [items]="storeItems2" (buyItem)="buyItem($event)" [title]="tile.card.family.label+' lvl '+(tile.card.level+1)"></tile-buy-popup>
 <tile-buy-popup *ngIf="showStore && gotCard==false" [items]="storeItems" (buyItem)="buyItem($event)" [title]="'city improvments'"></tile-buy-popup>
 
-<div (click)="clickTile()" [style.opacity]="tile.state===-1?0.2:1" [style.pointer-events]="tile.state===-1?'none':pointer">
+<div (click)="clickTile()" [style.opacity]="tile.state===-1?0.2:1" [style.pointer-events]="tile.state===-1?'none':'pointer'">
 
     <div style="position:absolute;padding-left:8px" [style.z-index]="getIndex()">
-        <div class="card-float" [@floatOver]="floatState" (@floatOver.done)=onFloatDone($event) *ngIf="gotCard==false && tile.overMe && currentCard"
-            [style.opacity]="isSelectd?0.5:1">
+        <div class="card-float" [@floatOver]="floatState" (@floatOver.done)=onFloatDone($event) *ngIf="gotCard==false && tile.overMe && currentCard" [style.opacity]="isSelectd?0.5:1">
             <app-tile-card [card]="currentCard"></app-tile-card>
         </div>
 
         <!-- <span #resourceRef *ngIf="collectedIcon" style="position:absolute" [@collectAnimation]="colloectAnimationState" (@collectAnimation.done)="onCollectDone($event)"> -->
-        <span #resourceRef style="position:absolute" >
+        <span #resourceRef style="position:absolute">
             <item-img *ngIf="collectedIcon" [type]="collectedIcon" size="35"></item-img>
         </span>
 
