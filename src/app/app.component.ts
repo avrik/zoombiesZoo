@@ -14,7 +14,7 @@ import { MessagesService, IMessage } from './services/messages.service';
 // + gold reward handling
 // ++ progress bar animation
 // + add match hint animation on rollover
-// + add remove resource/bomb card
+// ++ add remove resource/bomb card
 // ++ fix curtain animation
 // + add game settings button + window
 // + high score

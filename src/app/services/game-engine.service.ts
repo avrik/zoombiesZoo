@@ -55,7 +55,9 @@ export class GameEngineService {
   private tilesResources: Tile[] = [];
   private tilesCities: Tile[] = [];
 
-  private prevGameState: IGameModel;;
+  prevCurrentCard: Card;
+  private prevGameState: IGameModel;
+  private gameStateHistory: IGameModel[] = [];
   gameState: IGameModel = gameStateInit;
 
   private _tiles$: BehaviorSubject<Tile[]>;
@@ -75,7 +77,11 @@ export class GameEngineService {
   get years$(): Observable<number> { return this._years$.asObservable(); }
 
   set updateCurrentCard(card: Card) {
-    //this.prevGameState = Object.assign({}, this).gameState;
+    //this.prevGameState = Object.assign({}, this).gameState;.
+    if (this.gameState.currentCard && this.gameState.currentCard.family) {
+
+      this.prevCurrentCard = this.getNewCard(this.gameState.currentCard.family.name);
+    }
     this.gameState.currentCard = Object.assign({}, card);
     this._currentCard$.next(card);
   }
@@ -91,21 +97,22 @@ export class GameEngineService {
   }
 
   constructor() {
-    this._resourceStorage$ = <BehaviorSubject<IResourceStorage>>new BehaviorSubject(initResourcesStorage);
+    this._resourceStorage$ = <BehaviorSubject<IResourceStorage>>new BehaviorSubject(this.gameState.resourceStorage);
     this._cardHint$ = <BehaviorSubject<Card>>new BehaviorSubject(null);
-    this._population$ = <BehaviorSubject<number>>new BehaviorSubject(0);
-    this._tiles$ = <BehaviorSubject<Tile[]>>new BehaviorSubject(null);
-    this._currentCard$ = <BehaviorSubject<Card>>new BehaviorSubject(null);
-    this._currentLevel$ = <BehaviorSubject<GameLevel>>new BehaviorSubject(null);
-    this._years$ = <BehaviorSubject<number>>new BehaviorSubject(0);
+    this._population$ = <BehaviorSubject<number>>new BehaviorSubject(this.gameState.population);
+
+    this._currentCard$ = <BehaviorSubject<Card>>new BehaviorSubject(this.gameState.currentCard);
+    this._currentLevel$ = <BehaviorSubject<GameLevel>>new BehaviorSubject(this.gameState.currentLevel);
+    this._years$ = <BehaviorSubject<number>>new BehaviorSubject(this.gameState.turn);
 
     this.generateWorld();
 
+    this._tiles$ = <BehaviorSubject<Tile[]>>new BehaviorSubject(this.gameState.tiles);
     this.tiles$.subscribe(tiles => {
       if (tiles && this.gameStarted && !this.roundCompleted) {
         let done: number = tiles.filter(a => a.card && a.card.state != CardState.DONE).length;
         if (done === 0) {
-          this.roundCompleted=true;
+          this.roundCompleted = true;
           setTimeout(() => { this.roundComplete(); }, 10);
           //this.roundComplete();
         }
@@ -230,12 +237,13 @@ export class GameEngineService {
   }
 
   updateBoard() {
+    this.prevGameState = Object.assign({}, this.gameState);
     this._tiles$.next(Object.assign({}, this.gameState).tiles);
   }
 
   placeCardOnBoard(tile: Tile, card: Card) {
     this.roundCompleted = false;
-    this.prevGameState = Object.assign({}, this).gameState;
+
     this.updateCurrentCard = null;
 
     if (card.family.name != CardFamilyTypeEnum.ROAD) {
@@ -278,6 +286,9 @@ export class GameEngineService {
   }
 
   roundComplete() {
+    //this.gameStateHistory.push(Object.assign({}, this.gameState));
+
+
     this.gameState.tiles.filter(tile => tile.card).forEach(tile => {
       tile.card.age++;
       tile.card.state = CardState.REGULAR;
@@ -298,7 +309,12 @@ export class GameEngineService {
 
   moveWalkers() {
     let actionTaken: boolean = false;
-    let walkers: Tile[] = this.gameState.tiles.filter(tile => tile.card && tile.card.type === CardTypeEnum.WALKER && tile.card.state == CardState.REGULAR);
+    let walkers: Tile[] = this.gameState.tiles.filter(tile =>
+      tile.card &&
+      tile.card.type === CardTypeEnum.WALKER &&
+      tile.card.state == CardState.REGULAR &&
+      (tile.terrain.type != TerrainEnum.CARD_HOLDER)
+    );
 
     let people: Tile[] = walkers.filter(a => a.card.family.name == CardFamilyTypeEnum.PERSON);
     let animals: Tile[] = walkers.filter(a => a.card.family.name == CardFamilyTypeEnum.ANIMAL);
@@ -660,14 +676,14 @@ export class GameEngineService {
   }
 
   doUndo() {
-    //this.gameState = Object.assign({}, this).prevGameState;
+    //this.gameState = Object.assign({}, this.prevGameState);
+    this.gameState = this.gameStateHistory[0];
+
+    this.updateCurrentCard = this.prevCurrentCard;
+    //this.gameState.turn--;
+    //this._years$.next(Object.assign({}, this.gameState).turn);
+    debugger;
     this.updateBoard();
-    console.log("AaAaaaa = " + this.prevGameState.currentCard.family.label);
-    this.updateCurrentCard = this.prevGameState.currentCard;
-    //this._currentCard$.next(Object.assign({}, this.gameState).currentCard);
-    //this._tiles$.next(Object.assign({}, this.gameState).tiles);
-    this._population$.next(Object.assign({}, this.gameState).population);
-    this._years$.next(Object.assign({}, this.gameState).turn);
   }
 
   moveTileBuilding(tile: Tile) {

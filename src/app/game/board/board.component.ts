@@ -29,7 +29,7 @@ export class BoardComponent implements OnInit {
         if (this.lastTileClicked && this.currentCard) this.selectTileOver(this.lastTileClicked);
       }
 
-    });
+    })
   }
 
   ngOnInit() {
@@ -57,12 +57,13 @@ export class BoardComponent implements OnInit {
     // if (this.tileOver) this.tileOver.select = false;
     //console.log("selectTileOver!!!1");
 
-    let empties: Tile[];
+    let empties: Tile[]=[];
 
     if (tile) {
       empties = !tile.card ? [tile] : tile.getAllEmpties().filter(a => a.terrain.type == TerrainEnum.RESOURCES);
 
-    } else {
+    }
+    if (!empties.length) {
       empties = this.tiles.filter(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
     }
 
@@ -70,6 +71,8 @@ export class BoardComponent implements OnInit {
       if (this.tileOver) this.tileOver.select = false;
       this.tileOver = empties[0];
       this.tileOver.select = true;
+    } else {
+      console.log("not found place for tile over!!!!1");
     }
   }
 
