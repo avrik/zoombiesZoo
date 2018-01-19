@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { mainReducerFunc } from './redux/main-reducer';
 import { MessagesService, IMessage } from './services/messages.service';
-
+import { createStore, combineReducers } from 'redux'
 //TODOS :
 
 // + handle score
@@ -30,6 +30,7 @@ import { MessagesService, IMessage } from './services/messages.service';
 // + redux
 // + sounds & music
 // + effects
+// + monetization
 
 @Component({
   selector: 'app-root',
@@ -45,12 +46,8 @@ export class AppComponent {
     })
 
 
-    /* let store = createStore(mainReducerFunc);
+    
 
-    store.subscribe(() =>
-      console.log(store.getState())
-    )
-
-    store.dispatch({ type: 'INCREMENT' }) */
+    
   }
 }

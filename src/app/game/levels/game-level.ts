@@ -22,7 +22,7 @@ export class GameLevel {
     index: number = 0;
     goal: number;
     reward:IResourceStorage;
-    constructor(prevGameLevel: GameLevel) {
+    constructor(prevGameLevel: GameLevel=null) {
         if (prevGameLevel) {
             this.index = prevGameLevel.index + 1;
         }

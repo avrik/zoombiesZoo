@@ -1,3 +1,4 @@
+import { SET_TILES_CARD_ACTION, NEXT_CARD_ACTION } from './../../../redux/actions/actions';
 import { CardState } from './../../../enums/card-state.enum';
 import { TileCardComponent } from './tile-card/tile-card.component';
 import { UrlConst } from './../../../consts/url-const';
@@ -112,37 +113,46 @@ export class TileComponent implements OnInit {
 
   constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
     this.gameEngine.resourceStorage$.subscribe(resourceStorage => this.resourceStorage = resourceStorage)
-    this.gameEngine.currentCard$.subscribe(currentCard => {
+    /* this.gameEngine.currentCard$.subscribe(currentCard => {
       this.currentCard = currentCard;
-    });
+    }); */
+
+
+    this.gameEngine.store.subscribe(() => {
+      this.currentCard = this.gameEngine.store.getState().nextCard;
+    }
+    )
   }
 
 
 
   ngOnInit(): void {
-    this.tile.selected$.subscribe(selected => {
-      this.isSelectd = selected;
-      if (selected) {
-        this.overMe()
-      } else this.outMe();
-    });
+    if (this.tile && this.tile.selected$) {
+      this.tile.selected$.subscribe(selected => {
+        this.isSelectd = selected;
+        if (selected) {
+          this.overMe()
+        } else this.outMe();
+      });
 
-    this.tile.move$.subscribe(move => {
-      if (move) {
-        if (move == "up") this.cardRef.nativeElement.style.marginTop = "50px"
-        if (move == "down") this.cardRef.nativeElement.style.marginTop = "-50px"
-        if (move == "left") this.cardRef.nativeElement.style.marginLeft = "50px"
-        if (move == "right") this.cardRef.nativeElement.style.marginLeft = "-50px"
-        this.moveState = move;
-        //this.tile.state = TileState.MOVING;
+      this.tile.move$.subscribe(move => {
+        if (move) {
+          if (move == "up") this.cardRef.nativeElement.style.marginTop = "50px"
+          if (move == "down") this.cardRef.nativeElement.style.marginTop = "-50px"
+          if (move == "left") this.cardRef.nativeElement.style.marginLeft = "50px"
+          if (move == "right") this.cardRef.nativeElement.style.marginLeft = "-50px"
+          this.moveState = move;
+          //this.tile.state = TileState.MOVING;
 
-        setTimeout(() => {
-          this.cardRef.nativeElement.style.marginTop = 0;
-          this.cardRef.nativeElement.style.marginLeft = 0;
-          this.moveState = "idle";
-        }, 200);
-      }
-    })
+          setTimeout(() => {
+            this.cardRef.nativeElement.style.marginTop = 0;
+            this.cardRef.nativeElement.style.marginLeft = 0;
+            this.moveState = "idle";
+          }, 200);
+        }
+      })
+    }
+
   }
 
   onCardCollected() {
@@ -172,7 +182,8 @@ export class TileComponent implements OnInit {
     } else
       if (this.tile.terrain.type == TerrainEnum.CARD_HOLDER) {
         let temp = this.tile.card;
-        this.tile.card = this.currentCard;
+        // this.tile.card = this.currentCard;
+        this.tile.setCard(this.currentCard);
 
         if (temp) {
           this.gameEngine.updateCurrentCard = temp;
@@ -200,7 +211,11 @@ export class TileComponent implements OnInit {
 
           if (this.tile.terrain.type == TerrainEnum.RESOURCES) {
             //this.scaleState="down";
-            this.gameEngine.placeCardOnBoard(this.tile, this.currentCard);
+            //this.gameEngine.placeCardOnBoard(this.tile, this.currentCard);
+
+            this.gameEngine.store.dispatch({ type: SET_TILES_CARD_ACTION, payload: this.tile })
+            //this.gameEngine.store.dispatch({ type: NEXT_CARD_ACTION,payload:{} })
+
             this.chosen.emit();
           }
   }

@@ -11,6 +11,8 @@ export class Tile {
 
     linked: Tile[] = [];
     card: Card;
+    cardsHistroy: Card[] = []
+    prevCard: Card;
     overMe: boolean;
     terrain: Terrain;
     terrainTop: Terrain;
@@ -25,7 +27,6 @@ export class Tile {
         this.state = TileState.REGULAR;
     }
 
-
     get selected$(): Observable<boolean> { return this._selected$.asObservable(); }
     get move$(): Observable<string> { return this._move$.asObservable(); }
 
@@ -36,21 +37,6 @@ export class Tile {
     };
 
     set select(value: boolean) { this._selected$.next(value) };
-
-    isCardTrapped(): boolean {
-        if (!this.card || this.card.type != CardTypeEnum.WALKER) return false;
-
-        return this.linked.filter(a => !a.card || (a.card && a.card.type == CardTypeEnum.WALKER)).length ? false : true;
-        //return this.getAllEmpties().length?false:true;
-    }
-
-    getAllEmpties(): Tile[] {
-        return this.linked.filter(a => !a.card);
-    }
-
-    getCardsAround(): Tile[] {
-        return this.linked.filter(a => a.card);
-    }
 
     getMatchesAround(): Tile[] {
         let collector: Tile[] = [];
@@ -86,5 +72,26 @@ export class Tile {
         this.clear();
         this.terrainTop = null;
         this.overMe = false;
+    }
+
+    setCard(card: Card) {
+
+        this.card = card;
+
+    }
+
+    setNextTurn() {
+        if (this.card) {
+            this.card.age++;
+            this.card.state = CardState.REGULAR;
+        }
+        //this.prevCard = Object.assign({}, this).card;
+        this.cardsHistroy.push(Object.assign({}, this).card);
+    }
+
+    undo() {
+        if (this.cardsHistroy.length >= 2) {
+            this.card = this.cardsHistroy[this.cardsHistroy.length - 2];
+        }
     }
 }

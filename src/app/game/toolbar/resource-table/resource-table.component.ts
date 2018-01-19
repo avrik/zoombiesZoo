@@ -1,3 +1,4 @@
+import { IState } from './../../../redux/main-reducer';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { IResourceStorage } from '../../../services/game-engine.service';
 import { IBuyItem } from 'app/game/tile-buy-popup/buy-item/buy-item';
@@ -16,20 +17,30 @@ export class ResourceTableComponent implements OnInit {
   resourceStorage: IResourceStorage;
 
   items: IBuyItem[] = [
-    { label: "brick", cost: { coin: 3 }, icon: UrlConst.BRICK2, type: 0, amount: 6 ,description:"buy brick"},
-    { label: "lumber", cost: { coin: 3 }, icon: UrlConst.LUMBER2, type: 1, amount: 6,description:"buy lumber" },
-    { label: "wild", cost: { coin: 6 }, icon: UrlConst.WILD, type: 2, amount: 3 ,description:"buy wild-card"},
-    { label: "undo", cost: { coin: 0 }, icon: UrlConst.UNDO, type: 3, amount: 6 ,description:"undo last action"},
-   // { label: "buldoze", cost: { coin: 6 }, icon: UrlConst.BULDOZE, type: 4, amount: 3 },
+    { label: "brick", cost: { coin: 3 }, icon: UrlConst.BRICK2, type: 0, amount: 6, description: "buy brick" },
+    { label: "lumber", cost: { coin: 3 }, icon: UrlConst.LUMBER2, type: 1, amount: 6, description: "buy lumber" },
+    { label: "wild", cost: { coin: 6 }, icon: UrlConst.WILD, type: 2, amount: 3, description: "buy wild-card" },
+    { label: "undo", cost: { coin: 0 }, icon: UrlConst.UNDO, type: 3, amount: 6, description: "undo last action" },
+    // { label: "buldoze", cost: { coin: 6 }, icon: UrlConst.BULDOZE, type: 4, amount: 3 },
     //{ label: "move", cost: { coin: 6 }, icon: UrlConst.MOVE, type: 5 },
   ]
 
   constructor(public gameEngine: GameEngineService) {
-  
-    this.gameEngine.resourceStorage$.subscribe(resourceStorage => this.resourceStorage = resourceStorage)
+
+    //this.gameEngine.resourceStorage$.subscribe(resourceStorage => this.resourceStorage = resourceStorage)
+
+
+    this.gameEngine.store.subscribe(() => {
+      let newState: IState = this.gameEngine.store.getState();
+
+      if (this.resourceStorage != newState.resources) {
+        this.resourceStorage = newState.resources;
+      }
+    });
   }
 
   ngOnInit() {
+    
   }
 
   openStore() {

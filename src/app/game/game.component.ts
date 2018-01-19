@@ -1,3 +1,4 @@
+import { NEW_GAME_ACTION } from './../redux/actions/actions';
 import { environment } from './../../environments/environment';
 import { TerrainEnum } from './../enums/terrain.enum';
 import { Component, OnInit } from '@angular/core';
@@ -65,7 +66,10 @@ export class GameComponent implements OnInit {
     /* setTimeout(() => {
       this.messagesService.postMessage({type:MessageType.CURTAIN, title: "Welcome", message: `start your new town`, butns: [{ label: 'ok', action: null }, { label: 'cancel', action: null }] });
     }, 1500); */
-    this.gameEngine.start();
+    //this.gameEngine.start();
+
+
+    this.gameEngine.store.dispatch({ type: NEW_GAME_ACTION });
   }
 
 

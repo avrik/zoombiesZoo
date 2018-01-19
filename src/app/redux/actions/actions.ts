@@ -1,0 +1,10 @@
+export const NEW_GAME_ACTION:string = "NEW_GAME_ACTION";
+
+export const GENERATE_WORLD_ACTION:string = "GENERATE_WORLD_ACTION";
+export const NEXT_CARD_ACTION:string = "NEXT_CARD_ACTION";
+export const SET_TILES_CARD_ACTION:string = "SET_TILES_CARD_ACTION";
+
+export const ADD_RESOURCES_ACTION:string = "ADD_RESOURCES_ACTION";
+export const REMOVE_RESOURCES_ACTION:string = "REMOVE_RESOURCES_ACTION";
+export const NEXT_LEVEL_ACTION:string = "NEXT_LEVEL_ACTION";
+export const ADD_TO_POPULATION:string = "ADD_TO_POPULATION";
