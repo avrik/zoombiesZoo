@@ -1,7 +1,7 @@
+
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Card } from '../../../cards/card';
 import { GameEngineService } from 'app/services/game-engine.service';
-import { CardTypeEnum } from 'app/enums/card-type-enum.enum';
 import { CardFamilyTypeEnum } from '../../../../enums/card-family-type-enum.enum';
 import { MessagesService } from '../../../../services/messages.service';
 
@@ -18,12 +18,14 @@ export class TileCardComponent implements OnInit {
   @Input() placed: boolean;
   @Output() collected: EventEmitter<any> = new EventEmitter();
 
+
   constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) 
   { 
     
   }
 
   ngOnInit() {
+
   }
 
 

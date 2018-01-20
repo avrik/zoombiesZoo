@@ -51,7 +51,13 @@ export class ResourceTableComponent implements OnInit {
     this.showStore = false;
 
     if (!buyItem) return;
+
     switch (buyItem.type) {
+      case 3:
+        this.gameEngine.store.dispatch({type:"undo"});
+        break;
+    }
+    /* switch (buyItem.type) {
       case 3:
         this.gameEngine.doUndo();
         break;
@@ -64,7 +70,7 @@ export class ResourceTableComponent implements OnInit {
       case 2:
         this.gameEngine.updateCurrentCard = this.gameEngine.getNewCard(CardFamilyTypeEnum.WILD)
         break;
-    }
+    } */
   }
 
 }

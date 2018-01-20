@@ -19,6 +19,6 @@ export class TestPanelComponent implements OnInit {
   }
 
   onItemClick(item:ICardData) {
-    this.gameEngine.updateCurrentCard = this.gameEngine.getNewCard(item.family.name)
+    //this.gameEngine.updateCurrentCard = this.gameEngine.getNewCard(item.family.name)
   }
 }

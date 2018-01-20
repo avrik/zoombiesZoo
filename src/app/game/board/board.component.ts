@@ -1,5 +1,4 @@
 import { IState } from './../../redux/main-reducer';
-import { NEXT_CARD_ACTION, NEXT_LEVEL_ACTION } from './../../redux/actions/actions';
 import { TerrainEnum } from './../../enums/terrain.enum';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { GameEngineService } from '../../services/game-engine.service';
@@ -23,24 +22,18 @@ export class BoardComponent implements OnInit {
 
   constructor(public gameEngine: GameEngineService) {
 
-    this.gameEngine.tiles$.subscribe(tiles => {
-      this.tiles = tiles;
-    });
-    /* this.gameEngine.currentCard$.subscribe(currentCard => {
-      if (currentCard != this.currentCard) {
-        if (this.lastTileClicked && this.currentCard) this.selectTileOver(this.lastTileClicked);
-      }
-
-    }) */
-
     this.gameEngine.store.subscribe(() => {
       let newState: IState = this.gameEngine.store.getState();
+  
+      this.tiles = newState.tiles;
+
       if (this.currentCard != newState.nextCard) {
         //console.log(newState.nextCard)
         this.currentCard = newState.nextCard;
-
-        this.selectTileOver(newState.tileClicked);
       }
+
+      //this.selectTileOver(newState.tileClicked);
+      this.selectTileOver(newState.floatTile);
     }
     )
   }
@@ -69,8 +62,8 @@ export class BoardComponent implements OnInit {
   selectTileOver(tile: Tile = null) {
     // if (this.tileOver) this.tileOver.select = false;
     //console.log("selectTileOver!!!1");
-
-    let empties: Tile[] = [];
+    tile.select = true;
+   /*  let empties: Tile[] = [];
 
     if (tile) {
       empties = !tile.card ? [tile] : tile.linked.filter(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
@@ -87,6 +80,7 @@ export class BoardComponent implements OnInit {
     } else {
       console.log("not found place for tile over!!!!1");
     }
+    debugger; */
   }
 
   onTileOpenStore(event) {

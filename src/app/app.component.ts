@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { mainReducerFunc } from './redux/main-reducer';
 import { MessagesService, IMessage } from './services/messages.service';
-import { createStore, combineReducers } from 'redux'
+
 //TODOS :
 
 // + handle score
@@ -41,13 +40,10 @@ export class AppComponent {
   currentMessage: IMessage;
 
   constructor(private messagesService: MessagesService) {
-    this.messagesService.currentMessage$.subscribe(message => {
+    /* this.messagesService.currentMessage$.subscribe(message => {
       this.currentMessage = message;
-    })
+    }) */
 
 
-    
-
-    
   }
 }

@@ -32,7 +32,7 @@ export class ResourceItemComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.gameEngine.resourceStorage$.subscribe(resourceStorage => {
+    /* this.gameEngine.resourceStorage$.subscribe(resourceStorage => {
 
       if (resourceStorage && this.resourceStorage) {
         switch (this.type) {
@@ -51,7 +51,7 @@ export class ResourceItemComponent implements OnInit {
 
       this.resourceStorage = Object.assign({}, resourceStorage);
 
-    })
+    }) */
   }
 
   animate() {
@@ -63,7 +63,7 @@ export class ResourceItemComponent implements OnInit {
 
   onClick() {
     this.amount++;
-    this.gameEngine.addToStorage(this.type, 1);
+    //this.gameEngine.addToStorage(this.type, 1);
   }
 
 }

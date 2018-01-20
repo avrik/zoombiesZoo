@@ -1,4 +1,5 @@
-import { SET_TILES_CARD_ACTION, NEXT_CARD_ACTION } from './../../../redux/actions/actions';
+import { IState } from './../../../redux/main-reducer';
+import { PLACE_CARD_ON_TILE_ACTION, NEXT_TURN_ACTION, ADD_RESOURCES_ACTION, COLLECT_RESOURCES_ACTION } from './../../../redux/actions/actions';
 import { CardState } from './../../../enums/card-state.enum';
 import { TileCardComponent } from './tile-card/tile-card.component';
 import { UrlConst } from './../../../consts/url-const';
@@ -111,19 +112,21 @@ export class TileComponent implements OnInit {
     { label: 'road', cost: { block: 3, lumber: 0, coin: 0 }, icon: UrlConst.ROAD, type: CardFamilyTypeEnum.ROAD, description: "add road" },
   ]
 
+  onTurn: number;
+
   constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
-    this.gameEngine.resourceStorage$.subscribe(resourceStorage => this.resourceStorage = resourceStorage)
+    // this.gameEngine.resourceStorage$.subscribe(resourceStorage => this.resourceStorage = resourceStorage)
     /* this.gameEngine.currentCard$.subscribe(currentCard => {
       this.currentCard = currentCard;
     }); */
 
-
     this.gameEngine.store.subscribe(() => {
-      this.currentCard = this.gameEngine.store.getState().nextCard;
+      let newState:IState = this.gameEngine.store.getState();
+      this.currentCard = newState.nextCard;
+      this.tile.overMe = newState.floatTile == this.tile?true:false;
     }
     )
   }
-
 
 
   ngOnInit(): void {
@@ -156,7 +159,7 @@ export class TileComponent implements OnInit {
   }
 
   onCardCollected() {
-    this.tile.overMe = false;
+    //this.tile.overMe = false;
     this.tile.clear();
   }
 
@@ -167,14 +170,14 @@ export class TileComponent implements OnInit {
   }
 
   clickTile() {
-    this.tile.overMe = false;
+    //this.tile.overMe = false;
     if (this.tile.terrain.type == TerrainEnum.CITY) {
 
       if (this.tile.state == TileState.WAIT_FOR_MOVE) {
-        this.tile.card = this.gameEngine.pendingTileBuilding.card;
+        /* this.tile.card = this.gameEngine.pendingTileBuilding.card;
         this.gameEngine.moveBuildingDone();
         this.gameEngine.findMatch(this.tile);
-        this.gameEngine.updateBoard();
+        this.gameEngine.updateBoard(); */
       } else {
         this.showStore = !this.showStore;
         this.openStore.emit(this);
@@ -182,15 +185,14 @@ export class TileComponent implements OnInit {
     } else
       if (this.tile.terrain.type == TerrainEnum.CARD_HOLDER) {
         let temp = this.tile.card;
-        // this.tile.card = this.currentCard;
         this.tile.setCard(this.currentCard);
 
-        if (temp) {
+        /* if (temp) {
           this.gameEngine.updateCurrentCard = temp;
         } else {
           this.gameEngine.setNextValue();
         }
-        this.gameEngine.updateBoard();
+        this.gameEngine.updateBoard(); */
         this.overMe();
       } else
 
@@ -198,13 +200,13 @@ export class TileComponent implements OnInit {
           this.doCollectAnimation();
 
           if (this.tile.card.collect && this.tile.card.type == CardTypeEnum.RESOURCE) {
-            if (this.gameEngine.collectResources(this.tile.card.family.name, this.tile.card.collected)) {
+            /* if (this.gameEngine.collectResources(this.tile.card.family.name, this.tile.card.collected)) {
               this.tile.clear();
             } else {
 
               this.messagesService.postMessage({ type: MessageType.TOOLBAR, title: "No more storage place", message: "build more storage" });
-            }
-
+            } */
+            this.gameEngine.store.dispatch({ type: COLLECT_RESOURCES_ACTION, payload: this.tile })
             this.overMe();
           }
         } else
@@ -213,8 +215,8 @@ export class TileComponent implements OnInit {
             //this.scaleState="down";
             //this.gameEngine.placeCardOnBoard(this.tile, this.currentCard);
 
-            this.gameEngine.store.dispatch({ type: SET_TILES_CARD_ACTION, payload: this.tile })
-            //this.gameEngine.store.dispatch({ type: NEXT_CARD_ACTION,payload:{} })
+            this.gameEngine.store.dispatch({ type: PLACE_CARD_ON_TILE_ACTION, payload: this.tile })
+            //this.gameEngine.store.dispatch({ type: NEXT_TURN_ACTION,payload:{} })
 
             this.chosen.emit();
           }
@@ -229,7 +231,7 @@ export class TileComponent implements OnInit {
 
 
     if (buyItem.type == 10) {
-      this.gameEngine.moveTileBuilding(this.tile);
+      //this.gameEngine.moveTileBuilding(this.tile);
     } else {
       if (buyItem.type == CardFamilyTypeEnum.ROAD) {
         this.tile.terrainTop = new Terrain(TerrainEnum.ROAD)
@@ -238,7 +240,7 @@ export class TileComponent implements OnInit {
       //this.tile.card = this.gameEngine.getNewCard(buyItem.type);
       //this.gameEngine.findMatch(this.tile);
 
-      this.gameEngine.placeCardOnBoard(this.tile, this.gameEngine.getNewCard(buyItem.type))
+      //this.gameEngine.placeCardOnBoard(this.tile, this.gameEngine.getNewCard(buyItem.type))
       // }
 
       //this.gameEngine.nextTurn();
@@ -252,7 +254,7 @@ export class TileComponent implements OnInit {
 
     if (!this.isSelectd) {
       this.floatState = 'inactive';
-      this.tile.overMe = false;
+      //this.tile.overMe = false;
       //clearTimeout(this.timeout);
       if (this.tile.card) {
         this.hideCardMatch();
@@ -275,26 +277,27 @@ export class TileComponent implements OnInit {
       this.showCardMatch();
     } else {
       if (this.tile.terrain.type == TerrainEnum.RESOURCES || this.tile.terrain.type == TerrainEnum.CARD_HOLDER) {
-        this.tile.overMe = true;
+        //this.tile.overMe = true;
         this.floatState = 'up';
 
       } else if (this.tile.terrain.type == TerrainEnum.CITY) {
-        this.gameEngine.showCardMatchHint(this.gameEngine.getNewCard(CardFamilyTypeEnum.WILD));
+        //this.gameEngine.showCardMatchHint(this.gameEngine.getNewCard(CardFamilyTypeEnum.WILD));
       }
     }
   }
 
   hideCardMatch() {
-    this.gameEngine.showCardMatchHint(null);
+    /// this.gameEngine.showCardMatchHint(null);
     this.showThinkBubble = false;
   }
+  
   showCardMatch() {
     //console.log('show card match')
     if (this.tile.card.nextCard) {
-      this.gameEngine.showCardMatchHint(this.tile.card);
+      //this.gameEngine.showCardMatchHint(this.tile.card);
     } else if (this.tile.card.family.name == CardFamilyTypeEnum.PERSON) {
       this.showThinkBubble = true;
-      this.gameEngine.showCardMatchHint(this.gameEngine.getNewCard(CardFamilyTypeEnum.WILD));
+      //this.gameEngine.showCardMatchHint(this.gameEngine.getNewCard(CardFamilyTypeEnum.WILD));
     }
   }
 
@@ -336,7 +339,7 @@ export class TileComponent implements OnInit {
         this.tile.clear();
       }
 
-      this.gameEngine.updateBoard();
+      //this.gameEngine.updateBoard();
     }
 
   }

@@ -19,7 +19,7 @@ export class BuyItemComponent implements OnInit {
 
   resourceNeeded: any[] = [];
   resourceStorage: IResourceStorage;
-  enabled: boolean;
+  enabled: boolean=true;
 
   constructor(private gameEngine: GameEngineService, private messagesService:MessagesService) {
 
@@ -31,7 +31,7 @@ export class BuyItemComponent implements OnInit {
     this.resourceNeeded.concat(Array(this.buyItem.cost.lumber).map(a => { return { src: "assets/resources/wood.png" } }));
     this.resourceNeeded.concat(Array(this.buyItem.cost.coin).map(a => { return { src: "assets/resources/coin.png" } }));
 
-    this.gameEngine.resourceStorage$.subscribe(resourceStorage => {
+   /*  this.gameEngine.resourceStorage$.subscribe(resourceStorage => {
       this.resourceStorage = resourceStorage;
 
       if (this.buyItem && this.buyItem.cost && this.resourceStorage) {
@@ -42,22 +42,22 @@ export class BuyItemComponent implements OnInit {
           (this.buyItem.amount>0 || isNaN(this.buyItem.amount))
         ) ? true : false;
       }
-    })
+    }) */
   }
 
 
   onBuy() {
-
-    let testResources: IResourceStorage =
+    this.buy.emit(this.buyItem);
+    /* let testResources: IResourceStorage =
       {
         bricks: this.buyItem.cost.block ? this.resourceStorage.bricks - this.buyItem.cost.block : this.resourceStorage.bricks,
         lumber: this.buyItem.cost.lumber ? this.resourceStorage.lumber - this.buyItem.cost.lumber : this.resourceStorage.lumber,
         coins: this.buyItem.cost.coin ? this.resourceStorage.coins - this.buyItem.cost.coin : this.resourceStorage.coins
       }
 
-    if (testResources.bricks >= 0 && testResources.lumber >= 0 && testResources.coins >= 0) {
+    if (testResources.bricks >= 0 && testResources.lumber >= 0 && testResources.coins >= 0) { */
 
-      this.gameEngine.updateResourceStorage = testResources;
+     /*  this.gameEngine.updateResourceStorage = testResources;
       let total: number = 0;
       if (this.buyItem.cost.block) total += this.buyItem.cost.block;
       if (this.buyItem.cost.lumber) total += this.buyItem.cost.lumber;
@@ -65,11 +65,11 @@ export class BuyItemComponent implements OnInit {
       this.gameEngine.removeFromResourcesStorage(total);
       if (this.buyItem.amount) {
         this.buyItem.amount--;
-      }
+      } */
 
-      this.buy.emit(this.buyItem);
+      /* this.buy.emit(this.buyItem);
     } else{
       this.messagesService.postMessage({ title: "not enough resources!", type: MessageType.TOOLBAR })
-    }
+    } */
   }
 }

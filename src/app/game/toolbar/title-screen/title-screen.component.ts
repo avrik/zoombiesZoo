@@ -16,7 +16,7 @@ export class TitleScreenComponent implements OnInit {
   message: IMessage;
 
   constructor(private gameEngine: GameEngineService, private messageService: MessagesService) {
-    this.gameEngine.cardHint$.subscribe(cardHint => {
+    /* this.gameEngine.cardHint$.subscribe(cardHint => {
       this.cardHint = cardHint;
       if (this.cardHint && this.cardHint.family.name==100) {
         debugger;
@@ -32,7 +32,7 @@ export class TitleScreenComponent implements OnInit {
           this.message =null
         }, 2000);
       }
-    });
+    }); */
   }
 
   ngOnInit() {

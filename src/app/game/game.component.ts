@@ -1,4 +1,5 @@
-import { NEW_GAME_ACTION } from './../redux/actions/actions';
+import { IState } from './../redux/initialState';
+import { NEW_GAME_ACTION, NEXT_LEVEL_ACTION } from './../redux/actions/actions';
 import { environment } from './../../environments/environment';
 import { TerrainEnum } from './../enums/terrain.enum';
 import { Component, OnInit } from '@angular/core';
@@ -15,49 +16,41 @@ import { CardFamilyTypeEnum } from 'app/enums/card-family-type-enum.enum';
   styleUrls: ['./game.component.css']
 })
 export class GameComponent implements OnInit {
-  //total: number;
-  //totalMax: number = 0;
-  currentLevel: GameLevel;
 
-  debug:boolean
+  currentLevel: GameLevel;
+  debug: boolean
   constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
 
-    //let fromStorage = localStorage.getItem('totalMax')
-    //this.totalMax = parseFloat(fromStorage)
-
-    this.gameEngine.tiles$.subscribe(tiles => {
-      if (tiles) {
-        //this.total = 0;
-        //tiles.filter(a => a.card && a.card.value > 0).forEach(a => this.total += a.card.value);
-
-        //this.totalMax = Math.max(this.total, this.totalMax);
-        //localStorage.setItem('totalMax', this.totalMax.toString())
-
-        let availableTilesInField:Tile[] = tiles.filter(a => a.terrain && (a.terrain.type == TerrainEnum.RESOURCES || a.terrain.type == TerrainEnum.CARD_HOLDER) && !a.card);
-        let availableTilesInCity:Tile[] = tiles.filter(a => a.terrain && (a.terrain.type == TerrainEnum.CITY) && !a.card);
-
-        if (!availableTilesInField.length || !availableTilesInCity.length) {
-          this.gameOver();
+    this.gameEngine.store.subscribe(() => {
+      let newState: IState = this.gameEngine.store.getState();
+      let cache = [];
+      localStorage.setItem('gameState', JSON.stringify(newState, function (key, value) {
+        if (typeof value === 'object' && value !== null) {
+          if (cache.indexOf(value) !== -1) {
+            return;
+          }
+          cache.push(value);
         }
+        return value;
+      }));
+      cache = null;
 
-        
+
+
+      if (this.currentLevel && newState.population >= newState.level.goal) {
+        this.gameEngine.store.dispatch({ type: NEXT_LEVEL_ACTION });
       }
-    })
+  
 
-    this.gameEngine.currentLevel$.subscribe(currentLevel => {
-      if (currentLevel && currentLevel.index > 0) {
+      if (this.currentLevel != newState.level) {
+        this.currentLevel = newState.level;
         if (this.currentLevel) {
           this.messagesService.postMessage({
-            type:MessageType.CURTAIN,title: "Well done! ", message:`level ${currentLevel.index} completed!\n${currentLevel.reward.coins} coin rewarded`
+            type: MessageType.CURTAIN, title: "Well done! ", message: `level ${this.currentLevel.index} completed!\n${this.currentLevel.reward.coins} coin rewarded`
             , butns: [{ label: 'next level' }]
           });
-
-          //if (currentLevel.reward.coins)  this.gameEngine.addToStorage(CardFamilyTypeEnum.COIN, currentLevel.reward.coins)
-          //if (currentLevel.reward.lumber)  this.gameEngine.addToStorage(CardFamilyTypeEnum.LUMBER, currentLevel.reward.lumber)
-          //if (currentLevel.reward.bricks)  this.gameEngine.addToStorage(CardFamilyTypeEnum.BRICK, currentLevel.reward.bricks)
         }
       }
-      this.currentLevel = currentLevel
     })
   }
 
@@ -66,18 +59,18 @@ export class GameComponent implements OnInit {
     /* setTimeout(() => {
       this.messagesService.postMessage({type:MessageType.CURTAIN, title: "Welcome", message: `start your new town`, butns: [{ label: 'ok', action: null }, { label: 'cancel', action: null }] });
     }, 1500); */
-    //this.gameEngine.start();
-
-
     this.gameEngine.store.dispatch({ type: NEW_GAME_ACTION });
+
+
+    //this.gameEngine.store.dispatch({ type: NEW_GAME_ACTION });
   }
 
 
   gameOver() {
-    this.messagesService.postMessage({type:MessageType.POPUP, title: "GAME OVER", butns: [{ label: "start over", action: a => { this.restart() } }] })
+    this.messagesService.postMessage({ type: MessageType.POPUP, title: "GAME OVER", butns: [{ label: "start over", action: a => { this.restart() } }] })
   }
 
   restart() {
-    this.gameEngine.restart();
+    //this.gameEngine.restart();
   }
 }

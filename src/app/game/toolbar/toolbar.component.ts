@@ -70,6 +70,7 @@ export class ToolbarComponent implements OnInit {
     }
     ) */
 
+    
     this.gameEngine.store.subscribe(() => {
       let newState: IState = this.gameEngine.store.getState()
       this.years = newState.turn;
@@ -95,13 +96,13 @@ export class ToolbarComponent implements OnInit {
 
       if (newState.tiles) {
         let arr = newState.tiles.filter(a => a.card && !a.card.autoPlaced).map(a => a.card.value)
-        if (arr && arr.length) {
+        /* if (arr && arr.length) {
           this.score = arr.reduce((prev, cur) => prev ? prev + cur : cur);
           this.score += newState.population * 50;
           this.score += newState.resources ? newState.resources.bricks * this.gameEngine.getNewCard(CardFamilyTypeEnum.BRICK, 1).value : 0;
           this.score += newState.resources ? newState.resources.lumber * this.gameEngine.getNewCard(CardFamilyTypeEnum.LUMBER, 1).value : 0;
           this.score += newState.resources ? newState.resources.coins * this.gameEngine.getNewCard(CardFamilyTypeEnum.COIN, 1).value : 0;
-        }
+        } */
       }
 
     })

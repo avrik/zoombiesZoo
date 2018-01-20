@@ -4,7 +4,7 @@
 <div (click)="clickTile()" [style.opacity]="tile.state===-1?0.2:1" [style.pointer-events]="tile.state===-1?'none':'pointer'">
 
     <div style="position:absolute;padding-left:8px" [style.z-index]="getIndex()">
-        <div class="card-float" [@floatOver]="floatState" (@floatOver.done)=onFloatDone($event) *ngIf="gotCard==false && tile.overMe && currentCard" [style.opacity]="isSelectd?0.5:1">
+        <div class="card-float" [@floatOver]="floatState" (@floatOver.done)=onFloatDone($event) *ngIf="gotCard==false && tile.overMe" [style.opacity]="isSelectd?0.5:1">
             <app-tile-card [card]="currentCard"></app-tile-card>
         </div>
 
