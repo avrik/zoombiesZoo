@@ -19,9 +19,9 @@ export class Building {
             case CardFamilyTypeEnum.HOUSE:
                 this.url = "assets/buildings/Door Tall Closed.png";
                 break;
-            case CardFamilyTypeEnum.TOWER:
+            /* case CardFamilyTypeEnum.TOWER:
                 this.url = "assets/buildings/Wall Block Tall.png";
-                break;
+                break; */
             case CardFamilyTypeEnum.STORAGE:
                 this.url = "assets/buildings/storage.png";
                 break;

@@ -7,36 +7,40 @@ import { Card } from '../../cards/card';
 import { Terrain } from './terrain';
 import { MergeTypeEnum } from 'app/enums/merge-type-enum.enum';
 
+export interface ITileMove {
+    dir:string;
+    img:string;
+}
+
 export class Tile {
 
     linked: Tile[] = [];
     card: Card;
     cardsHistroy: Card[] = []
     prevCard: Card;
-    overMe: boolean;
+    //overMe: boolean;
     terrain: Terrain;
     terrainTop: Terrain;
     state: number = 0;
-    private _selected$: BehaviorSubject<boolean>;
-    private _move$: BehaviorSubject<string>;
-
+    movment:ITileMove;
+    showDelay:string;
     constructor(public col: number = -1, public row: number = -1) {
         this.terrain = new Terrain();
-        this._selected$ = <BehaviorSubject<boolean>>new BehaviorSubject(false);
-        this._move$ = <BehaviorSubject<string>>new BehaviorSubject("");
+        //this._selected$ = <BehaviorSubject<boolean>>new BehaviorSubject(false);
+        //this._move$ = <BehaviorSubject<string>>new BehaviorSubject("");
         this.state = TileState.REGULAR;
     }
 
-    get selected$(): Observable<boolean> { return this._selected$.asObservable(); }
-    get move$(): Observable<string> { return this._move$.asObservable(); }
+    //get selected$(): Observable<boolean> { return this._selected$.asObservable(); }
+    //get move$(): Observable<string> { return this._move$.asObservable(); }
 
     set moveMe(value: string) {
         this.state = TileState.MOVING;
         this.card.state = CardState.MOVING;
-        this._move$.next(value)
+        //this._move$.next(value)
     };
 
-    set select(value: boolean) { this._selected$.next(value) };
+    //set select(value: boolean) { this._selected$.next(value) };
 
     getMatchesAround(): Tile[] {
         let collector: Tile[] = [];
@@ -71,7 +75,7 @@ export class Tile {
     reset() {
         this.clear();
         this.terrainTop = null;
-        this.overMe = false;
+        //this.overMe = false;
     }
 
     setCard(card: Card) {

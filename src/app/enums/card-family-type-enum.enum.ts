@@ -4,17 +4,19 @@ export enum CardFamilyTypeEnum {
     LUMBER = 1,
     COIN = 10,
 
-    BOMB = 5,
+    BOMB = 20,
+    GRAVE = 50,
     PERSON = 100,
-    ANIMAL = 200,
-    GRAVE = 300,
-    ZOOMBIE = 500,
-    ZOOMBIE_TRAP = 600,
-    GOLD_CHEST = 700,
-    HOUSE = 1000,
-    TOWER = 2000,
-    STORAGE = 3000,
-    ROAD = 4000,
-    //WALL = 5000,
-    CHURCH = 5000
+    ANIMAL = 110,
+
+    ZOOMBIE = 200,
+    ZOOMBIE_TRAP = 220,
+    ROAD = 300,
+    STORAGE = 400,
+    SAWMILL = 450,
+    HOUSE = 500,
+    LABORATORY = 600,
+    CHURCH = 1000,
+    PALACE = 2000
+    
 }

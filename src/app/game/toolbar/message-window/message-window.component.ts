@@ -1,5 +1,8 @@
 import { Component, OnInit, transition, animate, state, trigger, style } from '@angular/core';
 import { MessagesService, IMessage } from '../../../services/messages.service';
+import { GameEngineService } from 'app/services/game-engine.service';
+import { IState } from 'app/redux/main-reducer';
+import { MessageType } from '../../../enums/message-type.enum';
 
 @Component({
   selector: 'message-window',
@@ -21,25 +24,41 @@ import { MessagesService, IMessage } from '../../../services/messages.service';
   ]
 })
 export class MessageWindowComponent implements OnInit {
-  state: string='';
+  state: string = '';
   currentMessage: IMessage;
 
-  constructor(private messagesService: MessagesService) {
+  constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
     this.messagesService.currentMessage$.subscribe(currentMessage => {
-      if (currentMessage && currentMessage.type == 1) {
+      if (currentMessage && currentMessage.type == MessageType.CURTAIN) {
         this.currentMessage = currentMessage;
-        this.state = 'in';
-
-        setTimeout(() => {
-          this.state = 'out';
-        }, 2500);
+        this.showCurtain();
       }
     }
     )
   }
 
   ngOnInit() {
-   this.state = "out";
+    this.gameEngine.store.subscribe(() => {
+
+      let newState: IState = this.gameEngine.store.getState();
+
+      if (newState.currentMessage && newState.currentMessage.type == MessageType.CURTAIN) {
+
+        this.currentMessage = newState.currentMessage;
+        this.showCurtain();
+        newState.currentMessage = null;
+      }
+    })
+
+    this.state = "out";
+  }
+
+  showCurtain() {
+    this.state = 'in';
+
+    setTimeout(() => {
+      this.state = 'out';
+    }, this.currentMessage.delay ? this.currentMessage.delay : 2500);
   }
 
 }

@@ -4,17 +4,27 @@
 <div (click)="clickTile()" [style.opacity]="tile.state===-1?0.2:1" [style.pointer-events]="tile.state===-1?'none':'pointer'">
 
     <div style="position:absolute;padding-left:8px" [style.z-index]="getIndex()">
-        <div class="card-float" [@floatOver]="floatState" (@floatOver.done)=onFloatDone($event) *ngIf="gotCard==false && tile.overMe" [style.opacity]="isSelectd?0.5:1">
+        
+        <div *ngIf="tile.movment" [@moveAnimation]="tile.movment.dir" (@moveAnimation.done)=onMoveDone($event)>
+           <img [src]="tile.movment.img" alt="" height="50">
+        </div>
+        
+        
+        <div *ngIf="onMe && (tile.terrain.type==0 || tile.terrain.type==4) && !tile.card" style="opacity:0.3;">
+            <app-tile-card [card]="currentCard"></app-tile-card>
+        </div>
+        
+        <div class="card-float" [@floatOver]="floatState" (@floatOver.done)="onFloatDone($event)" *ngIf="showNextHint" [style.opacity]="showNextHint?0.5:1">
             <app-tile-card [card]="currentCard"></app-tile-card>
         </div>
 
-        <!-- <span #resourceRef *ngIf="collectedIcon" style="position:absolute" [@collectAnimation]="colloectAnimationState" (@collectAnimation.done)="onCollectDone($event)"> -->
         <span #resourceRef style="position:absolute">
             <item-img *ngIf="collectedIcon" [type]="collectedIcon" size="35"></item-img>
         </span>
 
-        <div #cardRef [@moveAnimation]="moveState" (@moveAnimation.done)=onMoveDone($event) [@scaleAnimation]="scaleState" (@scaleAnimation.done)="onScaleDone($event)">
-            <app-tile-card *ngIf="gotCard==true" [placed]="true" [card]="tile.card" [onTerrain]="tile.terrain.type" (collected)="onCardCollected()"></app-tile-card>
+        <!-- <div #cardRef [@moveAnimation]="moveState" (@moveAnimation.done)=onMoveDone($event) [@scaleAnimation]="scaleState" (@scaleAnimation.done)="onScaleDone($event)"> -->
+        <div #cardRef [@visibilityChanged]="tile.showDelay" (@visibilityChanged.done)="onDelayDone($event)">
+            <app-tile-card *ngIf="gotCard==true" [placed]="true" [card]="tile.card" [onTerrain]="tile.terrain.type"></app-tile-card>
         </div>
 
 
@@ -26,12 +36,11 @@
 
 
     <!-- /TERRAIN -->
-    <!-- <div class="tile" *ngIf="tile" (mouseover)="overMe()" (mouseout)="outMe()"> -->
+
     <div class="tile" *ngIf="tile" (mouseover)="onMouseOver()" (mouseout)="outMe()" (mousedown)="onMouseOver()">
         <div class="over" *ngIf="tile.terrain?.clickable && gotCard==false"></div>
 
         <div class="terrain" [style.margin-top.px]="tile.terrain.type==4?-45:-32">
-            <!-- <img *ngIf="tile.building" [src]="tile.building.url" alt="" width="64"> -->
             <img [src]="tile.terrainTop?tile.terrainTop.url:tile.terrain.url" alt="" width="64">
         </div>
     </div>

@@ -10,9 +10,21 @@
 
 
     <div class="text-box">
-        citzens :
-        <b class="big-number">{{population | number}}</b>
-        <!-- <b class="big-number">{{population}} in city </b> -->
+
+
+
+        <div style="display:flex;justify-content:space-around">
+            <span>
+                level :
+                <b class="big-number">{{currentLevel?.index+1}}</b>
+            </span>
+            <span>
+                <!-- goal :  -->
+                {{currentLevel?.goal.verb}}
+                <b class="big-number">{{currentLevel?.goal.amount}}</b>
+                <img [src]="currentLevel?.goal.img" alt="" height="30" style="float: right;margin: -7px 0 0 5px;">
+            </span>
+        </div>
     </div>
 
 
@@ -23,26 +35,17 @@
     <app-resource-table></app-resource-table>
 
     <div class="text-box">
-        <!-- goal :
-        <b class="big-number">{{currentLevel?.goal}}</b> citzens -->
 
-        <div style="display:flex;justify-content:space-around">
-            <span>
-                level :
-                <b class="big-number">{{currentLevel?.index+1}}</b>
-            </span>
-            <span>
-                goal :
-                <b class="big-number">{{currentLevel?.goal}}</b>
-                <!-- <img src="assets/people/Character Boy.png" alt="" height="30" style="position:absolute;margin:-27px 0 0 27px"> -->
-                <img src="assets/people/Character Boy.png" alt="" height="30" style="float: right;margin: -7px 0 0 5px;">
-            </span>
-        </div>
+        <span style="text-align:left">
+            <!-- citzens : -->
+            <b class="big-number">{{population | number}}</b> citzens in {{currentCityLevel?.name}}
+        </span>
 
         <div class="progress-bar">
 
             <div #myBar class="progress-bar-inside" [style.width]="popProgress+'%'">
-                <b style="color:white;">{{popProgress | number : '1.0-0'}}%</b>
+                <!-- <b style="color:white;">{{popProgress | number : '1.0-0'}}%</b> -->
+                <b style="color:white;">{{population | number}}/{{currentCityLevel.goal | number}}</b>
             </div>
         </div>
     </div>

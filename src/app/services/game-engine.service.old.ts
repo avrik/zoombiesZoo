@@ -1,6 +1,6 @@
 
 import { IState } from './../redux/main-reducer';
-import { NEXT_TURN_ACTION, NEXT_LEVEL_ACTION, GENERATE_WORLD_ACTION, NEW_GAME_ACTION } from './../redux/actions/actions';
+import { GENERATE_WORLD_ACTION, NEW_GAME_ACTION } from './../redux/actions/actions';
 
 import { IResourceStorage } from 'app/services/game-engine.service';
 import { IGameLevelData } from './../game/levels/game-level';
@@ -158,14 +158,9 @@ export class GameEngineServiceee {
           //this.moveWalkers();
         }
 
-        if (this.currentState.level && this.currentState.population >= this.currentState.level.goal) {
+        /* if (this.currentState.level && this.currentState.population >= this.currentState.level.goal) {
           this.store.dispatch({ type: NEXT_LEVEL_ACTION });
-        }
-
-        //this.store.dispatch({ type: NEXT_TURN_ACTION });
-
-
-
+        } */
 
 
       }
@@ -234,7 +229,6 @@ export class GameEngineServiceee {
     this.placeRandomResources();
 
     this.store.dispatch({ type: NEW_GAME_ACTION, payload: [...this.gameState.tiles] });
-    //this.store.dispatch({ type: NEXT_TURN_ACTION })
   }
 
   restart(firstTime: boolean = false) {
@@ -253,8 +247,7 @@ export class GameEngineServiceee {
     this.setNextLevel();
     this.placeRandomResources();
 
-
-    this.store.dispatch({ type: NEXT_TURN_ACTION, payload: {} }) */
+    */
   }
 
   setNextLevel() {
@@ -368,7 +361,6 @@ export class GameEngineServiceee {
 
     //this.setNextValue();
 
-    //this.store.dispatch({ type: NEXT_TURN_ACTION });
 
     /* if (this.gameState.population >= this.gameState.currentLevel.goal) {
       this.setNextLevel();

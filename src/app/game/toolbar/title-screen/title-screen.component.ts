@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { GameEngineService } from 'app/services/game-engine.service';
 import { Card } from 'app/game/cards/card';
 import { MessagesService, IMessage } from 'app/services/messages.service';
+import { IState } from '../../../redux/main-reducer';
+import { MessageType } from '../../../enums/message-type.enum';
 
 @Component({
   selector: 'title-screen',
@@ -33,12 +35,28 @@ export class TitleScreenComponent implements OnInit {
         }, 2000);
       }
     }); */
+
+
   }
 
   ngOnInit() {
+    
+    this.gameEngine.store.subscribe(() => {
+      
+      let newState: IState = this.gameEngine.store.getState();
+      this.cardHint = newState.cardHint
+      this.currentCard = newState.nextCard; 
+      //debugger;
+      if (newState.currentMessage && newState.currentMessage.type == MessageType.TOOLBAR) {
+        this.message = newState.currentMessage;
+        //newState.message = null;
+      } else {
+        this.message = null;
+      }
+    })
   }
 
-  get isCardHint():boolean {
-    return this.cardHint?true:false;
+  get isCardHint(): boolean {
+    return this.cardHint ? true : false;
   }
 }

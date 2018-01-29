@@ -15,12 +15,24 @@ export const UrlConst = {
     HOUSE5:"assets/buildings/house3.png",
     HOUSE6:"assets/buildings/house3.png",
 
-    STORAGE1:"assets/buildings/storage1.png",
+    STORAGE1:"assets/buildings/storage.png",
     STORAGE2:"assets/buildings/storage.png",
     STORAGE3:"assets/buildings/storage.png",
     STORAGE4:"assets/buildings/storage.png",
     STORAGE5:"assets/buildings/storage.png",
     STORAGE6:"assets/buildings/storage.png",
+
+    SAWMILL1:"assets/buildings/sawmil.png",
+    SAWMILL2:"assets/buildings/sawmil.png",
+    SAWMILL3:"assets/buildings/sawmil.png",
+    SAWMILL4:"assets/buildings/sawmil.png",
+    SAWMILL5:"assets/buildings/sawmil.png",
+    SAWMILL6:"assets/buildings/sawmil.png",
+
+    LABORATORY:"assets/buildings/laboratory.png",
+    PALACE:"assets/buildings/laboratory.png",
+    
+
 
 
     BRICK1:"assets/resources/rock.png",

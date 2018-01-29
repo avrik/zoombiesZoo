@@ -3,6 +3,7 @@ import { MessagesService } from 'app/services/messages.service';
 import { IResourceStorage, GameEngineService } from 'app/services/game-engine.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ICost, IBuyItem } from './buy-item';
+import { IState } from 'app/redux/main-reducer';
 
 
 @Component({
@@ -16,13 +17,12 @@ export class BuyItemComponent implements OnInit {
   @Input() buyItem: IBuyItem;
   @Output() buy: EventEmitter<IBuyItem> = new EventEmitter();
 
-
   resourceNeeded: any[] = [];
   resourceStorage: IResourceStorage;
   enabled: boolean=true;
 
   constructor(private gameEngine: GameEngineService, private messagesService:MessagesService) {
-
+    
   }
 
   ngOnInit() {
@@ -30,7 +30,21 @@ export class BuyItemComponent implements OnInit {
     this.resourceNeeded.concat(Array(this.buyItem.cost.block).map(a => { return { src: "assets/resources/brick.png" } }));
     this.resourceNeeded.concat(Array(this.buyItem.cost.lumber).map(a => { return { src: "assets/resources/wood.png" } }));
     this.resourceNeeded.concat(Array(this.buyItem.cost.coin).map(a => { return { src: "assets/resources/coin.png" } }));
-
+    
+    //this.gameEngine.store.subscribe(()=>{
+      let newState:IState = this.gameEngine.store.getState();
+      
+      if (this.buyItem && this.buyItem.cost) {
+        this.enabled = (
+          (!this.buyItem.cost.block || newState.resources.bricks >= this.buyItem.cost.block) &&
+          (!this.buyItem.cost.lumber || newState.resources.lumber >= this.buyItem.cost.lumber) &&
+          (!this.buyItem.cost.coin || newState.resources.coins >= this.buyItem.cost.coin) &&
+          (this.buyItem.amount>0 || isNaN(this.buyItem.amount))
+        ) ? true : false;
+      }
+      
+  
+    //})
    /*  this.gameEngine.resourceStorage$.subscribe(resourceStorage => {
       this.resourceStorage = resourceStorage;
 

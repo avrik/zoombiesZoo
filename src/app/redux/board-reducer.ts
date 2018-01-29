@@ -6,6 +6,10 @@ import { CardFamilyTypeEnum } from './../enums/card-family-type-enum.enum';
 import { TerrainEnum } from './../enums/terrain.enum';
 import { Terrain } from './../game/board/tile/terrain';
 import { Tile } from './../game/board/tile/tile';
+import { TileState } from '../enums/tile-state.enum';
+import { IState } from './main-reducer';
+import { addResources } from 'app/redux/resources-reducer';
+import { checkIfLevelCompleted } from './level-reducer';
 
 
 export function generateWorld(totalRows: number, totalCols: number): Tile[] {
@@ -14,15 +18,9 @@ export function generateWorld(totalRows: number, totalCols: number): Tile[] {
 
     for (var i = 0; i < totalCols; i++) {
         for (var j = 0; j < totalRows; j++) {
-
             let newTile: Tile = new Tile(i, j);
-
-            if (j >= Math.floor(totalRows / 2)) {
-                newTile.terrain = new Terrain();
-            } else {
-                newTile.terrain = new Terrain(TerrainEnum.CITY);
-            }
-
+            let terrainType: number = j >= Math.floor(totalRows / 2) ? TerrainEnum.RESOURCES : TerrainEnum.CITY;
+            newTile.terrain = new Terrain(terrainType);
             tiles.push(newTile);
         }
     }
@@ -47,14 +45,10 @@ export function generateWorld(totalRows: number, totalCols: number): Tile[] {
         if (tileDown) tile.linked.push(tileDown);
     });
 
-
-
-
-
     const options: number[] = [CardFamilyTypeEnum.BRICK, CardFamilyTypeEnum.LUMBER];
 
     let getRandomTile = (tilesFiltered: Tile[] = null): Tile => {
-        let arr: Tile[] = tilesFiltered ? tilesFiltered : this.gameState.tiles;
+        let arr: Tile[] = tilesFiltered ? tilesFiltered : tiles;
         return arr[Math.floor(Math.random() * arr.length)];
     }
 
@@ -65,20 +59,97 @@ export function generateWorld(totalRows: number, totalCols: number): Tile[] {
         tile.card.autoPlaced = true;
     }
 
-    let arr: Tile[] = tiles.filter(a => a.terrain.type == TerrainEnum.CITY && a.row > 0 && a.row < (totalRows / 2 - 2) && a.linked.length > 3);
+    /* let arr: Tile[] = tiles.filter(a => a.terrain.type == TerrainEnum.CITY && a.row > 0 && a.row < (totalRows / 2 - 2) && a.linked.length > 3);
     let randTile: Tile = getRandomTile(arr.filter(a => !a.card));
     randTile.setCard(getNewCard(CardFamilyTypeEnum.STORAGE));
-    randTile.card.autoPlaced = true;
+    randTile.card.autoPlaced = true; */
 
-    randTile = getRandomTile(arr.filter(a => !a.card));
-    randTile.setCard(getNewCard(CardFamilyTypeEnum.HOUSE));
-    randTile.card.autoPlaced = true;
+    tiles.find(a => a.col == 0 && a.row == 0).setCard(getNewCard(CardFamilyTypeEnum.STORAGE));
+
+
+
+    //randTile = getRandomTile(arr.filter(a => !a.card));
+    //randTile.setCard(getNewCard(CardFamilyTypeEnum.HOUSE));
+    //randTile.card.autoPlaced = true;
 
     return tiles;
 }
 
+export function clickTileOnBoard(state: IState): IState {
+    let newState: IState = state;
+
+    if (newState.tileClicked.terrain.type == TerrainEnum.CARD_HOLDER) {
+        if (newState.tileClicked.card) {
+            let temp = Object.assign({}, newState.tileClicked.card);
+            newState.tileClicked.setCard(getNewCard(newState.nextCard.family.name));
+            newState.nextCard = temp;
+        } else {
+            newState.tileClicked.setCard(getNewCard(newState.nextCard.family.name));
+        }
+    } else {
+        newState.tileClicked.setCard(newState.nextCard);
+
+        if (newState.tileClicked.card.mergeBy == MergeTypeEnum.MATCH) {
+            findMatch(newState.tileClicked);
+        }
+
+        /* newState.tiles = moveWalkers(newState.tiles);
+        newState.tiles.filter(a => a.card && a.card.type == CardTypeEnum.WALKER).forEach(a => a.card.state = CardState.REGULAR)
+        newState.nextCard = getNextCard(); */
+    }
+
+    /* let found: Tile = newState.tileClicked.linked.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES)
+    newState.floatTile = found ? found : newState.tiles.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
+
+    let houses: Tile[] = newState.tiles.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.HOUSE)
+    if (houses.length) {
+        newState.population = houses.map(a => a.card.collected).reduce((prev, cur) => prev + cur);
+    }
+
+    newState.score += newState.tileClicked.card ? newState.tileClicked.card.value : 0; */
+
+    return newState;
+}
 
 
+export function nextTurn(newState: IState) {
+    newState.turn++;
+    moveWalkers(newState.tiles);
+    let bombs: Tile[] = newState.tiles.filter(a => a != newState.tileClicked && a.card && a.card.family.name == CardFamilyTypeEnum.BOMB);
+    checkBombs(bombs);
+
+    newState.tiles.filter(a => a.card && a.card.type == CardTypeEnum.WALKER).forEach(a => a.card.state = CardState.REGULAR)
+    newState.nextCard = getNextCard();
+
+    let found: Tile = newState.tileClicked.linked.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES)
+    newState.floatTile = found ? found : newState.tiles.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
+
+    let houses: Tile[] = newState.tiles.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.HOUSE)
+    if (houses.length) {
+        newState.population = houses.map(a => a.card.collected).reduce((prev, cur) => prev + cur);
+    }
+
+    newState.score += newState.tileClicked.card ? newState.tileClicked.card.value : 0;
+
+    checkIfLevelCompleted(newState);
+}
+
+
+export function getNextCard(): Card {
+    let rand: number = Math.round(Math.random() * 100);
+    let pickFrom: ICardData[] = [];
+    cardCollection.filter(item => item.chance).forEach(a => {
+        pickFrom.push(a);
+        if (a.nextCard && a.nextCard.chance) {
+            pickFrom.push(a.nextCard);
+        }
+    })
+
+    pickFrom = pickFrom.filter(item => item.chance >= rand)
+    let randCard: ICardData = pickFrom[Math.floor(Math.random() * pickFrom.length)];
+
+    return new Card(randCard);
+}
 
 export function findMatch(tile: Tile) {
     if (!tile.card || !tile.card.family) return;
@@ -98,12 +169,15 @@ export function findMatch(tile: Tile) {
                 if (tile.card.type == CardTypeEnum.BUILDING) {
                     if (linked.card.collected) totalCollected += linked.card.collected;
                 } else {
-                    if (linked.card.nextCard.collect) {
+                    if (linked.card.nextCard && linked.card.nextCard.collect) {
                         totalCollected += Math.max(linked.card.collected, 1);
                     }
                 }
 
-                moveAndClear(linked, tile)
+                //moveAndClear(linked, tile)
+                linked.movment = { dir: getMoveDir(linked, tile), img: linked.card.img };
+                tile.showDelay = "hidden";
+                linked.clear();
             });
 
             tile.setCard(new Card(tile.card.nextCard));
@@ -173,19 +247,32 @@ export function getNewCard(familyName: number, level: number = 0): Card {
 }
 
 
-function moveAndClear(from: Tile, to: Tile) {
+function getMoveDir(from: Tile, to: Tile): string {
+    if (to.col < from.col && to.row < from.row) { return "upLeftAndClear" }
+    if (to.col < from.col && to.row > from.row) { return "upRightAndClear" }
+    if (to.col > from.col && to.row < from.row) { return "downLeftAndClear" }
+    if (to.col > from.col && to.row > from.row) { return "downRightAndClear" }
 
-    from.card.state = CardState.MOVING;
-    if (to.col < from.col && to.row < from.row) { from.moveMe = "upLeftAndClear"; return }
-    if (to.col < from.col && to.row > from.row) { from.moveMe = "upRightAndClear"; return }
-    if (to.col > from.col && to.row < from.row) { from.moveMe = "downLeftAndClear"; return }
-    if (to.col > from.col && to.row > from.row) { from.moveMe = "downRightAndClear"; return }
-
-    if (to.col < from.col) { from.moveMe = "upAndClear"; return }
-    if (to.col > from.col) { from.moveMe = "downAndClear"; return }
-    if (to.row < from.row) { from.moveMe = "leftAndClear"; return }
-    if (to.row > from.row) { from.moveMe = "rightAndClear"; return }
+    if (to.col < from.col) { return "upAndClear" }
+    if (to.col > from.col) { return "downAndClear" }
+    if (to.row < from.row) { return "leftAndClear" }
+    if (to.row > from.row) { return "rightAndClear" }
 }
+
+/* function moveAndClear(from: Tile, to: Tile) {
+    let dir: string = "";
+    if (to.col < from.col && to.row < from.row) { dir = "upLeftAndClear" }
+    if (to.col < from.col && to.row > from.row) { dir = "upRightAndClear" }
+    if (to.col > from.col && to.row < from.row) { dir = "downLeftAndClear" }
+    if (to.col > from.col && to.row > from.row) { dir = "downRightAndClear" }
+
+    if (to.col < from.col) { dir = "upAndClear" }
+    if (to.col > from.col) { dir = "downAndClear" }
+    if (to.row < from.row) { dir = "leftAndClear" }
+    if (to.row > from.row) { dir = "rightAndClear" }
+
+    from.movment = { dir: dir, img: from.card.img };
+} */
 
 
 function getLinkedGroup(firstOne: Tile): Tile[] {
@@ -206,20 +293,175 @@ function getLinkedGroup(firstOne: Tile): Tile[] {
     return group;
 }
 
+function checkBombs(tiles: Tile[]) {
+    let bombs: Tile[] = tiles.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.BOMB);
+    bombs.forEach(bomb => {
+        bomb.card.collected--
 
-export function moveWalkers(tiles: Tile[]): Tile[] {
-    let newTiles = [...tiles];
-    let walkers: Tile[] = tiles.filter(a => a.card && a.card.type == CardTypeEnum.WALKER);
-
-    walkers.forEach(tile => {
-        let empties: Tile[] = tile.linked.filter(a => a.terrain.walkable && !a.card);
-        if (empties.length) {
-
-            let rand: number = Math.floor(Math.random() * (empties.length));
-            let moveToTile: Tile = empties.find((item, index) => index == rand);
-            moveToTile.card = tile.card;
-            tile.clear();
+        if (bomb.card.collected <= 0) {
+            let around: Tile[] = [...bomb.linked];//.filter(a => a.card);
+            around.push(bomb);
+            around.forEach(tileNear => {
+                tileNear.clear();
+                tileNear.terrainTop = new Terrain(TerrainEnum.EXPLOSION);
+                setTimeout(() => {
+                    tileNear.terrainTop = null;
+                }, 300);
+            })
         }
     })
+}
+
+export function moveWalkers(tiles: Tile[]): Tile[] {
+    let newTiles = tiles;
+    let actionTaken: boolean = false;
+    let walkers: Tile[] = newTiles.filter(tile =>
+        tile.card &&
+        tile.card.type === CardTypeEnum.WALKER &&
+        tile.card.state == CardState.REGULAR &&
+        tile.terrain.type != TerrainEnum.CARD_HOLDER
+    );
+    if (!walkers.length) return newTiles;
+    let people: Tile[] = walkers.filter(a => a.card.family.name == CardFamilyTypeEnum.PERSON);
+    let animals: Tile[] = walkers.filter(a => a.card.family.name == CardFamilyTypeEnum.ANIMAL);
+    let zoombies: Tile[] = walkers.filter(a => a.card.family.name == CardFamilyTypeEnum.ZOOMBIE);
+
+    people.forEach(person => { if (movePersonToRandomEmpty(person) == true) actionTaken = true })
+    animals.forEach(animal => { if (moveAnimalToRandomEmpty(animal) == true) actionTaken = true })
+    zoombies.forEach(zoombie => { if (moveZoombiesToRandomEmpty(zoombie) == true) actionTaken = true })
+
+    if (actionTaken) {
+        newTiles = moveWalkers(newTiles);
+    } else {
+        let walkers: Tile[] = newTiles.filter(tile => (tile.card && tile.card.mergeBy === MergeTypeEnum.TRAP && tile.terrain.type == TerrainEnum.RESOURCES));
+        tiles.filter(a => a.card && a.card.type == CardTypeEnum.WALKER).forEach(a => a.card.state = CardState.REGULAR);
+        testGroupTrapped(walkers);
+    }
+
     return newTiles;
+}
+
+
+function testGroupTrapped(walkers: Tile[]) {
+    if (walkers.length) {
+        let walkersGroup: Tile[] = [];
+        let firstOne: Tile = walkers.pop();
+        let isZoombieGroup: boolean;
+        walkersGroup.push(firstOne);
+
+        let addToQue: Function = (tile: Tile) => {
+            tile.linked.forEach(linked => {
+                if (linked.card && linked.card.mergeBy == MergeTypeEnum.TRAP && walkersGroup.indexOf(linked) == -1) {
+                    walkersGroup.push(linked);
+                    walkers.splice(walkers.indexOf(linked), 1);
+                    addToQue(linked)
+                }
+            })
+        }
+
+        addToQue(firstOne);
+
+        let foundEmpty: boolean;
+        walkersGroup.filter(walkers => {
+            if (walkers.linked.filter(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES).length > 0) {
+                foundEmpty = true;
+            }
+        })
+
+        if (!foundEmpty) {
+            trapWalkersGroup(walkersGroup);
+            findMatch(walkersGroup[0]);
+        }
+
+        testGroupTrapped(walkers);
+    }
+}
+
+function trapWalkersGroup(walkerGroup: Tile[]) {
+    walkerGroup.forEach(walker => walker.setCard(getNewCard(CardFamilyTypeEnum.GRAVE)));
+}
+
+function moveZoombiesToRandomEmpty(tile: Tile): boolean {
+    let churchsAround: Tile[] = tile.linked.filter(a => a.card).filter(a => a.card.family.name == CardFamilyTypeEnum.CHURCH && a.card.collected < a.card.collect)
+    if (churchsAround.length) {
+        let rand: number = Math.floor(Math.random() * (churchsAround.length));
+        let moveToTile: Tile = churchsAround.find((item, index) => index == rand);
+        moveToTile.card.collected++;
+        //moveAndClear(tile, moveToTile);
+        tile.movment = { dir: getMoveDir(tile, moveToTile), img: tile.card.img };
+        return true;
+    } else {
+
+        let empties: Tile[] = tile.linked.filter(a => !a.card && a.terrain.walkable);
+
+        switch (tile.terrain.type) {
+            case TerrainEnum.BRIDGE:
+                empties = empties.filter(a => (a.terrain.type != TerrainEnum.RESOURCES));
+                break;
+            case TerrainEnum.CITY:
+                empties = empties.filter(a => (a.terrain.type != TerrainEnum.BRIDGE));
+                break;
+        }
+
+        return moveToRandomSpot(tile, empties);
+    }
+}
+function moveAnimalToRandomEmpty(tile: Tile): boolean {
+    let empties: Tile[] = tile.linked.filter(a => !a.card && a.terrain.walkable && a.terrain.type == TerrainEnum.RESOURCES);
+
+    return moveToRandomSpot(tile, empties);
+}
+
+function movePersonToRandomEmpty(tile: Tile): boolean {
+    let housesAround: Tile[] = tile.linked.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.HOUSE && a.card.collected < a.card.collect)
+
+    if (housesAround.length) {
+        let rand: number = Math.floor(Math.random() * (housesAround.length));
+        let moveToTile: Tile = housesAround.find((item, index) => index == rand);
+
+        moveToTile.card.collected++;
+        moveToTile.card.state = CardState.MOVING;
+        //this.updatePopulation = 1;
+
+        //moveAndClear(tile, moveToTile);
+        tile.movment = { dir: getMoveDir(tile, moveToTile), img: tile.card.img };
+        //moveToTile.card = tile.card;
+        tile.clear();
+        return true;
+    } else {
+        let empties: Tile[] = tile.linked.filter(a => !a.card && a.terrain.walkable);
+        let foundRoad: Tile = empties.find(a => a.terrainTop && a.terrainTop.type == TerrainEnum.ROAD && a != tile.card.preTile);
+        if (foundRoad) {
+            empties = [foundRoad];
+        } else {
+            switch (tile.terrain.type) {
+                case TerrainEnum.BRIDGE:
+                    empties = empties.filter(a => (a.terrain.type != TerrainEnum.RESOURCES));
+                    break;
+                case TerrainEnum.CITY:
+                    empties = empties.filter(a => (a.terrain.type != TerrainEnum.BRIDGE));
+                    break;
+            }
+        }
+
+        return moveToRandomSpot(tile, empties);
+    }
+}
+
+function moveToRandomSpot(tile: Tile, empties: Tile[]): boolean {
+    if (empties.length) {
+        let rand: number = Math.floor(Math.random() * (empties.length));
+        let moveToTile: Tile = empties.find((item, index) => index == rand);
+
+        moveToTile.card = tile.card;
+        moveToTile.card.state = CardState.MOVING;
+        moveToTile.card.preTile = tile;
+        moveToTile.showDelay = "hidden";
+        tile.movment = { dir: getMoveDir(tile, moveToTile), img: tile.card.img };
+        tile.clear();
+
+        return true;
+    } else {
+        return false;
+    }
 }

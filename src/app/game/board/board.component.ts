@@ -62,7 +62,7 @@ export class BoardComponent implements OnInit {
   selectTileOver(tile: Tile = null) {
     // if (this.tileOver) this.tileOver.select = false;
     //console.log("selectTileOver!!!1");
-    tile.select = true;
+    //if (tile) tile.select = true;
    /*  let empties: Tile[] = [];
 
     if (tile) {

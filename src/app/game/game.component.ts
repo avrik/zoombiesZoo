@@ -1,5 +1,4 @@
-import { IState } from './../redux/initialState';
-import { NEW_GAME_ACTION, NEXT_LEVEL_ACTION } from './../redux/actions/actions';
+import { NEW_GAME_ACTION } from './../redux/actions/actions';
 import { environment } from './../../environments/environment';
 import { TerrainEnum } from './../enums/terrain.enum';
 import { Component, OnInit } from '@angular/core';
@@ -9,6 +8,8 @@ import { GameLevel } from 'app/game/levels/game-level';
 import { MessageType } from '../enums/message-type.enum';
 import { Tile } from './board/tile/tile';
 import { CardFamilyTypeEnum } from 'app/enums/card-family-type-enum.enum';
+import { IState } from '../redux/main-reducer';
+import { INIT_GAME_ACTION } from '../redux/actions/actions';
 
 @Component({
   selector: 'app-game',
@@ -18,7 +19,8 @@ import { CardFamilyTypeEnum } from 'app/enums/card-family-type-enum.enum';
 export class GameComponent implements OnInit {
 
   currentLevel: GameLevel;
-  debug: boolean
+  debug: boolean;
+
   constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
 
     this.gameEngine.store.subscribe(() => {
@@ -35,16 +37,22 @@ export class GameComponent implements OnInit {
       }));
       cache = null;
 
-
-
-      if (this.currentLevel && newState.population >= newState.level.goal) {
+      /* if (this.currentLevel && newState.population >= newState.level.goal) {
         this.gameEngine.store.dispatch({ type: NEXT_LEVEL_ACTION });
       }
-  
+ */
+
+
+      /* if (newState.currentMessage) {
+        this.messagesService.postMessage(newState.currentMessage);
+        newState.currentMessage = null;
+      } */
 
       if (this.currentLevel != newState.level) {
+
         this.currentLevel = newState.level;
-        if (this.currentLevel) {
+        if (this.currentLevel.index) {
+          //debugger;
           this.messagesService.postMessage({
             type: MessageType.CURTAIN, title: "Well done! ", message: `level ${this.currentLevel.index} completed!\n${this.currentLevel.reward.coins} coin rewarded`
             , butns: [{ label: 'next level' }]
@@ -56,15 +64,12 @@ export class GameComponent implements OnInit {
 
   ngOnInit() {
     this.debug = !environment.production;
-    /* setTimeout(() => {
-      this.messagesService.postMessage({type:MessageType.CURTAIN, title: "Welcome", message: `start your new town`, butns: [{ label: 'ok', action: null }, { label: 'cancel', action: null }] });
-    }, 1500); */
-    this.gameEngine.store.dispatch({ type: NEW_GAME_ACTION });
+    this.gameEngine.store.dispatch({ type: INIT_GAME_ACTION });
 
-
-    //this.gameEngine.store.dispatch({ type: NEW_GAME_ACTION });
+    setTimeout(() => {
+      this.gameEngine.store.dispatch({ type: NEW_GAME_ACTION });
+    }, 50);
   }
-
 
   gameOver() {
     this.messagesService.postMessage({ type: MessageType.POPUP, title: "GAME OVER", butns: [{ label: "start over", action: a => { this.restart() } }] })

@@ -16,7 +16,7 @@ export class TileCardComponent implements OnInit {
   @Input() onTerrain: number;
   @Input() card: Card;
   @Input() placed: boolean;
-  @Output() collected: EventEmitter<any> = new EventEmitter();
+  //@Output() collected: EventEmitter<any> = new EventEmitter();
 
 
   constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) 

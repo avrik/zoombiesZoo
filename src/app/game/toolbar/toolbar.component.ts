@@ -1,13 +1,12 @@
-import { NEXT_LEVEL_ACTION } from './../../redux/actions/actions';
-import { IState } from './../../redux/initialState';
 
 import { CardFamilyTypeEnum } from 'app/enums/card-family-type-enum.enum';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { GameEngineService, IResourceStorage } from 'app/services/game-engine.service';
 import { IBuyItem } from 'app/game/tile-buy-popup/buy-item/buy-item';
-import { GameLevel } from '../levels/game-level';
+import { GameLevel, CityLevel } from '../levels/game-level';
 import { UrlConst } from '../../consts/url-const';
 import { Card } from 'app/game/cards/card';
+import { IState } from '../../redux/main-reducer';
 
 @Component({
   selector: 'game-toolbar',
@@ -22,59 +21,19 @@ export class ToolbarComponent implements OnInit {
 
   popProgress: number = 0;
   currentLevel: GameLevel;
+  currentCityLevel: CityLevel;
 
   timeout: any;
   populationTarget: number;
   popCount: number;
 
   constructor(public gameEngine: GameEngineService) {
-    /* this.gameEngine.currentLevel$.subscribe(currentLevel => {
-      if (currentLevel) {
-        this.popCount = 0;
-        this.populationTarget = this.currentLevel ? currentLevel.goal - this.currentLevel.goal : currentLevel.goal;
-        this.currentLevel = currentLevel;
-        setTimeout(() => {
-          this.move(0);
-        }, 1500);
-      }
-
-    }); */
-
-    /* this.gameEngine.tiles$.subscribe(tiles => {
-      if (tiles) {
-        let arr = tiles.filter(a => a.card && !a.card.autoPlaced).map(a => a.card.value)
-        if (arr && arr.length) {
-          this.score = arr.reduce((prev, cur) => prev ? prev + cur : cur);
-          this.score += this.gameEngine.gameState.population * 50;
-          this.score += this.gameEngine.gameState.resourceStorage ? this.gameEngine.gameState.resourceStorage.bricks * this.gameEngine.getNewCard(CardFamilyTypeEnum.BRICK, 1).value : 0;
-          this.score += this.gameEngine.gameState.resourceStorage ? this.gameEngine.gameState.resourceStorage.lumber * this.gameEngine.getNewCard(CardFamilyTypeEnum.LUMBER, 1).value : 0;
-          this.score += this.gameEngine.gameState.resourceStorage ? this.gameEngine.gameState.resourceStorage.coins * this.gameEngine.getNewCard(CardFamilyTypeEnum.COIN, 1).value : 0;
-        }
-      }
-    }) */
-    //this.gameEngine.years$.subscribe(years => { this.years = years })
-    /* this.gameEngine.population$.subscribe(population => {
-
-      if (!isNaN(population)) {
-        this.population = population;
-
-        if (this.currentLevel) {
-
-          this.popCount++;
-          let percent: number = Math.min(Math.round(this.popCount / this.populationTarget * 100), 100);
-
-          console.log("PERCENT!!! " + percent)
-          this.move(percent)
-        }
-      }
-    }
-    ) */
-
     
     this.gameEngine.store.subscribe(() => {
       let newState: IState = this.gameEngine.store.getState()
       this.years = newState.turn;
-
+      this.score = newState.score;
+      this.currentLevel = newState.level;
       this.population = newState.population;
       if (this.population != newState.population) {
         this.popCount++;
@@ -84,34 +43,19 @@ export class ToolbarComponent implements OnInit {
         this.move(percent);
       }
 
-      if (this.currentLevel != newState.level) {
+      if (this.currentCityLevel != newState.cityLevel) {
+        this.currentCityLevel = newState.cityLevel;
         this.popCount = 0;
-        this.populationTarget = this.currentLevel ? newState.level.goal - this.currentLevel.goal : newState.level.goal;
-        this.currentLevel = newState.level;
+        this.populationTarget = this.currentCityLevel ? newState.cityLevel.goal - this.currentCityLevel.goal : newState.cityLevel.goal;
+        
         setTimeout(() => {
           this.move(0);
         }, 1500);
       }
-
-
-      if (newState.tiles) {
-        let arr = newState.tiles.filter(a => a.card && !a.card.autoPlaced).map(a => a.card.value)
-        /* if (arr && arr.length) {
-          this.score = arr.reduce((prev, cur) => prev ? prev + cur : cur);
-          this.score += newState.population * 50;
-          this.score += newState.resources ? newState.resources.bricks * this.gameEngine.getNewCard(CardFamilyTypeEnum.BRICK, 1).value : 0;
-          this.score += newState.resources ? newState.resources.lumber * this.gameEngine.getNewCard(CardFamilyTypeEnum.LUMBER, 1).value : 0;
-          this.score += newState.resources ? newState.resources.coins * this.gameEngine.getNewCard(CardFamilyTypeEnum.COIN, 1).value : 0;
-        } */
-      }
-
     })
   }
 
   ngOnInit() {
-
-
-
 
   }
 
