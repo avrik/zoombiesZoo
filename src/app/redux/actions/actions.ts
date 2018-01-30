@@ -15,6 +15,8 @@ export const REMOVE_RESOURCES_ACTION: string = "REMOVE_RESOURCES_ACTION";
 
 export const SET_NEXT_CARD: string = "SET_NEXT_CARD";
 export const UNDO_ACTION: string = "UNDO_ACTION";
+export const MOVE_BUILDING_ACTION: string = "MOVE_BUILDING_ACTION";
+export const PLACE_MOVE_BUILDING_ACTION: string = "PLACE_MOVE_BUILDING_ACTION";
 export const GAME_OVER: string = "GAME_OVER";
 export const CLICK_TILE: string = "CLICK_TILE";
 export const PLACE_BUILDING: string = "PLACE_BUILDING";

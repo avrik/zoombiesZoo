@@ -41,7 +41,7 @@ export function addResources(state: IState, tile: Tile, amount: number): IResour
             break;
     }
 
-    return state.resources;
+    return Object.assign({}, state.resources);
 }
 
 export function removeFromResourcesSawmill(state: IState, amount: number) {

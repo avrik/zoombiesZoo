@@ -9,7 +9,7 @@ import { Tile } from './../game/board/tile/tile';
 import { CardState } from './../enums/card-state.enum';
 import { CardFamilyTypeEnum } from './../enums/card-family-type-enum.enum';
 import { cardCollection, ICardData, Card } from './../game/cards/card';
-import { PLACE_CARD_ON_TILE_ACTION, GENERATE_WORLD_ACTION, NEW_GAME_ACTION, COLLECT_RESOURCES_ACTION, INIT_GAME_ACTION, CLICK_TILE, PLACE_CARD_ON_STASH_ACTION, PLACE_BUILDING, UNDO_ACTION, SET_NEXT_CARD } from './actions/actions';
+import { PLACE_CARD_ON_TILE_ACTION, GENERATE_WORLD_ACTION, NEW_GAME_ACTION, COLLECT_RESOURCES_ACTION, INIT_GAME_ACTION, CLICK_TILE, PLACE_CARD_ON_STASH_ACTION, PLACE_BUILDING, UNDO_ACTION, SET_NEXT_CARD, MOVE_BUILDING_ACTION, PLACE_MOVE_BUILDING_ACTION } from './actions/actions';
 import { generateWorld, findMatch, moveWalkers, getNextCard, nextTurn } from 'app/redux/board-reducer';
 import { addResources, removeFromResourcesSawmill } from 'app/redux/resources-reducer';
 import { clickTileOnBoard, getNewCard } from './board-reducer';
@@ -19,6 +19,7 @@ import { UrlConst } from '../consts/url-const';
 import { IMessage } from 'app/services/messages.service';
 import { MessageType } from '../enums/message-type.enum';
 import { CityLevel } from '../game/levels/game-level';
+import { TileState } from '../enums/tile-state.enum';
 
 export class MainReducer {
 
@@ -30,6 +31,7 @@ export interface IAction {
 }
 
 export interface IState {
+    pendingMoveCard: Card;
     tiles: Tile[];
     tileClicked: Tile;
     nextCard: Card;
@@ -50,6 +52,7 @@ const initState: IState = {
     tiles: [],
     turn: 0,
     tileClicked: null,
+    pendingMoveCard: null,
     nextCard: null,
     cardHint: null,
     level: new GameLevel(),
@@ -113,9 +116,9 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             }
             return newState;
 
-        case 'OVER_TILE':
+        /* case 'OVER_TILE':
             newState.cardHint = tile.card;
-            return newState;
+            return newState; */
 
         case SET_NEXT_CARD:
             if (action.payload) newState.nextCard = getNewCard(action.payload);
@@ -128,10 +131,19 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             return newState;
 
         case COLLECT_RESOURCES_ACTION:
-            addResources(newState, tile, tile.card.collect);
+            newState.resources = addResources(newState, tile, tile.card.collect);
             nextTurn(newState);
             return newState;
 
+        case PLACE_MOVE_BUILDING_ACTION:
+            //moveTileBuilding(newState, tile);
+            tile.setCard(newState.pendingMoveCard);
+            newState.pendingMoveCard = null;
+            newState.tiles.forEach(a => a.state = TileState.REGULAR);
+            return newState;
+        case MOVE_BUILDING_ACTION:
+            moveTileBuilding(newState, tile);
+            return newState;
         case UNDO_ACTION:
             return states[states.length - 2];
         default:
@@ -145,6 +157,16 @@ function stashCard(newState: IState, tile: Tile) {
     tile.setCard(newState.nextCard);
     newState.nextCard = temp ? temp : getNextCard();
 }
+
+function moveTileBuilding(newState: IState, tile: Tile) {
+    newState.tiles.forEach(a => a.state = TileState.DISABLED);
+
+    let moveOptions: Tile[] = newState.tiles.filter(a => a.terrain.type == TerrainEnum.CITY && !a.card);
+    moveOptions.forEach(a => { a.state = TileState.WAIT_FOR_MOVE });
+    newState.pendingMoveCard = Object.assign({}, tile.card);
+    tile.clear();
+}
+
 
 function buyBuilding(newState: IState, buyItem: IBuyItem): boolean {
 

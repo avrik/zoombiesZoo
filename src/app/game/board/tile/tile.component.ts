@@ -1,5 +1,5 @@
 import { IState } from './../../../redux/main-reducer';
-import { PLACE_CARD_ON_TILE_ACTION, COLLECT_RESOURCES_ACTION } from './../../../redux/actions/actions';
+import { PLACE_CARD_ON_TILE_ACTION, COLLECT_RESOURCES_ACTION, MOVE_BUILDING_ACTION, PLACE_MOVE_BUILDING_ACTION } from './../../../redux/actions/actions';
 import { CardState } from './../../../enums/card-state.enum';
 import { TileCardComponent } from './tile-card/tile-card.component';
 import { UrlConst } from './../../../consts/url-const';
@@ -115,7 +115,7 @@ export class TileComponent implements OnInit {
   ]
 
   storeItems2: IBuyItem[] = [
-    { cost: { block: 0, lumber: 0, coin: 2 }, icon: UrlConst.MOVE, type: 10, label: 'move', description: "move me" },
+    { label: 'move', cost: { block: 0, lumber: 0, coin: 0 }, icon: UrlConst.MOVE, type: 10, description: "move me" },
     { label: 'road', cost: { block: 3, lumber: 0, coin: 0 }, icon: UrlConst.ROAD, type: CardFamilyTypeEnum.ROAD, description: "add road" },
   ]
 
@@ -179,6 +179,7 @@ export class TileComponent implements OnInit {
         this.gameEngine.moveBuildingDone();
         this.gameEngine.findMatch(this.tile);
         this.gameEngine.updateBoard(); */
+        this.gameEngine.store.dispatch({ type: PLACE_MOVE_BUILDING_ACTION, payload: this.tile })
       } else {
         this.showStore = !this.showStore;
         this.openStore.emit(this);
@@ -207,6 +208,7 @@ export class TileComponent implements OnInit {
 
     if (buyItem.type == 10) {
       //this.gameEngine.moveTileBuilding(this.tile);
+      this.gameEngine.store.dispatch({ type: MOVE_BUILDING_ACTION, payload: this.tile });
     } else {
       this.gameEngine.store.dispatch({ type: PLACE_BUILDING, payload: { tile: this.tile, buyItem: buyItem } });
     }
@@ -235,10 +237,9 @@ export class TileComponent implements OnInit {
       this.tile.terrainTop = new Terrain(TerrainEnum.CARD_HOLDER_OPEN)
     }
 
-    if (this.currentState.cardHint != this.tile.card) {
-      this.gameEngine.store.dispatch({ type: 'OVER_TILE', payload: this.tile });
+    if (this.gameEngine.rollOverTile != this.tile) {
+      this.gameEngine.rollOverTile = this.tile;
     }
-
 
     if (!this.showNextHint) {
       if (this.tile.card) {

@@ -1,6 +1,6 @@
 <div class="container" [@show]="state" [style.background-color]="currentMessage?.isWow?'rgb(169, 22, 199)':'rgb(199, 22, 22)'">
   <span *ngIf="currentMessage">
-    <h3 style="margin:10px">{{currentMessage.title}}</h3>
-    <small>{{currentMessage.message}}</small>
+    <h3 style="margin:2px 10px">{{currentMessage.title}}</h3>
+    <small style="white-space: pre-line;">{{currentMessage.message }}</small>
   </span>
 </div>

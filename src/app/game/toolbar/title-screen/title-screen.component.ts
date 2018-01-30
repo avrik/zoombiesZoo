@@ -4,6 +4,7 @@ import { Card } from 'app/game/cards/card';
 import { MessagesService, IMessage } from 'app/services/messages.service';
 import { IState } from '../../../redux/main-reducer';
 import { MessageType } from '../../../enums/message-type.enum';
+import { Tile } from '../../board/tile/tile';
 
 @Component({
   selector: 'title-screen',
@@ -12,12 +13,12 @@ import { MessageType } from '../../../enums/message-type.enum';
 })
 export class TitleScreenComponent implements OnInit {
 
-  cardHint: Card;
+  //cardHint: Card;
   currentCard: Card;
   title: string = "Zoombie Zoo";
   message: IMessage;
 
-  constructor(private gameEngine: GameEngineService, private messageService: MessagesService) {
+  constructor(public gameEngine: GameEngineService, private messageService: MessagesService) {
     /* this.gameEngine.cardHint$.subscribe(cardHint => {
       this.cardHint = cardHint;
       if (this.cardHint && this.cardHint.family.name==100) {
@@ -40,11 +41,11 @@ export class TitleScreenComponent implements OnInit {
   }
 
   ngOnInit() {
-    
+
     this.gameEngine.store.subscribe(() => {
       
       let newState: IState = this.gameEngine.store.getState();
-      this.cardHint = newState.cardHint
+     // this.cardHint = newState.cardHint
       this.currentCard = newState.nextCard; 
       //debugger;
       if (newState.currentMessage && newState.currentMessage.type == MessageType.TOOLBAR) {
@@ -56,7 +57,10 @@ export class TitleScreenComponent implements OnInit {
     })
   }
 
-  get isCardHint(): boolean {
-    return this.cardHint ? true : false;
+  get rollOverTile():Tile {
+    return this.gameEngine.rollOverTile;
   }
+  /* get isCardHint(): boolean {
+    return this.gameEngine.cardHint ? true : false;
+  } */
 }

@@ -16,6 +16,7 @@ import { IState } from '../../redux/main-reducer';
 export class ToolbarComponent implements OnInit {
 
   years: number;
+  days: number;
   score: number = 0;
   population: number;
 
@@ -31,11 +32,13 @@ export class ToolbarComponent implements OnInit {
     
     this.gameEngine.store.subscribe(() => {
       let newState: IState = this.gameEngine.store.getState()
-      this.years = newState.turn;
+      this.years = Math.round(newState.turn/360)+1;
+      this.days = newState.turn;
       this.score = newState.score;
       this.currentLevel = newState.level;
-      this.population = newState.population;
+      
       if (this.population != newState.population) {
+        this.population = newState.population;
         this.popCount++;
         let percent: number = Math.min(Math.round(this.popCount / this.populationTarget * 100), 100);
 
@@ -44,13 +47,15 @@ export class ToolbarComponent implements OnInit {
       }
 
       if (this.currentCityLevel != newState.cityLevel) {
-        this.currentCityLevel = newState.cityLevel;
+        
         this.popCount = 0;
         this.populationTarget = this.currentCityLevel ? newState.cityLevel.goal - this.currentCityLevel.goal : newState.cityLevel.goal;
         
         setTimeout(() => {
           this.move(0);
-        }, 1500);
+        }, 2500);
+
+        this.currentCityLevel = newState.cityLevel;
       }
     })
   }

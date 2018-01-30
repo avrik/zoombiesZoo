@@ -2,31 +2,31 @@
 
 <div class="card-hint">{{message?.title}}</div>
 
-<div *ngIf="!message && isCardHint==true">
-    <div *ngIf="cardHint.nextCard!=null && cardHint.family.name!=100" class="card-hint">
-        <img [src]="cardHint.img" alt="" height="30">
+<div *ngIf="!message && rollOverTile && rollOverTile.card">
+    <div *ngIf="rollOverTile.card.nextCard!=null && rollOverTile.card.family.name!=100" class="card-hint">
+        <img [src]="rollOverTile.card.img" alt="" height="30">
         <b class="sign">✚</b>
-        <img [src]="cardHint.img" alt="" height="30">
+        <img [src]="rollOverTile.card.img" alt="" height="30">
         <b class="sign">✚</b>
-        <img [src]="cardHint.img" alt="" height="30">
+        <img [src]="rollOverTile.card.img" alt="" height="30">
         <b class="sign">=</b>
 
-        <img [src]="cardHint.nextCard.img" alt="" height="30">
-        <span *ngIf="cardHint.nextCard.bonus">
+        <img [src]="rollOverTile.card.nextCard.img" alt="" height="30">
+        <span *ngIf="rollOverTile.card.nextCard.bonus">
       <img src="assets/resources/coin.png" alt="" height="30">
     </span>
     </div>
 
-    <div *ngIf="cardHint.family.name==100" class="card-hint">
+    <div *ngIf="rollOverTile.card.family.name==100" class="card-hint">
         <img src="assets/buildings/house.png" alt="" height="30">
         <b class="sign">⬅</b>
 
-        <img [src]="cardHint.img" alt="" height="30">
+        <img [src]="rollOverTile.card.img" alt="" height="30">
     </div>
 </div>
 
 
-<div *ngIf="!message && isCardHint==false && currentCard!=null">
+<div *ngIf="!message && rollOverTile && rollOverTile.card && currentCard!=null">
     <span class="card-hint" style="margin-right:30px">
     <img [src]="currentCard.img" alt="" height="30">
   </span>

@@ -14,6 +14,10 @@ import { UNDO_ACTION, SET_NEXT_CARD } from '../../../redux/actions/actions';
 })
 export class ResourceTableComponent implements OnInit {
 
+  @ViewChild('brickRef') brickRef;
+  @ViewChild('lumberRef') lumberRef;
+  @ViewChild('coinRef') coinRef;
+
   showStore: boolean;
   resourceStorage: IResourceStorage;
 
@@ -36,7 +40,14 @@ export class ResourceTableComponent implements OnInit {
       let newState: IState = this.gameEngine.store.getState();
 
       if (this.resourceStorage != newState.resources) {
-        this.resourceStorage = newState.resources;
+
+        if (this.resourceStorage) {
+          if (newState.resources.bricks > this.resourceStorage.bricks) this.brickRef.animate();
+          if (newState.resources.lumber > this.resourceStorage.lumber) this.lumberRef.animate();
+          if (newState.resources.coins > this.resourceStorage.coins) this.coinRef.animate();
+        }
+
+        this.resourceStorage = Object.assign({}, newState.resources);
       }
     });
   }

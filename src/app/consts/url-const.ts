@@ -8,9 +8,9 @@ export const UrlConst = {
     CHURCH5:"assets/buildings/church3.png",
     CHURCH6:"assets/buildings/church3.png",
 
-    HOUSE1:"assets/buildings/house.png",
-    HOUSE2:"assets/buildings/house2.png",
-    HOUSE3:"assets/buildings/house3.png",
+    HOUSE1:"assets/buildings/house1b.png",
+    HOUSE2:"assets/buildings/house.png",
+    HOUSE3:"assets/buildings/house2.png",
     HOUSE4:"assets/buildings/house3.png",
     HOUSE5:"assets/buildings/house3.png",
     HOUSE6:"assets/buildings/house3.png",
@@ -29,7 +29,7 @@ export const UrlConst = {
     SAWMILL5:"assets/buildings/sawmil.png",
     SAWMILL6:"assets/buildings/sawmil.png",
 
-    LABORATORY:"assets/buildings/laboratory.png",
+    LABORATORY:"assets/buildings/lab.png",
     PALACE:"assets/buildings/laboratory.png",
     
 

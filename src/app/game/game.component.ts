@@ -48,17 +48,16 @@ export class GameComponent implements OnInit {
         newState.currentMessage = null;
       } */
 
-      if (this.currentLevel != newState.level) {
+      /* if (this.currentLevel != newState.level) {
 
         this.currentLevel = newState.level;
         if (this.currentLevel.index) {
-          //debugger;
           this.messagesService.postMessage({
             type: MessageType.CURTAIN, title: "Well done! ", message: `level ${this.currentLevel.index} completed!\n${this.currentLevel.reward.coins} coin rewarded`
             , butns: [{ label: 'next level' }]
           });
         }
-      }
+      } */
     })
   }
 

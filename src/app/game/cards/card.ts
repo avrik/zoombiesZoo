@@ -19,6 +19,7 @@ export interface ICardData {
   nextCard?: ICardData;
   chance?: number;
   img?: string;
+  imgs?: string[];
   collect?: number;
   collected?: number;
   reward?: number;
@@ -43,12 +44,12 @@ const coinCard: ICardData = { level: 0, family: familyCoin, mergeBy: MergeTypeEn
 //const goldChest: ICardData = { level: 1, family: { name: CardFamilyTypeEnum.GOLD_CHEST, value: 1250 }, mergeBy: MergeTypeEnum.NONE, collect: 10, type: CardTypeEnum.BUILDING, img: "assets/resources/Chest Closed.png" }
 
 const laboratoryCard: ICardData = {
-  level: 0, family: familyLaboratory, mergeBy: MergeTypeEnum.NONE, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH1,
+  level: 0, family: familyLaboratory, mergeBy: MergeTypeEnum.NONE, type: CardTypeEnum.BUILDING, img: UrlConst.LABORATORY,
 }
 
 const sawmillCard: ICardData = {
   level: 0, family: familySawmill, mergeBy: MergeTypeEnum.MATCH, collect: 12, type: CardTypeEnum.BUILDING, img: UrlConst.SAWMILL1,
-  nextCard :{
+  nextCard: {
     level: 1, family: familySawmill, mergeBy: MergeTypeEnum.MATCH, collect: 36, type: CardTypeEnum.BUILDING, img: UrlConst.SAWMILL2,
   }
 }
@@ -167,16 +168,14 @@ export const cardCollection: ICardData[] = [
       }
     }
   },
-  { level: 0, family: familyPerson, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 15, img: UrlConst.PERSON1, },
-  { level: 0, family: familyPerson, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 15, img: UrlConst.PERSON2, },
-  { level: 0, family: familyPerson, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 15, img: UrlConst.PERSON3, },
-  { level: 0, family: familyPerson, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 15, img: UrlConst.PERSON4, },
+  { level: 0, family: familyPerson, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 30, imgs: [UrlConst.PERSON1, UrlConst.PERSON2, UrlConst.PERSON3, UrlConst.PERSON4] },
   {
     level: 0, family: { name: CardFamilyTypeEnum.WILD, value: -1 }, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, chance: 30, img: UrlConst.WILD,
     nextCard: graveCard,
   },
   {
-    level: 1, family: { name: CardFamilyTypeEnum.ANIMAL, value: 0 }, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 20, img: UrlConst.ANIMAL,
+    level: 1, family: { name: CardFamilyTypeEnum.ANIMAL, value: 0 }, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 0, img: UrlConst.ANIMAL,
+    // level: 1, family: { name: CardFamilyTypeEnum.ANIMAL, value: 0 }, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 20, img: UrlConst.ANIMAL,
     nextCard: graveCard,
   },
   zoombieCard,
@@ -218,7 +217,7 @@ export class Card implements ICardData {
     this.minForNextLevel = data.minForNextLevel ? data.minForNextLevel : 3;
     this.nextCard = data.nextCard;
     this.chance = data.chance;
-    this.img = data.img;
+    this.img = data.imgs ? data.imgs[Math.floor(Math.random() * data.imgs.length)] : data.img;
     this.collect = data.collect ? data.collect : 0;
     this.reward = data.reward ? data.reward : 0;
     this.value = (Math.max((this.level * this.level * 10), 1) * this.family.value);

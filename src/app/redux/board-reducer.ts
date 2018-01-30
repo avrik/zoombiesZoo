@@ -165,11 +165,11 @@ export function findMatch(tile: Tile) {
             let totalCollected: number = tile.card.type == CardTypeEnum.RESOURCE ? Math.max(tile.card.collect, 1) : 0;
 
             matchedTiles.filter(a => a.card).forEach(linked => {
-
+                if (!linked.card) return;
                 if (tile.card.type == CardTypeEnum.BUILDING) {
                     if (linked.card.collected) totalCollected += linked.card.collected;
                 } else {
-                    if (linked.card.nextCard && linked.card.nextCard.collect) {
+                    if (linked.card && linked.card.nextCard && linked.card.nextCard.collect) {
                         totalCollected += Math.max(linked.card.collected, 1);
                     }
                 }
@@ -382,13 +382,13 @@ function trapWalkersGroup(walkerGroup: Tile[]) {
 }
 
 function moveZoombiesToRandomEmpty(tile: Tile): boolean {
-    let churchsAround: Tile[] = tile.linked.filter(a => a.card).filter(a => a.card.family.name == CardFamilyTypeEnum.CHURCH && a.card.collected < a.card.collect)
+    let churchsAround: Tile[] = tile.linked.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.CHURCH && a.card.collected < a.card.collect)
     if (churchsAround.length) {
         let rand: number = Math.floor(Math.random() * (churchsAround.length));
         let moveToTile: Tile = churchsAround.find((item, index) => index == rand);
         moveToTile.card.collected++;
-        //moveAndClear(tile, moveToTile);
         tile.movment = { dir: getMoveDir(tile, moveToTile), img: tile.card.img };
+        tile.clear();
         return true;
     } else {
 
@@ -421,11 +421,8 @@ function movePersonToRandomEmpty(tile: Tile): boolean {
 
         moveToTile.card.collected++;
         moveToTile.card.state = CardState.MOVING;
-        //this.updatePopulation = 1;
 
-        //moveAndClear(tile, moveToTile);
         tile.movment = { dir: getMoveDir(tile, moveToTile), img: tile.card.img };
-        //moveToTile.card = tile.card;
         tile.clear();
         return true;
     } else {

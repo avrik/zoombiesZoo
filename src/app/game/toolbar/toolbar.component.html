@@ -2,26 +2,29 @@
 
 <div class="container">
 
-    <div class="text-box">day :
-        <b class="big-number">{{years| number}}</b>
+    <div class="text-box" style="display:flex;justify-content:space-around">
+        <span>year :
+            <b class="big-number">{{years| number}}</b>
+        </span>
+        <span>day :
+            <b class="big-number">{{days| number}}</b>
+        </span>
     </div>
 
     <title-screen></title-screen>
 
 
     <div class="text-box">
-
-
-
         <div style="display:flex;justify-content:space-around">
             <span>
                 level :
                 <b class="big-number">{{currentLevel?.index+1}}</b>
             </span>
+            <h2 style="margin:0px">➡</h2>
             <span>
                 <!-- goal :  -->
                 {{currentLevel?.goal.verb}}
-                <b class="big-number">{{currentLevel?.goal.amount}}</b>
+                <b class="big-number">{{currentLevel?.goal.amount | number}}</b>
                 <img [src]="currentLevel?.goal.img" alt="" height="30" style="float: right;margin: -7px 0 0 5px;">
             </span>
         </div>
@@ -44,8 +47,8 @@
         <div class="progress-bar">
 
             <div #myBar class="progress-bar-inside" [style.width]="popProgress+'%'">
-                <!-- <b style="color:white;">{{popProgress | number : '1.0-0'}}%</b> -->
-                <b style="color:white;">{{population | number}}/{{currentCityLevel.goal | number}}</b>
+                <b style="color:white;">{{popProgress | number : '1.0-0'}}%</b>
+                <!-- <b style="color:white;">{{population | number}}/{{currentCityLevel.goal | number}}</b> -->
             </div>
         </div>
     </div>

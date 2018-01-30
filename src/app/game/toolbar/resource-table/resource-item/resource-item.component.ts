@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, trigger, state, style, transition, animate } from '@angular/core';
 import { GameEngineService, IResourceStorage } from 'app/services/game-engine.service';
+import { IState } from 'app/redux/main-reducer';
 
 @Component({
   selector: 'app-resource-item',
@@ -8,7 +9,7 @@ import { GameEngineService, IResourceStorage } from 'app/services/game-engine.se
   animations: [
     trigger('animate', [
       state('in', style({
-        transform: 'scale(1.2)'
+        transform: 'scale(1.4)'
       })),
       state('out', style({
         transform: 'scale(1)'
@@ -26,12 +27,40 @@ export class ResourceItemComponent implements OnInit {
 
   state: string = "out";
   resourceStorage: IResourceStorage;
+  currentState:IState;
 
   constructor(private gameEngine: GameEngineService) {
 
   }
 
   ngOnInit() {
+
+    this.gameEngine.store.subscribe(() => {
+     // debugger;
+      let newState: IState = this.gameEngine.store.getState();
+      
+      //if (this.resourceStorage != newState.resources) {
+      
+        /* if (this.currentState)
+        {
+          switch (this.type) {
+            case 0:
+              if (newState.resources.bricks > this.currentState.resources.bricks) this.animate();
+              break;
+            case 1:
+              if (newState.resources.lumber > this.currentState.resources.lumber) this.animate();
+              break;
+            case 2:
+              if (newState.resources.coins > this.currentState.resources.coins) this.animate();
+              break;
+          }
+        }
+
+        this.currentState = newState; */
+      //}
+        
+      
+    })
     /* this.gameEngine.resourceStorage$.subscribe(resourceStorage => {
 
       if (resourceStorage && this.resourceStorage) {
