@@ -40,9 +40,9 @@ export class AppComponent {
   currentMessage: IMessage;
 
   constructor(private messagesService: MessagesService) {
-    /* this.messagesService.currentMessage$.subscribe(message => {
+    this.messagesService.currentMessage$.subscribe(message => {
       this.currentMessage = message;
-    }) */
+    })
 
 
   }

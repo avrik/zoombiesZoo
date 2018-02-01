@@ -309,4 +309,6 @@ export class TileComponent implements OnInit {
 
   }
 
+  
+
 }

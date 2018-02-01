@@ -46,9 +46,11 @@ export interface IState {
     floatTile: Tile;
     cityBuyItems: IBuyItem[];
     currentMessage: IMessage;
+    gameOver: boolean;
 }
 
 const initState: IState = {
+    gameOver: false,
     tiles: [],
     turn: 0,
     tileClicked: null,
@@ -96,6 +98,7 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             return action.payload;
 
         case INIT_GAME_ACTION:
+            newState = Object.assign({}, initState);
             newState.tiles = generateWorld(11, 5);
             newState.nextCard = getNextCard();
             return newState;
@@ -116,10 +119,6 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             }
             return newState;
 
-        /* case 'OVER_TILE':
-            newState.cardHint = tile.card;
-            return newState; */
-
         case SET_NEXT_CARD:
             if (action.payload) newState.nextCard = getNewCard(action.payload);
             return newState;
@@ -137,13 +136,15 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
 
         case PLACE_MOVE_BUILDING_ACTION:
             //moveTileBuilding(newState, tile);
-            tile.setCard(newState.pendingMoveCard);
+            tile.card = newState.pendingMoveCard;
             newState.pendingMoveCard = null;
             newState.tiles.forEach(a => a.state = TileState.REGULAR);
             return newState;
+
         case MOVE_BUILDING_ACTION:
             moveTileBuilding(newState, tile);
             return newState;
+
         case UNDO_ACTION:
             return states[states.length - 2];
         default:
@@ -154,7 +155,7 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
 
 function stashCard(newState: IState, tile: Tile) {
     let temp: Card = tile.card;
-    tile.setCard(newState.nextCard);
+    tile.card = newState.nextCard;
     newState.nextCard = temp ? temp : getNextCard();
 }
 
@@ -180,7 +181,7 @@ function buyBuilding(newState: IState, buyItem: IBuyItem): boolean {
             return false;
         }
 
-        newState.tileClicked.setCard(getNewCard(buyItem.type))
+        newState.tileClicked.card = getNewCard(buyItem.type);
         findMatch(newState.tileClicked);
         //newState.score += newState.tileClicked.card.value;
     }

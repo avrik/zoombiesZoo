@@ -23,24 +23,47 @@ export class GameComponent implements OnInit {
 
   constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
 
+    let savedGameStateStr: string = localStorage.getItem('test');
+ 
+    /* if (savedGameStateStr) {
+      let savedGameState: IState = JSON.parse(savedGameStateStr);
+      console.log(savedGameState)
+    } */
+    // debugger;
+
+
     this.gameEngine.store.subscribe(() => {
       let newState: IState = this.gameEngine.store.getState();
-      let cache = [];
-      localStorage.setItem('gameState', JSON.stringify(newState, function (key, value) {
-        if (typeof value === 'object' && value !== null) {
-          if (cache.indexOf(value) !== -1) {
-            return;
+
+      if (newState.tiles.length) {
+        //let str: string = newState.tiles[0].toString()
+        //console.log(JSON.parse(str))
+      }
+
+      if (newState.gameOver)
+      {
+        console.log("GAME OVER!!!!");
+        this.messagesService.postMessage({ type: MessageType.POPUP, title: "GAME OVER", butns: [{ label: "start over", action: a => { this.restart() } }] })
+      }
+      
+
+
+      /* if (newState.tiles) {
+        let str: string = JSON.stringify(newState.tiles, (key, value) => {
+          if (value == 'object') {
+            return value.toString()
           }
-          cache.push(value);
-        }
-        return value;
-      }));
-      cache = null;
+          return value;
+        });
+        localStorage.setItem('tiles', str);
+      } */
+
+
 
       /* if (this.currentLevel && newState.population >= newState.level.goal) {
         this.gameEngine.store.dispatch({ type: NEXT_LEVEL_ACTION });
       }
- */
+
 
 
       /* if (newState.currentMessage) {
@@ -70,11 +93,15 @@ export class GameComponent implements OnInit {
     }, 50);
   }
 
-  gameOver() {
+  /* gameOver() {
     this.messagesService.postMessage({ type: MessageType.POPUP, title: "GAME OVER", butns: [{ label: "start over", action: a => { this.restart() } }] })
-  }
+  } */
 
   restart() {
-    //this.gameEngine.restart();
+    this.gameEngine.store.dispatch({ type: INIT_GAME_ACTION });
+
+    setTimeout(() => {
+      this.gameEngine.store.dispatch({ type: NEW_GAME_ACTION });
+    }, 50);
   }
 }

@@ -49,14 +49,14 @@ import { ItemImgComponent } from './game/item-view/item-img/item-img.component';
     MessageWindowComponent,
     LumberComponent,
     ItemImgComponent,
-    
+
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
   ],
-  providers: [GameEngineService,MessagesService],
+  providers: [GameEngineService, MessagesService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

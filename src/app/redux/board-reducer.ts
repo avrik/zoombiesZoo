@@ -11,7 +11,6 @@ import { IState } from './main-reducer';
 import { addResources } from 'app/redux/resources-reducer';
 import { checkIfLevelCompleted } from './level-reducer';
 
-
 export function generateWorld(totalRows: number, totalCols: number): Tile[] {
 
     let tiles: Tile[] = [];
@@ -55,7 +54,7 @@ export function generateWorld(totalRows: number, totalCols: number): Tile[] {
     for (let i = 0; i < 5; i++) {
         let tile: Tile = getRandomTile(tiles.filter(a => a.terrain.type == TerrainEnum.RESOURCES && !a.card));
         let rand: number = Math.floor(Math.random() * options.length);
-        tile.setCard(getNewCard(options[rand]))
+        tile.card = getNewCard(options[rand]);
         tile.card.autoPlaced = true;
     }
 
@@ -64,7 +63,7 @@ export function generateWorld(totalRows: number, totalCols: number): Tile[] {
     randTile.setCard(getNewCard(CardFamilyTypeEnum.STORAGE));
     randTile.card.autoPlaced = true; */
 
-    tiles.find(a => a.col == 0 && a.row == 0).setCard(getNewCard(CardFamilyTypeEnum.STORAGE));
+    tiles.find(a => a.col == 0 && a.row == 0).card = getNewCard(CardFamilyTypeEnum.STORAGE);
 
 
 
@@ -81,13 +80,13 @@ export function clickTileOnBoard(state: IState): IState {
     if (newState.tileClicked.terrain.type == TerrainEnum.CARD_HOLDER) {
         if (newState.tileClicked.card) {
             let temp = Object.assign({}, newState.tileClicked.card);
-            newState.tileClicked.setCard(getNewCard(newState.nextCard.family.name));
+            newState.tileClicked.card = getNewCard(newState.nextCard.family.name);
             newState.nextCard = temp;
         } else {
-            newState.tileClicked.setCard(getNewCard(newState.nextCard.family.name));
+            newState.tileClicked.card = getNewCard(newState.nextCard.family.name);
         }
     } else {
-        newState.tileClicked.setCard(newState.nextCard);
+        newState.tileClicked.card = newState.nextCard;
 
         if (newState.tileClicked.card.mergeBy == MergeTypeEnum.MATCH) {
             findMatch(newState.tileClicked);
@@ -132,8 +131,15 @@ export function nextTurn(newState: IState) {
     newState.score += newState.tileClicked.card ? newState.tileClicked.card.value : 0;
 
     checkIfLevelCompleted(newState);
+    checkIfGameOver(newState)
 }
 
+function checkIfGameOver(newState: IState) {
+    let emptyInCity: number = newState.tiles.filter(a => a.terrain.type == TerrainEnum.CITY && !a.card).length;
+    let emptyInResources: number = newState.tiles.filter(a => a.terrain.type == TerrainEnum.RESOURCES && !a.card).length;
+
+    if (!emptyInCity || !emptyInResources) newState.gameOver = true;
+}
 
 export function getNextCard(): Card {
     let rand: number = Math.round(Math.random() * 100);
@@ -158,7 +164,8 @@ export function findMatch(tile: Tile) {
         handleWild(tile);
     }
 
-    let matchedTiles: Tile[] = tile.getMatchesAround();
+    //let matchedTiles: Tile[] = tile.getMatchesAround();
+    let matchedTiles: Tile[] = getMatchesAround(tile);
     if (matchedTiles.length > 1) {
 
         if (tile.card.nextCard) {
@@ -180,12 +187,12 @@ export function findMatch(tile: Tile) {
                 linked.clear();
             });
 
-            tile.setCard(new Card(tile.card.nextCard));
+            tile.card = new Card(tile.card.nextCard);
 
             if (tile.card.reward) {
                 let emptyTile: Tile = tile.linked.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
                 if (emptyTile) {
-                    emptyTile.setCard(getNewCard(CardFamilyTypeEnum.COIN));
+                    emptyTile.card = getNewCard(CardFamilyTypeEnum.COIN);
                     emptyTile.card.collected = tile.card.reward;
                 }
             }
@@ -202,6 +209,33 @@ export function findMatch(tile: Tile) {
         }
     }
 }
+
+
+function getMatchesAround(tile: Tile): Tile[] {
+    let collector: Tile[] = [];
+
+    if (tile.linked) {
+        let func: Function = (arr: Tile[]) => {
+            arr.filter(item =>
+                tile != item &&
+                tile.card && item.card &&
+                ((tile.card.mergeBy == MergeTypeEnum.MATCH && item.card.mergeBy == MergeTypeEnum.MATCH) ||
+                    (tile.card.mergeBy == MergeTypeEnum.MATCH_COLLECTED && item.card.mergeBy == MergeTypeEnum.MATCH_COLLECTED
+                        && tile.card.collect == tile.card.collected && item.card.collect == item.card.collected)) &&
+                collector.indexOf(item) == -1 &&
+                (item.card.value === tile.card.value))
+                .forEach(item => {
+                    collector.push(item);
+                    func(item.linked);
+                });
+        }
+
+        func(tile.linked);
+    }
+    return collector;
+}
+
+
 
 
 function handleWild(tile: Tile) {
@@ -228,7 +262,7 @@ function handleWild(tile: Tile) {
     });
 
     // tile.card = optionsForWild.length ? optionsForWild[0].card : this.getNewCard(CardFamilyTypeEnum.GRAVE);
-    tile.setCard(optionsForWild.length ? optionsForWild[0].card : getNewCard(CardFamilyTypeEnum.GRAVE));
+    tile.card = optionsForWild.length ? optionsForWild[0].card : getNewCard(CardFamilyTypeEnum.GRAVE);
 }
 
 
@@ -378,7 +412,7 @@ function testGroupTrapped(walkers: Tile[]) {
 }
 
 function trapWalkersGroup(walkerGroup: Tile[]) {
-    walkerGroup.forEach(walker => walker.setCard(getNewCard(CardFamilyTypeEnum.GRAVE)));
+    walkerGroup.forEach(walker => walker.card = getNewCard(CardFamilyTypeEnum.GRAVE));
 }
 
 function moveZoombiesToRandomEmpty(tile: Tile): boolean {
