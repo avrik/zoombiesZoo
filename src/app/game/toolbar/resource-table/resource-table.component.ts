@@ -22,19 +22,15 @@ export class ResourceTableComponent implements OnInit {
   resourceStorage: IResourceStorage;
 
   items: IBuyItem[] = [
-    { label: "brick", cost: { coin: 3 }, icon: UrlConst.BRICK2, type: CardFamilyTypeEnum.BRICK, amount: 6, description: "buy brick" },
-    { label: "lumber", cost: { coin: 3 }, icon: UrlConst.LUMBER2, type: CardFamilyTypeEnum.LUMBER, amount: 6, description: "buy lumber" },
-    { label: "wild", cost: { coin: 6 }, icon: UrlConst.WILD, type: CardFamilyTypeEnum.WILD, amount: 3, description: "buy wild-card" },
-    { label: "bomb", cost: { coin: 0 }, icon: UrlConst.BOMB, type: CardFamilyTypeEnum.BOMB, amount: 3, description: "buy TNT" },
-    { label: "undo", cost: { coin: 0 }, icon: UrlConst.UNDO, type: 99, amount: 6, description: "undo last action" },
-    // { label: "buldoze", cost: { coin: 6 }, icon: UrlConst.BULDOZE, type: 4, amount: 3 },
-    //{ label: "move", cost: { coin: 6 }, icon: UrlConst.MOVE, type: 5 },
+    { label: "tree", cost: { coin: 1 }, icon: UrlConst.LUMBER1, type: CardFamilyTypeEnum.LUMBER, amount: 6, description: "plant tree" },
+    { label: "brick", cost: { coin: 3 }, icon: UrlConst.BRICK2, type: CardFamilyTypeEnum.BRICK, amount: 3, description: "buy brick" },
+    { label: "lumber", cost: { coin: 3 }, icon: UrlConst.LUMBER2, type: CardFamilyTypeEnum.LUMBER, amount: 3, description: "buy lumber" },
+    { label: "wild", cost: { coin: 4 }, icon: UrlConst.WILD, type: CardFamilyTypeEnum.WILD, amount: 3, description: "buy wild-card" },
+    { label: "bomb", cost: { coin: 4 }, icon: UrlConst.BOMB, type: CardFamilyTypeEnum.BOMB, amount: 3, description: "buy TNT" },
+    { label: "undo", cost: { coin: 0 }, icon: UrlConst.UNDO, type: 99, amount: 9, description: "undo last action" },
   ]
 
   constructor(public gameEngine: GameEngineService) {
-
-    //this.gameEngine.resourceStorage$.subscribe(resourceStorage => this.resourceStorage = resourceStorage)
-
 
     this.gameEngine.store.subscribe(() => {
       let newState: IState = this.gameEngine.store.getState();

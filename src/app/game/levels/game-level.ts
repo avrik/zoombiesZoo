@@ -30,6 +30,7 @@ export interface IGameLevelData {
     text?: string;
 }
 const basePop: number = 6;
+
 const cityLevelsData: ICityLevelData[] = [
     { name: "the wilderness", goal: basePop, reward: { coins: 1 } },//6
     { name: "camp", goal: basePop * 2 + basePop, reward: { coins: 1 } },//18
@@ -49,16 +50,20 @@ const gameLevelsData: IGameLevelData[] = [
     // { goal: { verb:"build", img: UrlConst.ROAD, roads: 1, amount: 1 }, reward: { coins: 1 } },
     { goal: { verb: "build", img: UrlConst.SAWMILL1, building: { type: CardFamilyTypeEnum.SAWMILL, level: 1 }, amount: 1 }, reward: { coins: 1 } },
     { goal: { verb: "build", img: UrlConst.HOUSE1, building: { type: CardFamilyTypeEnum.HOUSE, level: 1 }, amount: 1 }, reward: { coins: 1 } },
-    { goal: { verb: "populate", img: UrlConst.PERSON1, population: 6, amount: 6 }, reward: { coins: 2 } },
-    { goal: { verb: "populate", img: UrlConst.PERSON1, population: 18, amount: 18 }, reward: { coins: 2 } },
+    // { goal: { verb: "populate", img: UrlConst.PERSON1, population: 6, amount: 6 }, reward: { coins: 2 } },
+    { goal: { verb: "populate", img: UrlConst.PERSON1, population: 12, amount: 12 }, reward: { coins: 2 } },
+    { goal: { verb: "collect", img: UrlConst.BRICK3, building: { type: CardFamilyTypeEnum.BRICK, level: 2 }, amount: 1 }, reward: { coins: 1 } },
     { goal: { verb: "build", img: UrlConst.HOUSE2, building: { type: CardFamilyTypeEnum.HOUSE, level: 2 }, amount: 1 }, reward: { coins: 1 } },
     { goal: { verb: "build", img: UrlConst.LABORATORY, building: { type: CardFamilyTypeEnum.LABORATORY, level: 1 }, amount: 1 }, reward: { coins: 1 } },
     { goal: { verb: "build", img: UrlConst.CHURCH1, building: { type: CardFamilyTypeEnum.CHURCH, level: 1 }, amount: 1 }, reward: { coins: 1 } },
+    { goal: { verb: "collect", img: UrlConst.BRICK4, building: { type: CardFamilyTypeEnum.BRICK, level: 3 }, amount: 1 }, reward: { coins: 1 } },
     { goal: { verb: "get", img: "", score: 100000, amount: 100000 }, reward: { coins: 3 } },
+    { goal: { verb: "collect", img: UrlConst.BRICK5, building: { type: CardFamilyTypeEnum.BRICK, level: 4 }, amount: 1 }, reward: { coins: 1 } },
     { goal: { verb: "build", img: UrlConst.HOUSE3, building: { type: CardFamilyTypeEnum.HOUSE, level: 3 }, amount: 1 }, reward: { coins: 1 } },
     { goal: { verb: "get", img: "", score: 300000, amount: 300000 }, reward: { coins: 3 } },
     { goal: { verb: "populate", img: UrlConst.PERSON1, population: 120, amount: 120 }, reward: { coins: 3 } },
     { goal: { verb: "get", img: "", score: 1000000, amount: 1000000 }, reward: { coins: 3 } },
+    { goal: { verb: "collect", img: UrlConst.BRICK6, building: { type: CardFamilyTypeEnum.BRICK, level: 5 }, amount: 1 }, reward: { coins: 1 } },
     { goal: { verb: "get", img: "", score: 3000000, amount: 3000000 }, reward: { coins: 3 } },
 ]
 
@@ -69,6 +74,11 @@ export class CityLevel {
     name: string
 
     constructor(prevCityLevel: CityLevel = null) {
+
+        /* for (let i = 0; i < 10; i++) {
+            console.log(Math.floor(Math.exp((i) + basePop)));
+        } */
+
         if (prevCityLevel) {
             this.index = prevCityLevel.index + 1;
         }
@@ -76,6 +86,7 @@ export class CityLevel {
         if (this.index < cityLevelsData.length) {
             let levelData: ICityLevelData = cityLevelsData[this.index];
             this.goal = levelData.goal;
+            //this.goal = Math.exp((this.index * basePop))
             this.reward = levelData.reward;
             this.name = levelData.name;
         } else {

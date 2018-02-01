@@ -4,15 +4,27 @@
 
 .card-hint {
     display: flex;
-    line-height: 30px;
+    height: 20px;
+    /* line-height: 20px; */
+    /* height: 90%; */
     justify-content: center;
     /* text-align: center; */
     color: rgb(107, 228, 117);
     font-size: 12px;
+
+    background-color: black;
+    border-radius: 5px;
+    padding: 5px 0 2px 0;
+    margin-top: 2px;
+    border-bottom: 2px solid #8a8787;
 }
 
-.title {
+img {
+    margin-top:-3px;
+}
+
+/* .title {
     padding: 0;
     margin: 2px;
     color: gold;
-}
+} */

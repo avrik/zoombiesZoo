@@ -7,9 +7,10 @@ import { TerrainEnum } from './../enums/terrain.enum';
 import { Terrain } from './../game/board/tile/terrain';
 import { Tile } from './../game/board/tile/tile';
 import { TileState } from '../enums/tile-state.enum';
-import { IState } from './main-reducer';
+import { IState, currentGameState } from './main-reducer';
 import { addResources } from 'app/redux/resources-reducer';
 import { checkIfLevelCompleted } from './level-reducer';
+import { clearTile } from './tile-reducer';
 
 export function generateWorld(totalRows: number, totalCols: number): Tile[] {
 
@@ -118,7 +119,7 @@ export function nextTurn(newState: IState) {
     checkBombs(bombs);
 
     newState.tiles.filter(a => a.card && a.card.type == CardTypeEnum.WALKER).forEach(a => a.card.state = CardState.REGULAR)
-    newState.nextCard = getNextCard();
+    //newState.nextCard = getNextCard();
 
     let found: Tile = newState.tileClicked.linked.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES)
     newState.floatTile = found ? found : newState.tiles.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
@@ -142,6 +143,15 @@ function checkIfGameOver(newState: IState) {
 }
 
 export function getNextCard(): Card {
+    let gotLab: Tile = currentGameState.tiles.find(a => a.card && a.card.family.name == CardFamilyTypeEnum.LABORATORY);
+    if (gotLab) {
+        let bombData: ICardData = cardCollection.find(a => a.family.name == CardFamilyTypeEnum.BOMB);
+        bombData.chance = 100;
+    }
+
+    let personCardData: ICardData = cardCollection.find(a => a.family.name == CardFamilyTypeEnum.PERSON);
+    personCardData.chance = Math.min(25 + (currentGameState.cityLevel.index * 5), 50)
+
     let rand: number = Math.round(Math.random() * 100);
     let pickFrom: ICardData[] = [];
     cardCollection.filter(item => item.chance).forEach(a => {
@@ -181,10 +191,11 @@ export function findMatch(tile: Tile) {
                     }
                 }
 
-                //moveAndClear(linked, tile)
+                //move(linked, tile)
                 linked.movment = { dir: getMoveDir(linked, tile), img: linked.card.img };
                 tile.showDelay = "hidden";
-                linked.clear();
+                //linked.clear();
+                clearTile(linked);
             });
 
             tile.card = new Card(tile.card.nextCard);
@@ -265,9 +276,7 @@ function handleWild(tile: Tile) {
     tile.card = optionsForWild.length ? optionsForWild[0].card : getNewCard(CardFamilyTypeEnum.GRAVE);
 }
 
-
 export function getNewCard(familyName: number, level: number = 0): Card {
-
     let curCardData: ICardData = cardCollection.find(a => a.family.name == familyName);
     if (level) {
         for (let i = 0; i < level; i++) {
@@ -280,34 +289,17 @@ export function getNewCard(familyName: number, level: number = 0): Card {
     return card;
 }
 
-
 function getMoveDir(from: Tile, to: Tile): string {
-    if (to.col < from.col && to.row < from.row) { return "upLeftAndClear" }
-    if (to.col < from.col && to.row > from.row) { return "upRightAndClear" }
-    if (to.col > from.col && to.row < from.row) { return "downLeftAndClear" }
-    if (to.col > from.col && to.row > from.row) { return "downRightAndClear" }
+    if (to.col < from.col && to.row < from.row) { return "upLeft" }
+    if (to.col < from.col && to.row > from.row) { return "upRight" }
+    if (to.col > from.col && to.row < from.row) { return "downLeft" }
+    if (to.col > from.col && to.row > from.row) { return "downRight" }
 
-    if (to.col < from.col) { return "upAndClear" }
-    if (to.col > from.col) { return "downAndClear" }
-    if (to.row < from.row) { return "leftAndClear" }
-    if (to.row > from.row) { return "rightAndClear" }
+    if (to.col < from.col) { return "up" }
+    if (to.col > from.col) { return "down" }
+    if (to.row < from.row) { return "left" }
+    if (to.row > from.row) { return "right" }
 }
-
-/* function moveAndClear(from: Tile, to: Tile) {
-    let dir: string = "";
-    if (to.col < from.col && to.row < from.row) { dir = "upLeftAndClear" }
-    if (to.col < from.col && to.row > from.row) { dir = "upRightAndClear" }
-    if (to.col > from.col && to.row < from.row) { dir = "downLeftAndClear" }
-    if (to.col > from.col && to.row > from.row) { dir = "downRightAndClear" }
-
-    if (to.col < from.col) { dir = "upAndClear" }
-    if (to.col > from.col) { dir = "downAndClear" }
-    if (to.row < from.row) { dir = "leftAndClear" }
-    if (to.row > from.row) { dir = "rightAndClear" }
-
-    from.movment = { dir: dir, img: from.card.img };
-} */
-
 
 function getLinkedGroup(firstOne: Tile): Tile[] {
     let group: Tile[] = [];
@@ -336,7 +328,7 @@ function checkBombs(tiles: Tile[]) {
             let around: Tile[] = [...bomb.linked];//.filter(a => a.card);
             around.push(bomb);
             around.forEach(tileNear => {
-                tileNear.clear();
+                clearTile(tileNear);
                 tileNear.terrainTop = new Terrain(TerrainEnum.EXPLOSION);
                 setTimeout(() => {
                     tileNear.terrainTop = null;
@@ -422,7 +414,7 @@ function moveZoombiesToRandomEmpty(tile: Tile): boolean {
         let moveToTile: Tile = churchsAround.find((item, index) => index == rand);
         moveToTile.card.collected++;
         tile.movment = { dir: getMoveDir(tile, moveToTile), img: tile.card.img };
-        tile.clear();
+        clearTile(tile);
         return true;
     } else {
 
@@ -457,7 +449,7 @@ function movePersonToRandomEmpty(tile: Tile): boolean {
         moveToTile.card.state = CardState.MOVING;
 
         tile.movment = { dir: getMoveDir(tile, moveToTile), img: tile.card.img };
-        tile.clear();
+        clearTile(tile);
         return true;
     } else {
         let empties: Tile[] = tile.linked.filter(a => !a.card && a.terrain.walkable);
@@ -489,7 +481,7 @@ function moveToRandomSpot(tile: Tile, empties: Tile[]): boolean {
         moveToTile.card.preTile = tile;
         moveToTile.showDelay = "hidden";
         tile.movment = { dir: getMoveDir(tile, moveToTile), img: tile.card.img };
-        tile.clear();
+        clearTile(tile);
 
         return true;
     } else {

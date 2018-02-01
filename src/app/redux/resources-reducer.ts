@@ -3,12 +3,13 @@ import { IState } from './main-reducer';
 import { IResourceStorage } from 'app/services/game-engine.service';
 import { CardFamilyTypeEnum } from 'app/enums/card-family-type-enum.enum';
 import { MessageType } from '../enums/message-type.enum';
+import { clearTile } from './tile-reducer';
 
 export function addResources(state: IState, tile: Tile, amount: number): IResourceStorage {
     switch (tile.card.family.name) {
         case CardFamilyTypeEnum.COIN:
             state.resources.coins += amount;
-            tile.clear();
+            clearTile(tile);
             break;
 
         case CardFamilyTypeEnum.LUMBER:
@@ -16,7 +17,7 @@ export function addResources(state: IState, tile: Tile, amount: number): IResour
             if (sawmills.length) {
                 sawmills[0].card.collected += amount;
                 state.resources.lumber += amount;
-                tile.clear();
+                clearTile(tile);
             } else {
                 let txt: string = state.tiles.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.SAWMILL).length ? "no place in sawmill" : "build a sawmill to store your lumber"
                 //console.log(txt);
@@ -29,13 +30,13 @@ export function addResources(state: IState, tile: Tile, amount: number): IResour
             if (storages.length) {
                 storages[0].card.collected += amount;
                 state.resources.bricks += amount;
-                tile.clear();
+                clearTile(tile);
             } else {
                 //console.log("no place in storage");
                 state.currentMessage = { type: MessageType.TOOLBAR, title: "no place in storage" };
             }
             /* state.resources.coins += amount;
-            tile.clear(); */
+            clearTile(tile); */
             break;
         default:
             break;

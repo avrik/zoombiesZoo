@@ -39,32 +39,34 @@ import { CLICK_TILE, PLACE_CARD_ON_STASH_ACTION, PLACE_BUILDING } from '../../..
     ]),
 
     trigger('moveAnimation', [
-      state('up', style({ transform: 'translateY(-50px)' })),
+      /* state('up', style({ transform: 'translateY(-50px)' })),
       state('down', style({ transform: 'translateY(50px)' })),
       state('left', style({ transform: 'translateX(-50px)' })),
       state('right', style({ transform: 'translateX(50px)' })),
       transition('* => up', animate('200ms ease-out')),
       transition('* => down', animate('200ms ease-out')),
       transition('* => left', animate('200ms ease-out')),
-      transition('* => right', animate('200ms ease-out')),
+      transition('* => right', animate('200ms ease-out')), */
 
-      state('upAndClear', style({ transform: 'translateY(-50px)' })),
-      state('downAndClear', style({ transform: 'translateY(50px)' })),
-      state('leftAndClear', style({ transform: 'translateX(-50px)' })),
-      state('rightAndClear', style({ transform: 'translateX(50px)' })),
-      transition('* => upAndClear', animate('150ms ease-out')),
-      transition('* => downAndClear', animate('150ms ease-out')),
-      transition('* => leftAndClear', animate('150ms ease-out')),
-      transition('* => rightAndClear', animate('150ms ease-out')),
+      state('up', style({ transform: 'translateY(-50px)' })),
+      state('down', style({ transform: 'translateY(50px)' })),
+      state('left', style({ transform: 'translateX(-50px)' })),
+      state('right', style({ transform: 'translateX(50px)' })),
 
-      state('upLeftAndClear', style({ transform: 'translateY(-50px) translateX(-50px)' })),
-      state('upRightAndClear', style({ transform: 'translateY(-50px) translateX(50px)' })),
-      state('downLeftAndClear', style({ transform: 'translateY(50px) translateX(-50px)' })),
-      state('downRightAndClear', style({ transform: 'translateY(50px) translateX(50px)' })),
-      transition('* => upLeftAndClear', animate('150ms ease-out')),
-      transition('* => upRightAndClear', animate('150ms ease-out')),
-      transition('* => downLeftAndClear', animate('150ms ease-out')),
-      transition('* => downRightAndClear', animate('150ms ease-out')),
+      state('upLeft', style({ transform: 'translateY(-50px) translateX(-50px)' })),
+      state('upRight', style({ transform: 'translateY(-50px) translateX(50px)' })),
+      state('downLeft', style({ transform: 'translateY(50px) translateX(-50px)' })),
+      state('downRight', style({ transform: 'translateY(50px) translateX(50px)' })),
+
+      transition('* => up', animate('100ms ease-out')),
+      transition('* => down', animate('100ms ease-out')),
+      transition('* => left', animate('100ms ease-out')),
+      transition('* => right', animate('100ms ease-out')),
+
+      transition('* => upLeft', animate('100ms ease-out')),
+      transition('* => upRight', animate('100ms ease-out')),
+      transition('* => downLeft', animate('100ms ease-out')),
+      transition('* => downRight', animate('100ms ease-out')),
     ]),
     trigger('visibilityChanged', [
       state('shown', style({ opacity: 1 })),
@@ -110,12 +112,12 @@ export class TileComponent implements OnInit {
     { label: 'storage', cost: { block: 9, lumber: 0, coin: 0 }, icon: UrlConst.STORAGE1, type: CardFamilyTypeEnum.STORAGE, description: "our resources need storage" },
     { label: 'swamill', cost: { block: 9, lumber: 0, coin: 0 }, icon: UrlConst.SAWMILL1, type: CardFamilyTypeEnum.SAWMILL, description: "use sawmills to store lumber" },
     { label: 'house', cost: { block: 9, lumber: 6, coin: 0 }, icon: UrlConst.HOUSE1, type: CardFamilyTypeEnum.HOUSE, description: "our people need houses" },
-    { label: 'laboratory', cost: { block: 18, lumber: 6, coin: 3 }, icon: UrlConst.LABORATORY, type: CardFamilyTypeEnum.LABORATORY, description: "cathedrals are used to trap the undead" },
+    { label: 'laboratory', cost: { block: 18, lumber: 6, coin: 3 }, icon: UrlConst.LABORATORY, type: CardFamilyTypeEnum.LABORATORY, description: "produce TNT!" },
     { label: 'church', cost: { block: 21, lumber: 12, coin: 3 }, icon: UrlConst.CHURCH1, type: CardFamilyTypeEnum.CHURCH, description: "cathedrals are used to trap the undead" },
   ]
 
   storeItems2: IBuyItem[] = [
-    { label: 'move', cost: { block: 0, lumber: 0, coin: 0 }, icon: UrlConst.MOVE, type: 10, description: "move me" },
+    { label: 'move', cost: { block: 0, lumber: 0, coin: 3 }, icon: UrlConst.MOVE, type: 10, description: "move me" },
     { label: 'road', cost: { block: 3, lumber: 0, coin: 0 }, icon: UrlConst.ROAD, type: CardFamilyTypeEnum.ROAD, description: "add road" },
   ]
 
@@ -137,29 +139,29 @@ export class TileComponent implements OnInit {
 
       switch (this.tile.state) {
         case TileState.MOVE_UP:
-          this.moveState = "upAndClear";
+          this.moveState = "up";
           break;
         case TileState.MOVE_DOWN:
-          this.moveState = "downAndClear";
+          this.moveState = "down";
           break;
         case TileState.MOVE_RIGHT:
-          this.moveState = "rightAndClear";
+          this.moveState = "right";
           break;
         case TileState.MOVE_LEFT:
-          this.moveState = "leftAndClear";
+          this.moveState = "left";
           break;
 
         case TileState.MOVE_UP_LEFT:
-          this.moveState = "upLeftAndClear";
+          this.moveState = "upLeft";
           break;
         case TileState.MOVE_UP_RIGHT:
-          this.moveState = "upRightAndClear";
+          this.moveState = "upRight";
           break;
         case TileState.MOVE_DOWN_LEFT:
-          this.moveState = "downLeftAndClear";
+          this.moveState = "downLeft";
           break;
         case TileState.MOVE_DOWN_RIGHT:
-          this.moveState = "downRightAndClear";
+          this.moveState = "downRight";
           break;
       }
     }
@@ -173,12 +175,7 @@ export class TileComponent implements OnInit {
   clickTile() {
 
     if (this.tile.terrain.type == TerrainEnum.CITY) {
-
       if (this.tile.state == TileState.WAIT_FOR_MOVE) {
-        /* this.tile.card = this.gameEngine.pendingTileBuilding.card;
-        this.gameEngine.moveBuildingDone();
-        this.gameEngine.findMatch(this.tile);
-        this.gameEngine.updateBoard(); */
         this.gameEngine.store.dispatch({ type: PLACE_MOVE_BUILDING_ACTION, payload: this.tile })
       } else {
         this.showStore = !this.showStore;
@@ -207,7 +204,6 @@ export class TileComponent implements OnInit {
     }
 
     if (buyItem.type == 10) {
-      //this.gameEngine.moveTileBuilding(this.tile);
       this.gameEngine.store.dispatch({ type: MOVE_BUILDING_ACTION, payload: this.tile });
     } else {
       this.gameEngine.store.dispatch({ type: PLACE_BUILDING, payload: { tile: this.tile, buyItem: buyItem } });
@@ -302,13 +298,13 @@ export class TileComponent implements OnInit {
     /* if (this.tile.card) {
       this.tile.card.state = CardState.DONE;
 
-      if (event.toState.indexOf('AndClear') != -1) {
-        this.tile.clear();
+      if (event.toState.indexOf('') != -1) {
+        this.clearTile(tile);
       }
     } */
 
   }
 
-  
+
 
 }

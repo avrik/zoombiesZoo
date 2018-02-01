@@ -3,16 +3,17 @@ import { MessagesService, IMessage } from './services/messages.service';
 
 //TODOS :
 
+// + undo implementation
+// + save game state implementation
+
 // + handle score
 // + pricing
 // ++ move building implementation
-// + undo implementation
-// + save game state implementation
 // + restart game fixing
 // ++ fix next card hinting
 // + gold reward handling
 // ++ progress bar animation
-// + add match hint animation on rollover
+// ++ add match hint animation on rollover
 // ++ add remove resource/bomb card
 // ++ fix curtain animation
 // + add game settings button + window

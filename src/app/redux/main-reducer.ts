@@ -20,6 +20,7 @@ import { IMessage } from 'app/services/messages.service';
 import { MessageType } from '../enums/message-type.enum';
 import { CityLevel } from '../game/levels/game-level';
 import { TileState } from '../enums/tile-state.enum';
+import { clearTile } from './tile-reducer';
 
 export class MainReducer {
 
@@ -78,10 +79,13 @@ const initState: IState = {
 
 let prevGameState: IState;
 let states: IState[] = []
+export let currentGameState: IState;
 
 export function mainReducerFunc(state: IState = initState, action: IAction): IState {
-
+    prevGameState = Object.assign({}, state);
     let newState: IState = Object.assign({}, state);
+    currentGameState = newState;
+
 
     states.push(newState);
     newState.currentMessage = null;
@@ -127,10 +131,12 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             newState.tileClicked = tile;
             clickTileOnBoard(newState);
             nextTurn(newState);
+            newState.nextCard = getNextCard();
             return newState;
 
         case COLLECT_RESOURCES_ACTION:
             newState.resources = addResources(newState, tile, tile.card.collect);
+            newState.tileClicked = tile;
             nextTurn(newState);
             return newState;
 
@@ -146,6 +152,7 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             return newState;
 
         case UNDO_ACTION:
+            //return prevGameState;
             return states[states.length - 2];
         default:
             return newState;
@@ -165,9 +172,8 @@ function moveTileBuilding(newState: IState, tile: Tile) {
     let moveOptions: Tile[] = newState.tiles.filter(a => a.terrain.type == TerrainEnum.CITY && !a.card);
     moveOptions.forEach(a => { a.state = TileState.WAIT_FOR_MOVE });
     newState.pendingMoveCard = Object.assign({}, tile.card);
-    tile.clear();
+    clearTile(tile);
 }
-
 
 function buyBuilding(newState: IState, buyItem: IBuyItem): boolean {
 

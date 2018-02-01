@@ -17,7 +17,7 @@ export class Tile {
 
     linked: Tile[] = [];
     card: Card;
-    cardsHistroy: Card[] = [];
+    //cardsHistroy: Card[] = [];
     terrain: Terrain;
     terrainTop: Terrain;
     movment: ITileMove;
@@ -25,7 +25,7 @@ export class Tile {
     showDelay: string;
 
     constructor(public col: number = -1, public row: number = -1) {
-        this.terrain = new Terrain();
+        //this.terrain = new Terrain();
         this.state = TileState.REGULAR;
     }
 
@@ -60,16 +60,15 @@ export class Tile {
         return collector;
     } */
 
-    clear() {
+    /* clear() {
         this.card = null;
         this.state = TileState.REGULAR;
-    }
+    } */
 
-    reset() {
+    /* reset() {
         this.clear();
         this.terrainTop = null;
-        //this.overMe = false;
-    }
+    } */
 
     /* setCard(card: Card) {
         this.card = card;
