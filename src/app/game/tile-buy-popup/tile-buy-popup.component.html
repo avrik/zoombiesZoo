@@ -1,16 +1,16 @@
+<div class="container">
 
-<div class="store">
+    <div class="store">
         <div class="header" style="display:flex;justify-content:space-between">
             <span style="margin-left:5px;line-height:25px">{{description?description:title}}</span>
             <button style="margin-right:5px" (click)="onClose()">x</button>
         </div>
 
         <div class="content">
-            <app-buy-item *ngFor="let item of items;let i = index" [icon]="item.icon" [buyItem]="item" (buy)="buy($event)" (mouseout)="onMouseOut(item)"
-                (mouseover)="onMouseOver(item) "></app-buy-item>
+            <app-buy-item *ngFor="let item of items;let i = index" [icon]="item.icon" [buyItem]="item" (buy)="buy($event)" (mouseout)="onMouseOut(item)" (mouseover)="onMouseOver(item) "></app-buy-item>
         </div>
     </div>
-<div class="container">
+    <!-- <div class="mask">
 
-    
+    </div> -->
 </div>
