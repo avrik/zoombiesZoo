@@ -1,5 +1,5 @@
-<tile-buy-popup *ngIf="showStore && gotCard==true && tile.card.type==1" [items]="storeItems2" (buyItem)="buyItem($event)" [title]="tile.card.family.label+' lvl '+(tile.card.level+1)"></tile-buy-popup>
-<tile-buy-popup *ngIf="showStore && gotCard==false" [items]="storeItems" (buyItem)="buyItem($event)" [title]="'city improvments'"></tile-buy-popup>
+<!-- <tile-buy-popup *ngIf="showStore && gotCard==true && tile.card.type==1" [items]="storeItems2" (buyItem)="buyItem($event)" [title]="tile.card.family.label+' lvl '+(tile.card.level+1)"></tile-buy-popup> -->
+<!-- <tile-buy-popup *ngIf="showStore && gotCard==false" [items]="storeItems" (buyItem)="buyItem($event)" [title]="'city improvments'"></tile-buy-popup> -->
 
 <div (click)="clickTile()" [style.opacity]="tile.state===-1?0.2:1" [style.pointer-events]="tile.state===-1?'none':'pointer'">
 

@@ -1,6 +1,13 @@
 import { Component } from '@angular/core';
 import { MessagesService, IMessage } from './services/messages.service';
 
+//BUGS :
+//+ move building complete - board disabled
+//+ wild bugs - match near wood..
+//+ storage resource shows minus
+//+movment glitch
+
+
 //TODOS :
 
 // + undo implementation

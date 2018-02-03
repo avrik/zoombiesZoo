@@ -24,7 +24,7 @@ export class Tile {
     state: number = 0;
     showDelay: string;
 
-    constructor(public col: number = -1, public row: number = -1) {
+    constructor(public ypos: number = -1, public xpos: number = -1) {
         //this.terrain = new Terrain();
         this.state = TileState.REGULAR;
     }

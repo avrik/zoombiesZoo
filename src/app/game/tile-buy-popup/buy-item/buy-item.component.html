@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" [style.opacity]="enabled?1:0.5" [style.pointer-events]="enabled?'pointer':'none'" (click)="onBuy()">
 
     <div style="text-align:center;display:flex">
         <!-- {{title}} -->
@@ -9,7 +9,7 @@
 
             <br>
 
-            <button [disabled]="!enabled" (click)="onBuy()">{{buyItem.label?buyItem.label:'buy'}}</button>
+            <button [disabled]="!enabled" >{{buyItem.label?buyItem.label:'buy'}}</button>
 
         </div>
 

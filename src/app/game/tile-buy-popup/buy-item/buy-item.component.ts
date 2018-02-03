@@ -42,21 +42,6 @@ export class BuyItemComponent implements OnInit {
           (this.buyItem.amount>0 || isNaN(this.buyItem.amount))
         ) ? true : false;
       }
-      
-  
-    //})
-   /*  this.gameEngine.resourceStorage$.subscribe(resourceStorage => {
-      this.resourceStorage = resourceStorage;
-
-      if (this.buyItem && this.buyItem.cost && this.resourceStorage) {
-        this.enabled = (
-          (!this.buyItem.cost.block || resourceStorage.bricks >= this.buyItem.cost.block) &&
-          (!this.buyItem.cost.lumber || resourceStorage.lumber >= this.buyItem.cost.lumber) &&
-          (!this.buyItem.cost.coin || resourceStorage.coins >= this.buyItem.cost.coin) &&
-          (this.buyItem.amount>0 || isNaN(this.buyItem.amount))
-        ) ? true : false;
-      }
-    }) */
   }
 
 

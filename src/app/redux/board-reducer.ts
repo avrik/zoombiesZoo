@@ -26,22 +26,22 @@ export function generateWorld(totalRows: number, totalCols: number): Tile[] {
     }
 
     let middle: number = Math.floor(totalRows / 2);
-    tiles.find(a => a.col == 0 && a.row == middle).terrain = new Terrain(TerrainEnum.WATER);
-    tiles.find(a => a.col == 1 && a.row == middle).terrain = new Terrain(TerrainEnum.BRIDGE);
-    tiles.find(a => a.col == 2 && a.row == middle).terrain = new Terrain(TerrainEnum.WATER);
-    tiles.find(a => a.col == 3 && a.row == middle).terrain = new Terrain(TerrainEnum.BRIDGE);
-    tiles.find(a => a.col == 4 && a.row == middle).terrain = new Terrain(TerrainEnum.WATER);
+    tiles.find(a => a.ypos == 0 && a.xpos == middle).terrain = new Terrain(TerrainEnum.WATER);
+    tiles.find(a => a.ypos == 1 && a.xpos == middle).terrain = new Terrain(TerrainEnum.BRIDGE);
+    tiles.find(a => a.ypos == 2 && a.xpos == middle).terrain = new Terrain(TerrainEnum.WATER);
+    tiles.find(a => a.ypos == 3 && a.xpos == middle).terrain = new Terrain(TerrainEnum.BRIDGE);
+    tiles.find(a => a.ypos == 4 && a.xpos == middle).terrain = new Terrain(TerrainEnum.WATER);
 
-    tiles.find(a => a.col == 0 && a.row == totalRows - 1).terrain = new Terrain(TerrainEnum.CARD_HOLDER);
+    tiles.find(a => a.ypos == 0 && a.xpos == totalRows - 1).terrain = new Terrain(TerrainEnum.CARD_HOLDER);
 
     tiles.forEach(tile => {
-        let tileLeft = tiles.find(a => a.col == tile.col - 1 && a.row == tile.row);
+        let tileLeft = tiles.find(a => a.ypos == tile.ypos - 1 && a.xpos == tile.xpos);
         if (tileLeft) tile.linked.push(tileLeft);
-        let tileRight = tiles.find(a => a.col == tile.col + 1 && a.row == tile.row);
+        let tileRight = tiles.find(a => a.ypos == tile.ypos + 1 && a.xpos == tile.xpos);
         if (tileRight) tile.linked.push(tileRight);
-        let tileUp = tiles.find(a => a.col == tile.col && a.row == tile.row - 1);
+        let tileUp = tiles.find(a => a.ypos == tile.ypos && a.xpos == tile.xpos - 1);
         if (tileUp) tile.linked.push(tileUp);
-        let tileDown = tiles.find(a => a.col == tile.col && a.row == tile.row + 1);
+        let tileDown = tiles.find(a => a.ypos == tile.ypos && a.xpos == tile.xpos + 1);
         if (tileDown) tile.linked.push(tileDown);
     });
 
@@ -59,12 +59,12 @@ export function generateWorld(totalRows: number, totalCols: number): Tile[] {
         tile.card.autoPlaced = true;
     }
 
-    /* let arr: Tile[] = tiles.filter(a => a.terrain.type == TerrainEnum.CITY && a.row > 0 && a.row < (totalRows / 2 - 2) && a.linked.length > 3);
+    /* let arr: Tile[] = tiles.filter(a => a.terrain.type == TerrainEnum.CITY && a.xpos > 0 && a.xpos < (totalRows / 2 - 2) && a.linked.length > 3);
     let randTile: Tile = getRandomTile(arr.filter(a => !a.card));
     randTile.setCard(getNewCard(CardFamilyTypeEnum.STORAGE));
     randTile.card.autoPlaced = true; */
 
-    tiles.find(a => a.col == 0 && a.row == 0).card = getNewCard(CardFamilyTypeEnum.STORAGE);
+    tiles.find(a => a.ypos == 0 && a.xpos == 0).card = getNewCard(CardFamilyTypeEnum.STORAGE);
 
 
 
@@ -146,11 +146,20 @@ export function getNextCard(): Card {
     let gotLab: Tile = currentGameState.tiles.find(a => a.card && a.card.family.name == CardFamilyTypeEnum.LABORATORY);
     if (gotLab) {
         let bombData: ICardData = cardCollection.find(a => a.family.name == CardFamilyTypeEnum.BOMB);
-        bombData.chance = 10;
+        bombData.chance = 5;
     }
 
-    let personCardData: ICardData = cardCollection.find(a => a.family.name == CardFamilyTypeEnum.PERSON);
-    personCardData.chance = Math.min(25 + (currentGameState.cityLevel.index * 5), 50)
+    if (currentGameState.level.index > 2) {
+        let personCardData: ICardData = cardCollection.find(a => a.family.name == CardFamilyTypeEnum.PERSON);
+        personCardData.chance = Math.min(25 + (currentGameState.cityLevel.index * 2), 50);
+    }
+
+
+    if (currentGameState.level.index > 4) {
+        let animalCardData: ICardData = cardCollection.find(a => a.family.name == CardFamilyTypeEnum.ANIMAL);
+        animalCardData.chance = Math.min(5 + (currentGameState.cityLevel.index * 2), 20);
+    }
+
 
     let rand: number = Math.round(Math.random() * 100);
     let pickFrom: ICardData[] = [];
@@ -290,15 +299,15 @@ export function getNewCard(familyName: number, level: number = 0): Card {
 }
 
 function getMoveDir(from: Tile, to: Tile): string {
-    if (to.col < from.col && to.row < from.row) { return "upLeft" }
-    if (to.col < from.col && to.row > from.row) { return "upRight" }
-    if (to.col > from.col && to.row < from.row) { return "downLeft" }
-    if (to.col > from.col && to.row > from.row) { return "downRight" }
+    if (to.ypos < from.ypos && to.xpos < from.xpos) { return "upLeft" }
+    if (to.ypos < from.ypos && to.xpos > from.xpos) { return "upRight" }
+    if (to.ypos > from.ypos && to.xpos < from.xpos) { return "downLeft" }
+    if (to.ypos > from.ypos && to.xpos > from.xpos) { return "downRight" }
 
-    if (to.col < from.col && to.row == from.row) { return "up" }
-    if (to.col > from.col && to.row == from.row) { return "down" }
-    if (to.row < from.row && to.col == from.col) { return "left" }
-    if (to.row > from.row && to.col == from.col) { return "right" }
+    if (to.ypos < from.ypos && to.xpos == from.xpos) { return "up" }
+    if (to.ypos > from.ypos && to.xpos == from.xpos) { return "down" }
+    if (to.xpos < from.xpos && to.ypos == from.ypos) { return "left" }
+    if (to.xpos > from.xpos && to.ypos == from.ypos) { return "right" }
 }
 
 function getLinkedGroup(firstOne: Tile): Tile[] {

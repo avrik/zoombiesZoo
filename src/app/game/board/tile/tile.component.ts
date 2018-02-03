@@ -86,6 +86,7 @@ export class TileComponent implements OnInit {
   //@Input() onBoard: boolean = true;
   @Output() openStore: EventEmitter<any> = new EventEmitter();
   @Output() chosen: EventEmitter<Tile> = new EventEmitter();
+
   currentState: IState;
   floatState: string = "";
   moveState: string = "idle";
@@ -121,9 +122,11 @@ export class TileComponent implements OnInit {
       this.showNextHint = this.currentState.floatTile == this.tile ? true : false;
 
       this.floatState = this.showNextHint ? 'up' : ""
-      let arr: string[] = ['up', "down", "left", "right", "upLeft", "upRight", "downLeft", "downRight"];
-      this.moveState = arr[this.tile.state - 10];
-      
+      //let arr: string[] = ['up', "down", "left", "right", "upLeft", "upRight", "downLeft", "downRight"];
+      if (this.tile.movment) this.moveState = this.tile.movment.dir;
+
+      //this.moveState = arr[this.tile.state - 10];
+
       /* MOVE_UP = 10,
         MOVE_DOWN = 11,
         MOVE_LEFT = 12,
@@ -169,6 +172,7 @@ export class TileComponent implements OnInit {
   }
 
   clickTile() {
+    this.chosen.emit(this.tile);
     if (this.tile.terrain.type == TerrainEnum.CITY) {
       if (this.tile.state == TileState.WAIT_FOR_MOVE) {
         this.gameEngine.store.dispatch({ type: PLACE_MOVE_BUILDING_ACTION, payload: this.tile })
@@ -252,7 +256,7 @@ export class TileComponent implements OnInit {
   }
 
   getIndex() {
-    return this.tile.col * 10;
+    return this.tile.ypos * 10;
   }
 
   onFloatDone(event) {
