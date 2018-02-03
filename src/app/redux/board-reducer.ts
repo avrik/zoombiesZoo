@@ -146,7 +146,7 @@ export function getNextCard(): Card {
     let gotLab: Tile = currentGameState.tiles.find(a => a.card && a.card.family.name == CardFamilyTypeEnum.LABORATORY);
     if (gotLab) {
         let bombData: ICardData = cardCollection.find(a => a.family.name == CardFamilyTypeEnum.BOMB);
-        bombData.chance = 100;
+        bombData.chance = 10;
     }
 
     let personCardData: ICardData = cardCollection.find(a => a.family.name == CardFamilyTypeEnum.PERSON);
@@ -295,10 +295,10 @@ function getMoveDir(from: Tile, to: Tile): string {
     if (to.col > from.col && to.row < from.row) { return "downLeft" }
     if (to.col > from.col && to.row > from.row) { return "downRight" }
 
-    if (to.col < from.col) { return "up" }
-    if (to.col > from.col) { return "down" }
-    if (to.row < from.row) { return "left" }
-    if (to.row > from.row) { return "right" }
+    if (to.col < from.col && to.row == from.row) { return "up" }
+    if (to.col > from.col && to.row == from.row) { return "down" }
+    if (to.row < from.row && to.col == from.col) { return "left" }
+    if (to.row > from.row && to.col == from.col) { return "right" }
 }
 
 function getLinkedGroup(firstOne: Tile): Tile[] {

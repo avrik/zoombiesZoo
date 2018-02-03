@@ -1,9 +1,9 @@
 <message-window></message-window>
 
 <div class="card-hint" [style.background-color]="message?'rgb(192, 16, 16)':'black'">
-    <div [@animate]="animationState" (@animate.done)="onScaleDone($event)" *ngIf="message" >{{message?.title}}</div>
+    <div [@animate]="animationState" (@animate.done)="onScaleDone($event)" *ngIf="message">{{message?.title}}</div>
 
-    <div *ngIf="!message && rollOverTile && rollOverTile.card" >
+    <div *ngIf="!message && rollOverTile && rollOverTile.card!=null">
         <div *ngIf="rollOverTile.card.nextCard!=null && rollOverTile.card.family.name!=100" style="display:flex">
             <img [src]="rollOverTile.card.img" alt="" height="20">
             <b class="sign">✚</b>
@@ -13,7 +13,7 @@
             <b class="sign">=</b>
 
             <img [src]="rollOverTile.card.nextCard.img" alt="" height="25">
-            
+
             <span *ngIf="rollOverTile.card.nextCard.reward">
                 <img src="assets/resources/coin.png" alt="" height="20">
             </span>
@@ -33,11 +33,11 @@
 
     <div *ngIf="!message && (rollOverTile && !rollOverTile.card)  && currentCard!=null" style="display:flex">
         <!-- <div> -->
-         <span>place</span>  
-         <span style="margin-left:10px">
+        <span>place</span>
+        <span style="margin-left:10px">
             <img  [src]="currentCard.img" alt="" height="20">
-         </span>  
-         
+         </span>
+
         <!-- </div> -->
     </div>
 

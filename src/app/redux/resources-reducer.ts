@@ -5,12 +5,13 @@ import { CardFamilyTypeEnum } from 'app/enums/card-family-type-enum.enum';
 import { MessageType } from '../enums/message-type.enum';
 import { clearTile } from './tile-reducer';
 
-export function addResources(state: IState, tile: Tile, amount: number): IResourceStorage {
+export function addResources(state: IState, tile: Tile, amount: number): boolean {
     switch (tile.card.family.name) {
         case CardFamilyTypeEnum.COIN:
             state.resources.coins += amount;
             clearTile(tile);
-            break;
+            return true;
+           // break;
 
         case CardFamilyTypeEnum.LUMBER:
             let sawmills: Tile[] = state.tiles.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.SAWMILL && (a.card.collected + amount) <= a.card.collect);
@@ -18,6 +19,7 @@ export function addResources(state: IState, tile: Tile, amount: number): IResour
                 sawmills[0].card.collected += amount;
                 state.resources.lumber += amount;
                 clearTile(tile);
+                return true;
             } else {
                 let txt: string = state.tiles.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.SAWMILL).length ? "no place in sawmill" : "build a sawmill to store your lumber"
                 //console.log(txt);
@@ -31,6 +33,7 @@ export function addResources(state: IState, tile: Tile, amount: number): IResour
                 storages[0].card.collected += amount;
                 state.resources.bricks += amount;
                 clearTile(tile);
+                return true;
             } else {
                 //console.log("no place in storage");
                 state.currentMessage = { type: MessageType.TOOLBAR, title: "no place in storage" };
@@ -38,11 +41,10 @@ export function addResources(state: IState, tile: Tile, amount: number): IResour
             /* state.resources.coins += amount;
             clearTile(tile); */
             break;
-        default:
-            break;
     }
 
-    return Object.assign({}, state.resources);
+    //return Object.assign({}, state.resources);
+    return false;
 }
 
 export function removeFromResourcesSawmill(state: IState, amount: number) {

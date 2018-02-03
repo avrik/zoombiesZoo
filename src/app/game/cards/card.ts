@@ -170,7 +170,7 @@ export const cardCollection: ICardData[] = [
   },
   { level: 0, family: familyPerson, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 35, imgs: [UrlConst.PERSON1, UrlConst.PERSON2, UrlConst.PERSON3, UrlConst.PERSON4] },
   {
-    level: 0, family: { name: CardFamilyTypeEnum.WILD, value: -1 }, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, chance: 30, img: UrlConst.WILD,
+    level: 0, family: { name: CardFamilyTypeEnum.WILD, value: -1 }, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, chance: 20, img: UrlConst.WILD,
     nextCard: graveCard,
   },
   {

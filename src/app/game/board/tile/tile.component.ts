@@ -39,15 +39,6 @@ import { CLICK_TILE, PLACE_CARD_ON_STASH_ACTION, PLACE_BUILDING } from '../../..
     ]),
 
     trigger('moveAnimation', [
-      /* state('up', style({ transform: 'translateY(-50px)' })),
-      state('down', style({ transform: 'translateY(50px)' })),
-      state('left', style({ transform: 'translateX(-50px)' })),
-      state('right', style({ transform: 'translateX(50px)' })),
-      transition('* => up', animate('200ms ease-out')),
-      transition('* => down', animate('200ms ease-out')),
-      transition('* => left', animate('200ms ease-out')),
-      transition('* => right', animate('200ms ease-out')), */
-
       state('up', style({ transform: 'translateY(-50px)' })),
       state('down', style({ transform: 'translateY(50px)' })),
       state('left', style({ transform: 'translateX(-50px)' })),
@@ -92,7 +83,7 @@ export class TileComponent implements OnInit {
   @ViewChild('cardRef') cardRef: ElementRef;
   @ViewChild('resourceRef') resourceRef: ElementRef;
   @Input() tile: Tile;
-  @Input() onBoard: boolean = true;
+  //@Input() onBoard: boolean = true;
   @Output() openStore: EventEmitter<any> = new EventEmitter();
   @Output() chosen: EventEmitter<Tile> = new EventEmitter();
   currentState: IState;
@@ -103,8 +94,7 @@ export class TileComponent implements OnInit {
 
   currentCard: Card;
   showStore: boolean;
-  timeout: any;
-  resourceStorage: IResourceStorage;
+
   showThinkBubble: boolean;
   collectedIcon: string;
   storeItems: IBuyItem[] = [
@@ -125,45 +115,51 @@ export class TileComponent implements OnInit {
   onMe: boolean;
 
   constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
-    // this.gameEngine.resourceStorage$.subscribe(resourceStorage => this.resourceStorage = resourceStorage)
-    /* this.gameEngine.currentCard$.subscribe(currentCard => {
-      this.currentCard = currentCard;
-    }); */
-
     this.gameEngine.store.subscribe(() => {
       this.currentState = this.gameEngine.store.getState();
       this.currentCard = this.currentState.nextCard;
       this.showNextHint = this.currentState.floatTile == this.tile ? true : false;
 
       this.floatState = this.showNextHint ? 'up' : ""
-
-      switch (this.tile.state) {
-        case TileState.MOVE_UP:
-          this.moveState = "up";
-          break;
-        case TileState.MOVE_DOWN:
-          this.moveState = "down";
-          break;
-        case TileState.MOVE_RIGHT:
-          this.moveState = "right";
-          break;
-        case TileState.MOVE_LEFT:
-          this.moveState = "left";
-          break;
-
-        case TileState.MOVE_UP_LEFT:
-          this.moveState = "upLeft";
-          break;
-        case TileState.MOVE_UP_RIGHT:
-          this.moveState = "upRight";
-          break;
-        case TileState.MOVE_DOWN_LEFT:
-          this.moveState = "downLeft";
-          break;
-        case TileState.MOVE_DOWN_RIGHT:
-          this.moveState = "downRight";
-          break;
-      }
+      let arr: string[] = ['up', "down", "left", "right", "upLeft", "upRight", "downLeft", "downRight"];
+      this.moveState = arr[this.tile.state - 10];
+      
+      /* MOVE_UP = 10,
+        MOVE_DOWN = 11,
+        MOVE_LEFT = 12,
+        MOVE_RIGHT = 13,
+        MOVE_UP_LEFT = 14,
+        MOVE_UP_RIGHT = 15,
+        MOVE_DOWN_LEFT = 16,
+        MOVE_DOWN_RIGHT = 17,
+        TileState.MOVE_UP */
+      /*  switch (this.tile.state) {
+         case TileState.MOVE_UP:
+           this.moveState = "up";
+           break;
+         case TileState.MOVE_DOWN:
+           this.moveState = "down";
+           break;
+         case TileState.MOVE_RIGHT:
+           this.moveState = "right";
+           break;
+         case TileState.MOVE_LEFT:
+           this.moveState = "left";
+           break;
+ 
+         case TileState.MOVE_UP_LEFT:
+           this.moveState = "upLeft";
+           break;
+         case TileState.MOVE_UP_RIGHT:
+           this.moveState = "upRight";
+           break;
+         case TileState.MOVE_DOWN_LEFT:
+           this.moveState = "downLeft";
+           break;
+         case TileState.MOVE_DOWN_RIGHT:
+           this.moveState = "downRight";
+           break;
+       } */
     }
     )
   }
@@ -173,7 +169,6 @@ export class TileComponent implements OnInit {
   }
 
   clickTile() {
-
     if (this.tile.terrain.type == TerrainEnum.CITY) {
       if (this.tile.state == TileState.WAIT_FOR_MOVE) {
         this.gameEngine.store.dispatch({ type: PLACE_MOVE_BUILDING_ACTION, payload: this.tile })
@@ -210,7 +205,7 @@ export class TileComponent implements OnInit {
     }
   }
 
-  outMe() {
+  onMouseOut() {
     this.onMe = false;
     if (this.tile.terrainTop && this.tile.terrainTop.type == TerrainEnum.CARD_HOLDER_OPEN && !this.tile.card) {
       this.tile.terrainTop = null;
@@ -220,7 +215,6 @@ export class TileComponent implements OnInit {
       this.floatState = '';
 
       if (this.tile.card) {
-        //this.hideCardMatch();
         this.showThinkBubble = false;
       }
     }
@@ -253,9 +247,12 @@ export class TileComponent implements OnInit {
     }
   }
 
-
   get gotCard(): boolean {
     return this.tile.card ? true : false;
+  }
+
+  getIndex() {
+    return this.tile.col * 10;
   }
 
   onFloatDone(event) {
@@ -267,24 +264,18 @@ export class TileComponent implements OnInit {
       this.floatState = "";
   }
 
-  getIndex() {
-    return this.tile.col * 10;
-  }
-
   onCollectDone(event) {
     this.colloectAnimationState = "";
     this.collectedIcon = "";
   }
 
   onScaleDone(event) {
-
     if (event.toState == "down") {
       this.scaleState = "up";
     }
   }
 
   onDelayDone(event) {
-
     if (event.toState == "hidden") {
       this.tile.showDelay = "shown";
     } else {
@@ -295,16 +286,5 @@ export class TileComponent implements OnInit {
   onMoveDone(event) {
     this.tile.state = TileState.REGULAR;
     this.tile.movment = null;
-    /* if (this.tile.card) {
-      this.tile.card.state = CardState.DONE;
-
-      if (event.toState.indexOf('') != -1) {
-        this.clearTile(tile);
-      }
-    } */
-
   }
-
-
-
 }

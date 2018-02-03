@@ -135,9 +135,12 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             return newState;
 
         case COLLECT_RESOURCES_ACTION:
-            newState.resources = addResources(newState, tile, tile.card.collect);
-            newState.tileClicked = tile;
-            nextTurn(newState);
+            if (addResources(newState, tile, tile.card.collected))
+            {
+                newState.tileClicked = tile;
+                nextTurn(newState);
+            }
+            
             return newState;
 
         case PLACE_MOVE_BUILDING_ACTION:
