@@ -1,4 +1,4 @@
-<tile-buy-popup *ngIf="showStore" [items]="items" title="store" (buyItem)="onBuyItem($event)"></tile-buy-popup>
+<!-- <tile-buy-popup *ngIf="showStore" [items]="items" title="store" (buyItem)="onBuyItem($event)"></tile-buy-popup> -->
 <div *ngIf="resourceStorage" class="container">
     <app-resource-item #brickRef [amount]="resourceStorage.bricks" [type]="0" icon="brick"></app-resource-item>
     <app-resource-item #lumberRef [amount]="resourceStorage.lumber" [type]="1" icon="lumber"></app-resource-item>

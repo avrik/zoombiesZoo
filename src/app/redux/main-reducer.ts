@@ -9,7 +9,7 @@ import { Tile } from './../game/board/tile/tile';
 import { CardState } from './../enums/card-state.enum';
 import { CardFamilyTypeEnum } from './../enums/card-family-type-enum.enum';
 import { cardCollection, ICardData, Card } from './../game/cards/card';
-import { PLACE_CARD_ON_TILE_ACTION, GENERATE_WORLD_ACTION, NEW_GAME_ACTION, COLLECT_RESOURCES_ACTION, INIT_GAME_ACTION, CLICK_TILE, PLACE_CARD_ON_STASH_ACTION, PLACE_BUILDING, UNDO_ACTION, SET_NEXT_CARD, MOVE_BUILDING_ACTION, PLACE_MOVE_BUILDING_ACTION } from './actions/actions';
+import { PLACE_CARD_ON_TILE_ACTION, GENERATE_WORLD_ACTION, NEW_GAME_ACTION, COLLECT_RESOURCES_ACTION, INIT_GAME_ACTION, CLICK_TILE, PLACE_CARD_ON_STASH_ACTION, PLACE_BUILDING, UNDO_ACTION, SET_NEXT_CARD, MOVE_BUILDING_ACTION, PLACE_MOVE_BUILDING_ACTION, OPEN_STORE, CLOSE_STORE } from './actions/actions';
 import { generateWorld, findMatch, moveWalkers, getNextCard, nextTurn } from 'app/redux/board-reducer';
 import { addResources, removeFromResourcesSawmill } from 'app/redux/resources-reducer';
 import { clickTileOnBoard, getNewCard } from './board-reducer';
@@ -45,7 +45,8 @@ export interface IState {
     population: number;
     prevState: IState;
     floatTile: Tile;
-    cityBuyItems: IBuyItem[];
+    //cityBuyItems: IBuyItem[];
+    showStoreItems: IBuyItem[];
     currentMessage: IMessage;
     gameOver: boolean;
 }
@@ -65,14 +66,15 @@ const initState: IState = {
     population: 0,
     prevState: null,
     floatTile: null,
-    cityBuyItems: [
+    /* cityBuyItems: [
         { label: 'road', cost: { block: 3, lumber: 0, coin: 0 }, icon: UrlConst.ROAD, type: CardFamilyTypeEnum.ROAD, description: "roads will direct the people in the right path" },
         { label: 'house', cost: { block: 9, lumber: 6, coin: 0 }, icon: UrlConst.HOUSE1, type: CardFamilyTypeEnum.HOUSE, description: "our people need houses" },
         { label: 'storage', cost: { block: 9, lumber: 0, coin: 0 }, icon: UrlConst.STORAGE1, type: CardFamilyTypeEnum.STORAGE, description: "our resources need storage" },
         { label: 'swamill', cost: { block: 9, lumber: 0, coin: 0 }, icon: UrlConst.STORAGE1, type: CardFamilyTypeEnum.SAWMILL, description: "cathedrals are used to trap the undead" },
         { label: 'laboratory', cost: { block: 18, lumber: 6, coin: 3 }, icon: UrlConst.CHURCH1, type: CardFamilyTypeEnum.LABORATORY, description: "cathedrals are used to trap the undead" },
         { label: 'church', cost: { block: 21, lumber: 12, coin: 3 }, icon: UrlConst.CHURCH1, type: CardFamilyTypeEnum.CHURCH, description: "cathedrals are used to trap the undead" },
-    ],
+    ], */
+    showStoreItems: null,
     currentMessage: null
 }
 
@@ -135,12 +137,11 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             return newState;
 
         case COLLECT_RESOURCES_ACTION:
-            if (addResources(newState, tile, tile.card.collected))
-            {
+            if (addResources(newState, tile, tile.card.collected)) {
                 newState.tileClicked = tile;
                 nextTurn(newState);
             }
-            
+
             return newState;
 
         case PLACE_MOVE_BUILDING_ACTION:
@@ -154,6 +155,13 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             moveTileBuilding(newState, tile);
             return newState;
 
+        case CLOSE_STORE:
+            newState.showStoreItems = null;
+            return newState;
+        case OPEN_STORE:
+            newState.tileClicked = action.payload.tile;
+            newState.showStoreItems = action.payload.items;
+            return newState;
         case UNDO_ACTION:
             //return prevGameState;
             return states[states.length - 2];

@@ -1,5 +1,5 @@
 import { IState } from './../../../redux/main-reducer';
-import { PLACE_CARD_ON_TILE_ACTION, COLLECT_RESOURCES_ACTION, MOVE_BUILDING_ACTION, PLACE_MOVE_BUILDING_ACTION } from './../../../redux/actions/actions';
+import { PLACE_CARD_ON_TILE_ACTION, COLLECT_RESOURCES_ACTION, MOVE_BUILDING_ACTION, PLACE_MOVE_BUILDING_ACTION, OPEN_STORE } from './../../../redux/actions/actions';
 import { CardState } from './../../../enums/card-state.enum';
 import { TileCardComponent } from './tile-card/tile-card.component';
 import { UrlConst } from './../../../consts/url-const';
@@ -177,8 +177,9 @@ export class TileComponent implements OnInit {
       if (this.tile.state == TileState.WAIT_FOR_MOVE) {
         this.gameEngine.store.dispatch({ type: PLACE_MOVE_BUILDING_ACTION, payload: this.tile })
       } else {
-        this.showStore = !this.showStore;
-        this.openStore.emit(this);
+        //this.showStore = !this.showStore;
+        //this.openStore.emit(this);
+        this.gameEngine.store.dispatch({ type: OPEN_STORE, payload: { tile: this.tile, items: this.tile.card ? this.storeItems2 : this.storeItems } })
       }
     } else {
       if (this.tile.terrain.type == TerrainEnum.CARD_HOLDER) {

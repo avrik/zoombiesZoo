@@ -5,7 +5,7 @@ import { IBuyItem } from 'app/game/tile-buy-popup/buy-item/buy-item';
 import { UrlConst } from '../../../consts/url-const';
 import { GameEngineService } from 'app/services/game-engine.service';
 import { CardFamilyTypeEnum } from 'app/enums/card-family-type-enum.enum';
-import { UNDO_ACTION, SET_NEXT_CARD } from '../../../redux/actions/actions';
+import { UNDO_ACTION, SET_NEXT_CARD, OPEN_STORE } from '../../../redux/actions/actions';
 
 @Component({
   selector: 'app-resource-table',
@@ -21,7 +21,7 @@ export class ResourceTableComponent implements OnInit {
   showStore: boolean;
   resourceStorage: IResourceStorage;
 
-  items: IBuyItem[] = [
+  storeItems: IBuyItem[] = [
     { label: "tree", cost: { coin: 1 }, icon: UrlConst.LUMBER1, type: CardFamilyTypeEnum.LUMBER, amount: 6, description: "plant tree" },
     { label: "brick", cost: { coin: 3 }, icon: UrlConst.BRICK2, type: CardFamilyTypeEnum.BRICK, amount: 3, description: "buy brick" },
     { label: "lumber", cost: { coin: 3 }, icon: UrlConst.LUMBER2, type: CardFamilyTypeEnum.LUMBER, amount: 3, description: "buy lumber" },
@@ -53,7 +53,8 @@ export class ResourceTableComponent implements OnInit {
   }
 
   openStore() {
-    this.showStore = !this.showStore;
+    // this.showStore = !this.showStore;
+    this.gameEngine.store.dispatch({ type: OPEN_STORE, payload: { items: this.storeItems } });
   }
 
   onBuyItem(buyItem: IBuyItem) {
