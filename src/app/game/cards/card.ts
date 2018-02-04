@@ -57,7 +57,7 @@ const sawmillCard: ICardData = {
         level: 3, family: familySawmill, mergeBy: MergeTypeEnum.MATCH, collect: 324, type: CardTypeEnum.BUILDING, img: UrlConst.SAWMILL4,
       }
     }
-    
+
   }
 }
 

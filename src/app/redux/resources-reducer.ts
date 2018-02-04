@@ -1,9 +1,8 @@
 import { Tile } from './../game/board/tile/tile';
-import { IState } from './main-reducer';
-import { IResourceStorage } from 'app/services/game-engine.service';
 import { CardFamilyTypeEnum } from 'app/enums/card-family-type-enum.enum';
 import { MessageType } from '../enums/message-type.enum';
 import { clearTile } from './tile-reducer';
+import { IState } from './interfaces';
 
 export function addResources(state: IState, tile: Tile, amount: number): boolean {
     switch (tile.card.family.name) {

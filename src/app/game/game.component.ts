@@ -1,5 +1,4 @@
-import { IState } from 'app/redux/main-reducer';
-import { IBuyItem } from './tile-buy-popup/buy-item/buy-item';
+
 import { NEW_GAME_ACTION, OPEN_STORE, MOVE_BUILDING_ACTION, PLACE_BUILDING, CLOSE_STORE } from './../redux/actions/actions';
 import { environment } from './../../environments/environment';
 import { TerrainEnum } from './../enums/terrain.enum';
@@ -11,6 +10,7 @@ import { MessageType } from '../enums/message-type.enum';
 import { Tile } from './board/tile/tile';
 import { CardFamilyTypeEnum } from 'app/enums/card-family-type-enum.enum';
 import { INIT_GAME_ACTION } from '../redux/actions/actions';
+import { IBuyItem, IState } from 'app/redux/interfaces';
 
 @Component({
   selector: 'app-game',

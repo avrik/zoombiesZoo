@@ -1,12 +1,12 @@
 
 import { CardFamilyTypeEnum } from 'app/enums/card-family-type-enum.enum';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { GameEngineService, IResourceStorage } from 'app/services/game-engine.service';
-import { IBuyItem } from 'app/game/tile-buy-popup/buy-item/buy-item';
+import { GameEngineService } from 'app/services/game-engine.service';
 import { GameLevel, CityLevel } from '../levels/game-level';
 import { UrlConst } from '../../consts/url-const';
 import { Card } from 'app/game/cards/card';
-import { IState } from '../../redux/main-reducer';
+import { IState } from 'app/redux/interfaces';
+
 
 @Component({
   selector: 'game-toolbar',

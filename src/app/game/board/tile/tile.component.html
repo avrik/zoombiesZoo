@@ -1,6 +1,3 @@
-<!-- <tile-buy-popup *ngIf="showStore && gotCard==true && tile.card.type==1" [items]="storeItems2" (buyItem)="buyItem($event)" [title]="tile.card.family.label+' lvl '+(tile.card.level+1)"></tile-buy-popup> -->
-<!-- <tile-buy-popup *ngIf="showStore && gotCard==false" [items]="storeItems" (buyItem)="buyItem($event)" [title]="'city improvments'"></tile-buy-popup> -->
-
 <div (click)="clickTile()" [style.opacity]="tile.state===-1?0.2:1" [style.pointer-events]="tile.state===-1?'none':'pointer'">
 
     <div style="position:absolute;padding-left:8px" [style.z-index]="getIndex()">
@@ -10,11 +7,11 @@
         </div>
 
 
-        <div *ngIf="onMe && (tile.terrain.type==0 || tile.terrain.type==4) && !tile.card" style="opacity:0.3;">
+        <div *ngIf="onMe &&  !isCardFloating && (tile.terrain.type==0 || tile.terrain.type==4) && !tile.card" style="opacity:0.3;">
             <app-tile-card [card]="currentCard"></app-tile-card>
         </div>
 
-        <div class="card-float" [@floatOver]="floatState" (@floatOver.done)="onFloatDone($event)" *ngIf="showNextHint" [style.opacity]="showNextHint?0.5:1">
+        <div class="card-float" [@floatOver]="floatState" (@floatOver.done)="onFloatDone($event)" *ngIf="isCardFloating">
             <app-tile-card [card]="currentCard"></app-tile-card>
         </div>
 
@@ -23,7 +20,7 @@
         </span>
 
         <!-- <div #cardRef [@moveAnimation]="moveState" (@moveAnimation.done)=onMoveDone($event) [@scaleAnimation]="scaleState" (@scaleAnimation.done)="onScaleDone($event)"> -->
-        <div #cardRef [@visibilityChanged]="tile.showDelay" (@visibilityChanged.done)="onDelayDone($event)">
+        <div #cardRef [@visibilityChanged]="tile.showDelay">
             <app-tile-card *ngIf="gotCard==true" [placed]="true" [card]="tile.card" [onTerrain]="tile.terrain.type"></app-tile-card>
         </div>
 

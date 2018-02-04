@@ -1,7 +1,7 @@
 
-import { IBuyItem } from './buy-item/buy-item';
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { CardFamilyTypeEnum } from 'app/enums/card-family-type-enum.enum';
+import { IBuyItem } from 'app/redux/interfaces';
 
 @Component({
   selector: 'tile-buy-popup',

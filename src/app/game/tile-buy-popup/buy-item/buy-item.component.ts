@@ -1,9 +1,8 @@
 import { MessageType } from './../../../enums/message-type.enum';
 import { MessagesService } from 'app/services/messages.service';
-import { IResourceStorage, GameEngineService } from 'app/services/game-engine.service';
+import { GameEngineService } from 'app/services/game-engine.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { ICost, IBuyItem } from './buy-item';
-import { IState } from 'app/redux/main-reducer';
+import { IBuyItem, IResourceStorage, IState } from 'app/redux/interfaces';
 
 
 @Component({

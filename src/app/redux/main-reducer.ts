@@ -1,6 +1,5 @@
 
 import { CardTypeEnum } from 'app/enums/card-type-enum.enum';
-import { IResourceStorage } from 'app/services/game-engine.service';
 import { GameLevel } from './../game/levels/game-level';
 import { TerrainEnum } from './../enums/terrain.enum';
 import { Terrain } from './../game/board/tile/terrain';
@@ -10,10 +9,9 @@ import { CardState } from './../enums/card-state.enum';
 import { CardFamilyTypeEnum } from './../enums/card-family-type-enum.enum';
 import { cardCollection, ICardData, Card } from './../game/cards/card';
 import { PLACE_CARD_ON_TILE_ACTION, GENERATE_WORLD_ACTION, NEW_GAME_ACTION, COLLECT_RESOURCES_ACTION, INIT_GAME_ACTION, CLICK_TILE, PLACE_CARD_ON_STASH_ACTION, PLACE_BUILDING, UNDO_ACTION, SET_NEXT_CARD, MOVE_BUILDING_ACTION, PLACE_MOVE_BUILDING_ACTION, OPEN_STORE, CLOSE_STORE } from './actions/actions';
-import { generateWorld, findMatch, moveWalkers, getNextCard, nextTurn } from 'app/redux/board-reducer';
+import { generateWorld, findMatch, moveWalkers, nextTurn } from 'app/redux/board-reducer';
 import { addResources, removeFromResourcesSawmill } from 'app/redux/resources-reducer';
-import { clickTileOnBoard, getNewCard } from './board-reducer';
-import { IBuyItem } from '../game/tile-buy-popup/buy-item/buy-item';
+import { clickTileOnBoard } from './board-reducer';
 import { removeFromResourcesStorage } from './resources-reducer';
 import { UrlConst } from '../consts/url-const';
 import { IMessage } from 'app/services/messages.service';
@@ -21,34 +19,11 @@ import { MessageType } from '../enums/message-type.enum';
 import { CityLevel } from '../game/levels/game-level';
 import { TileState } from '../enums/tile-state.enum';
 import { clearTile } from './tile-reducer';
+import { IState, IAction, IBuyItem } from './interfaces';
+import { tileBuildingItems, tileStoreItems, mainStoreItems, getNewCard } from './common-reducer';
 
 export class MainReducer {
 
-}
-
-export interface IAction {
-    payload: any;
-    type: string;
-}
-
-export interface IState {
-    pendingMoveCard: Card;
-    tiles: Tile[];
-    tileClicked: Tile;
-    nextCard: Card;
-    cardHint: Card;
-    level: GameLevel;
-    cityLevel: CityLevel;
-    resources: IResourceStorage;
-    turn: number;
-    score: number;
-    population: number;
-    prevState: IState;
-    floatTile: Tile;
-    //cityBuyItems: IBuyItem[];
-    showStoreItems: IBuyItem[];
-    currentMessage: IMessage;
-    gameOver: boolean;
 }
 
 const initState: IState = {
@@ -66,28 +41,18 @@ const initState: IState = {
     population: 0,
     prevState: null,
     floatTile: null,
-    /* cityBuyItems: [
-        { label: 'road', cost: { block: 3, lumber: 0, coin: 0 }, icon: UrlConst.ROAD, type: CardFamilyTypeEnum.ROAD, description: "roads will direct the people in the right path" },
-        { label: 'house', cost: { block: 9, lumber: 6, coin: 0 }, icon: UrlConst.HOUSE1, type: CardFamilyTypeEnum.HOUSE, description: "our people need houses" },
-        { label: 'storage', cost: { block: 9, lumber: 0, coin: 0 }, icon: UrlConst.STORAGE1, type: CardFamilyTypeEnum.STORAGE, description: "our resources need storage" },
-        { label: 'swamill', cost: { block: 9, lumber: 0, coin: 0 }, icon: UrlConst.STORAGE1, type: CardFamilyTypeEnum.SAWMILL, description: "cathedrals are used to trap the undead" },
-        { label: 'laboratory', cost: { block: 18, lumber: 6, coin: 3 }, icon: UrlConst.CHURCH1, type: CardFamilyTypeEnum.LABORATORY, description: "cathedrals are used to trap the undead" },
-        { label: 'church', cost: { block: 21, lumber: 12, coin: 3 }, icon: UrlConst.CHURCH1, type: CardFamilyTypeEnum.CHURCH, description: "cathedrals are used to trap the undead" },
-    ], */
     showStoreItems: null,
     currentMessage: null
 }
-
 
 let prevGameState: IState;
 let states: IState[] = []
 export let currentGameState: IState;
 
 export function mainReducerFunc(state: IState = initState, action: IAction): IState {
-    prevGameState = Object.assign({}, state);
+    // prevGameState = Object.assign({}, state);
     let newState: IState = Object.assign({}, state);
     currentGameState = newState;
-
 
     states.push(newState);
     newState.currentMessage = null;
@@ -137,8 +102,10 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             return newState;
 
         case COLLECT_RESOURCES_ACTION:
+            let img: string = tile.card.img;
             if (addResources(newState, tile, tile.card.collected)) {
                 newState.tileClicked = tile;
+                tile.movment = { dir: 'collect', img: img };
                 nextTurn(newState);
             }
 
@@ -159,8 +126,18 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             newState.showStoreItems = null;
             return newState;
         case OPEN_STORE:
-            newState.tileClicked = action.payload.tile;
-            newState.showStoreItems = action.payload.items;
+            newState.tileClicked = action.payload ? action.payload.tile : null;
+            if (newState.tileClicked) {
+                if (newState.tileClicked.card) {
+                    newState.showStoreItems = tileBuildingItems;
+                } else {
+                    newState.showStoreItems = tileStoreItems;
+                }
+
+            } else {
+                newState.showStoreItems = mainStoreItems;
+            }
+
             return newState;
         case UNDO_ACTION:
             //return prevGameState;
@@ -215,6 +192,40 @@ function buyBuilding(newState: IState, buyItem: IBuyItem): boolean {
     return true;
 }
 
+
+export function getNextCard(): Card {
+    let gotLab: Tile = currentGameState.tiles.find(a => a.card && a.card.family.name == CardFamilyTypeEnum.LABORATORY);
+    if (gotLab) {
+        let bombData: ICardData = cardCollection.find(a => a.family.name == CardFamilyTypeEnum.BOMB);
+        bombData.chance = 5;
+    }
+
+    if (currentGameState.level.index > 2) {
+        let personCardData: ICardData = cardCollection.find(a => a.family.name == CardFamilyTypeEnum.PERSON);
+        personCardData.chance = Math.min(25 + (currentGameState.cityLevel.index * 2), 50);
+    }
+
+
+    if (currentGameState.level.index > 4) {
+        let animalCardData: ICardData = cardCollection.find(a => a.family.name == CardFamilyTypeEnum.ANIMAL);
+        animalCardData.chance = Math.min(5 + (currentGameState.cityLevel.index * 2), 20);
+    }
+
+
+    let rand: number = Math.round(Math.random() * 100);
+    let pickFrom: ICardData[] = [];
+    cardCollection.filter(item => item.chance).forEach(a => {
+        pickFrom.push(a);
+        if (a.nextCard && a.nextCard.chance) {
+            pickFrom.push(a.nextCard);
+        }
+    })
+
+    pickFrom = pickFrom.filter(item => item.chance >= rand)
+    let randCard: ICardData = pickFrom[Math.floor(Math.random() * pickFrom.length)];
+
+    return new Card(randCard);
+}
 
 
 

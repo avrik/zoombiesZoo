@@ -1,5 +1,5 @@
 <div class="container">
     <div *ngFor="let item of collection" (click)="onItemClick(item)">
-        <img [src]="item.img" alt="" height="50">
+        <img [src]="item.imgs?item.imgs[0]:item.img" alt="" height="50">
     </div>
 </div>

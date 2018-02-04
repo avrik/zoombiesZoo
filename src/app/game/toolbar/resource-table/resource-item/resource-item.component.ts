@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, trigger, state, style, transition, animate } from '@angular/core';
-import { GameEngineService, IResourceStorage } from 'app/services/game-engine.service';
-import { IState } from 'app/redux/main-reducer';
+import { GameEngineService } from 'app/services/game-engine.service';
+import { IResourceStorage, IState } from 'app/redux/interfaces';
 
 @Component({
   selector: 'app-resource-item',

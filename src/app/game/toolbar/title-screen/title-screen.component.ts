@@ -3,9 +3,9 @@ import { trigger, state, style, transition, animate, keyframes } from '@angular/
 import { GameEngineService } from 'app/services/game-engine.service';
 import { Card } from 'app/game/cards/card';
 import { MessagesService, IMessage } from 'app/services/messages.service';
-import { IState } from '../../../redux/main-reducer';
 import { MessageType } from '../../../enums/message-type.enum';
 import { Tile } from '../../board/tile/tile';
+import { IState } from 'app/redux/interfaces';
 
 @Component({
   selector: 'title-screen',

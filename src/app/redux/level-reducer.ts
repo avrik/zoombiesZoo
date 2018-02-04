@@ -1,12 +1,13 @@
-import { IState } from './main-reducer';
+
 import { CityLevel, GameLevel } from '../game/levels/game-level';
 import { TerrainEnum } from '../enums/terrain.enum';
 import { MessageType } from '../enums/message-type.enum';
 import { addResources } from 'app/redux/resources-reducer';
-import { getNewCard } from 'app/redux/board-reducer';
 import { CardFamilyTypeEnum } from '../enums/card-family-type-enum.enum';
 import { Card } from 'app/game/cards/card';
 import { state } from '@angular/core';
+import { IState } from './interfaces';
+import { getNewCard } from 'app/redux/common-reducer';
 
 export function checkIfLevelCompleted(state: IState): IState {
     let newState = state;

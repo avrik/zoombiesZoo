@@ -7,10 +7,12 @@ import { TerrainEnum } from './../enums/terrain.enum';
 import { Terrain } from './../game/board/tile/terrain';
 import { Tile } from './../game/board/tile/tile';
 import { TileState } from '../enums/tile-state.enum';
-import { IState, currentGameState } from './main-reducer';
 import { addResources } from 'app/redux/resources-reducer';
 import { checkIfLevelCompleted } from './level-reducer';
 import { clearTile } from './tile-reducer';
+import { IState } from './interfaces';
+import { getNewCard } from './common-reducer';
+
 
 export function generateWorld(totalRows: number, totalCols: number): Tile[] {
 
@@ -142,39 +144,7 @@ function checkIfGameOver(newState: IState) {
     if (!emptyInCity || !emptyInResources) newState.gameOver = true;
 }
 
-export function getNextCard(): Card {
-    let gotLab: Tile = currentGameState.tiles.find(a => a.card && a.card.family.name == CardFamilyTypeEnum.LABORATORY);
-    if (gotLab) {
-        let bombData: ICardData = cardCollection.find(a => a.family.name == CardFamilyTypeEnum.BOMB);
-        bombData.chance = 5;
-    }
 
-    if (currentGameState.level.index > 2) {
-        let personCardData: ICardData = cardCollection.find(a => a.family.name == CardFamilyTypeEnum.PERSON);
-        personCardData.chance = Math.min(25 + (currentGameState.cityLevel.index * 2), 50);
-    }
-
-
-    if (currentGameState.level.index > 4) {
-        let animalCardData: ICardData = cardCollection.find(a => a.family.name == CardFamilyTypeEnum.ANIMAL);
-        animalCardData.chance = Math.min(5 + (currentGameState.cityLevel.index * 2), 20);
-    }
-
-
-    let rand: number = Math.round(Math.random() * 100);
-    let pickFrom: ICardData[] = [];
-    cardCollection.filter(item => item.chance).forEach(a => {
-        pickFrom.push(a);
-        if (a.nextCard && a.nextCard.chance) {
-            pickFrom.push(a.nextCard);
-        }
-    })
-
-    pickFrom = pickFrom.filter(item => item.chance >= rand)
-    let randCard: ICardData = pickFrom[Math.floor(Math.random() * pickFrom.length)];
-
-    return new Card(randCard);
-}
 
 export function findMatch(tile: Tile) {
     if (!tile.card || !tile.card.family) return;
@@ -202,7 +172,7 @@ export function findMatch(tile: Tile) {
 
                 //move(linked, tile)
                 linked.movment = { dir: getMoveDir(linked, tile), img: linked.card.img };
-                tile.showDelay = "hidden";
+                tile.showDelay = "show";
                 //linked.clear();
                 clearTile(linked);
             });
@@ -283,19 +253,6 @@ function handleWild(tile: Tile) {
 
     // tile.card = optionsForWild.length ? optionsForWild[0].card : this.getNewCard(CardFamilyTypeEnum.GRAVE);
     tile.card = optionsForWild.length ? optionsForWild[0].card : getNewCard(CardFamilyTypeEnum.GRAVE);
-}
-
-export function getNewCard(familyName: number, level: number = 0): Card {
-    let curCardData: ICardData = cardCollection.find(a => a.family.name == familyName);
-    if (level) {
-        for (let i = 0; i < level; i++) {
-            if (curCardData.nextCard) curCardData = curCardData.nextCard;
-        }
-    }
-
-    let card: Card = new Card(curCardData)
-
-    return card;
 }
 
 function getMoveDir(from: Tile, to: Tile): string {
@@ -488,7 +445,7 @@ function moveToRandomSpot(tile: Tile, empties: Tile[]): boolean {
         moveToTile.card = tile.card;
         moveToTile.card.state = CardState.MOVING;
         moveToTile.card.preTile = tile;
-        moveToTile.showDelay = "hidden";
+        moveToTile.showDelay = "show";
         tile.movment = { dir: getMoveDir(tile, moveToTile), img: tile.card.img };
         clearTile(tile);
 

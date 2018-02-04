@@ -1,6 +1,7 @@
-import { IResourceStorage } from "app/services/game-engine.service";
+
 import { CardFamilyTypeEnum } from '../../enums/card-family-type-enum.enum';
 import { UrlConst } from '../../consts/url-const';
+import { IResourceStorage } from 'app/redux/interfaces';
 
 export interface IBuildingGoalType {
     type: number;

@@ -1,8 +1,8 @@
 import { Component, OnInit, transition, animate, state, trigger, style } from '@angular/core';
 import { MessagesService, IMessage } from '../../../services/messages.service';
 import { GameEngineService } from 'app/services/game-engine.service';
-import { IState } from 'app/redux/main-reducer';
 import { MessageType } from '../../../enums/message-type.enum';
+import { IState } from 'app/redux/interfaces';
 
 @Component({
   selector: 'message-window',

@@ -1,11 +1,10 @@
-import { IState } from './../../../redux/main-reducer';
+
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { IResourceStorage } from '../../../services/game-engine.service';
-import { IBuyItem } from 'app/game/tile-buy-popup/buy-item/buy-item';
 import { UrlConst } from '../../../consts/url-const';
 import { GameEngineService } from 'app/services/game-engine.service';
 import { CardFamilyTypeEnum } from 'app/enums/card-family-type-enum.enum';
-import { UNDO_ACTION, SET_NEXT_CARD, OPEN_STORE } from '../../../redux/actions/actions';
+import { OPEN_STORE } from '../../../redux/actions/actions';
+import { IResourceStorage, IState } from 'app/redux/interfaces';
 
 @Component({
   selector: 'app-resource-table',
@@ -18,17 +17,7 @@ export class ResourceTableComponent implements OnInit {
   @ViewChild('lumberRef') lumberRef;
   @ViewChild('coinRef') coinRef;
 
-  showStore: boolean;
   resourceStorage: IResourceStorage;
-
-  storeItems: IBuyItem[] = [
-    { label: "tree", cost: { coin: 1 }, icon: UrlConst.LUMBER1, type: CardFamilyTypeEnum.LUMBER, amount: 6, description: "plant tree" },
-    { label: "brick", cost: { coin: 3 }, icon: UrlConst.BRICK2, type: CardFamilyTypeEnum.BRICK, amount: 3, description: "buy brick" },
-    { label: "lumber", cost: { coin: 3 }, icon: UrlConst.LUMBER2, type: CardFamilyTypeEnum.LUMBER, amount: 3, description: "buy lumber" },
-    { label: "wild", cost: { coin: 4 }, icon: UrlConst.WILD, type: CardFamilyTypeEnum.WILD, amount: 3, description: "buy wild-card" },
-    { label: "bomb", cost: { coin: 4 }, icon: UrlConst.BOMB, type: CardFamilyTypeEnum.BOMB, amount: 3, description: "buy TNT" },
-    { label: "undo", cost: { coin: 0 }, icon: UrlConst.UNDO, type: 99, amount: 9, description: "undo last action" },
-  ]
 
   constructor(public gameEngine: GameEngineService) {
 
@@ -53,11 +42,10 @@ export class ResourceTableComponent implements OnInit {
   }
 
   openStore() {
-    // this.showStore = !this.showStore;
-    this.gameEngine.store.dispatch({ type: OPEN_STORE, payload: { items: this.storeItems } });
+    this.gameEngine.store.dispatch({ type: OPEN_STORE });
   }
 
-  onBuyItem(buyItem: IBuyItem) {
+  /* onBuyItem(buyItem: IBuyItem) {
     this.showStore = false;
 
     if (!buyItem) return;
@@ -67,6 +55,6 @@ export class ResourceTableComponent implements OnInit {
     } else {
       this.gameEngine.store.dispatch({ type: SET_NEXT_CARD, payload: buyItem.type });
     }
-  }
+  } */
 
 }
