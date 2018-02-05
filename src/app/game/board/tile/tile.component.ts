@@ -91,7 +91,6 @@ export class TileComponent implements OnInit {
   floatState: string = "";
   currentCard: Card;
   showThinkBubble: boolean;
-  collectedIcon: string;
   isCardFloating: boolean;
   onMe: boolean;
 

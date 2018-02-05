@@ -27,6 +27,7 @@ export interface IState {
     showStoreItems: IBuyItem[];
     currentMessage: IMessage;
     gameOver: boolean;
+    boardState:string;
 }
 
 export interface ICost {

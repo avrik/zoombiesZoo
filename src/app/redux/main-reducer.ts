@@ -42,7 +42,8 @@ const initState: IState = {
     prevState: null,
     floatTile: null,
     showStoreItems: null,
-    currentMessage: null
+    currentMessage: null,
+    boardState:""
 }
 
 let prevGameState: IState;

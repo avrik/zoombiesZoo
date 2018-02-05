@@ -12,6 +12,7 @@ import { checkIfLevelCompleted } from './level-reducer';
 import { clearTile } from './tile-reducer';
 import { IState } from './interfaces';
 import { getNewCard } from './common-reducer';
+import { currentGameState } from './main-reducer';
 
 
 export function generateWorld(totalRows: number, totalCols: number): Tile[] {
@@ -296,10 +297,13 @@ function checkBombs(tiles: Tile[]) {
             around.forEach(tileNear => {
                 clearTile(tileNear);
                 tileNear.terrainTop = new Terrain(TerrainEnum.EXPLOSION);
+                currentGameState.boardState = "shake";
                 setTimeout(() => {
                     tileNear.terrainTop = null;
                 }, 300);
             })
+        } else {
+            currentGameState.boardState = "";
         }
     })
 }

@@ -2,6 +2,6 @@
 <tile-buy-popup *ngIf="showStore && lastTileClicked.card && lastTileClicked.card.type==1" [items]="storeItems2" (buyItem)="buyItem($event)" [title]="tile.card.family.label+' lvl '+(tile.card.level+1)"></tile-buy-popup>
 <tile-buy-popup *ngIf="showStore && !lastTileClicked.card" [items]="storeItems" (buyItem)="buyItem($event)" [title]="'city improvments'"></tile-buy-popup> -->
 
-<div class="container" #mainBoard [ngStyle]="{'grid-template-columns': getCols() }">
+<div [@animationState]="state" (@animationState.done)="onAnimationDone()" class="container" #mainBoard [ngStyle]="{'grid-template-columns': getCols() }">
     <app-tile *ngFor="let tile of tiles" [tile]="tile"></app-tile>
 </div>
