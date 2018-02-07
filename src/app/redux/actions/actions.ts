@@ -19,6 +19,7 @@ export const OPEN_STORE: string = "OPEN_STORE";
 export const CLOSE_STORE: string = "CLOSE_STORE";
 export const PLACE_BUILDING: string = "PLACE_BUILDING";
 export const PLACE_CARD_ON_STASH_ACTION: string = "PLACE_CARD_ON_STASH_ACTION";
+export const BUY_ITEM: string = "BUY_ITEM";
 
 
 /* export function initGameAction() {

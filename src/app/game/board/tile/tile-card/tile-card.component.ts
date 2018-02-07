@@ -11,13 +11,9 @@ import { MessagesService } from '../../../../services/messages.service';
   styleUrls: ['./tile-card.component.css']
 })
 export class TileCardComponent implements OnInit {
-  showThinkBubble: boolean;
 
   @Input() onTerrain: number;
   @Input() card: Card;
-  @Input() placed: boolean;
-  //@Output() collected: EventEmitter<any> = new EventEmitter();
-
 
   constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) 
   { 

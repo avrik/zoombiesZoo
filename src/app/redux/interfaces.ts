@@ -44,6 +44,8 @@ export interface IBuyItem {
     icon: string;
     type: number;
     amount? :number;
+    store:number;
+    level?:number;
 }
 
 export interface IResourceStorage {

@@ -3,6 +3,7 @@ import { MessagesService } from 'app/services/messages.service';
 import { GameEngineService } from 'app/services/game-engine.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { IBuyItem, IResourceStorage, IState } from 'app/redux/interfaces';
+import { BUY_ITEM } from '../../../redux/actions/actions';
 
 
 @Component({
@@ -18,10 +19,10 @@ export class BuyItemComponent implements OnInit {
 
   resourceNeeded: any[] = [];
   resourceStorage: IResourceStorage;
-  enabled: boolean=true;
+  enabled: boolean = true;
 
-  constructor(private gameEngine: GameEngineService, private messagesService:MessagesService) {
-    
+  constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
+
   }
 
   ngOnInit() {
@@ -29,23 +30,24 @@ export class BuyItemComponent implements OnInit {
     this.resourceNeeded.concat(Array(this.buyItem.cost.block).map(a => { return { src: "assets/resources/brick.png" } }));
     this.resourceNeeded.concat(Array(this.buyItem.cost.lumber).map(a => { return { src: "assets/resources/wood.png" } }));
     this.resourceNeeded.concat(Array(this.buyItem.cost.coin).map(a => { return { src: "assets/resources/coin.png" } }));
-    
+
     //this.gameEngine.store.subscribe(()=>{
-      let newState:IState = this.gameEngine.store.getState();
-      
-      if (this.buyItem && this.buyItem.cost) {
-        this.enabled = (
-          (!this.buyItem.cost.block || newState.resources.bricks >= this.buyItem.cost.block) &&
-          (!this.buyItem.cost.lumber || newState.resources.lumber >= this.buyItem.cost.lumber) &&
-          (!this.buyItem.cost.coin || newState.resources.coins >= this.buyItem.cost.coin) &&
-          (this.buyItem.amount>0 || isNaN(this.buyItem.amount))
-        ) ? true : false;
-      }
+    let newState: IState = this.gameEngine.store.getState();
+
+    if (this.buyItem && this.buyItem.cost) {
+      this.enabled = (
+        (!this.buyItem.cost.block || newState.resources.bricks >= this.buyItem.cost.block) &&
+        (!this.buyItem.cost.lumber || newState.resources.lumber >= this.buyItem.cost.lumber) &&
+        (!this.buyItem.cost.coin || newState.resources.coins >= this.buyItem.cost.coin) &&
+        (this.buyItem.amount > 0 || isNaN(this.buyItem.amount))
+      ) ? true : false;
+    }
   }
 
 
   onBuy() {
     this.buy.emit(this.buyItem);
+    this.gameEngine.store.dispatch({ type: BUY_ITEM, payload: this.buyItem })
     /* let testResources: IResourceStorage =
       {
         bricks: this.buyItem.cost.block ? this.resourceStorage.bricks - this.buyItem.cost.block : this.resourceStorage.bricks,
@@ -55,19 +57,19 @@ export class BuyItemComponent implements OnInit {
 
     if (testResources.bricks >= 0 && testResources.lumber >= 0 && testResources.coins >= 0) { */
 
-     /*  this.gameEngine.updateResourceStorage = testResources;
-      let total: number = 0;
-      if (this.buyItem.cost.block) total += this.buyItem.cost.block;
-      if (this.buyItem.cost.lumber) total += this.buyItem.cost.lumber;
+    /*  this.gameEngine.updateResourceStorage = testResources;
+     let total: number = 0;
+     if (this.buyItem.cost.block) total += this.buyItem.cost.block;
+     if (this.buyItem.cost.lumber) total += this.buyItem.cost.lumber;
 
-      this.gameEngine.removeFromResourcesStorage(total);
-      if (this.buyItem.amount) {
-        this.buyItem.amount--;
-      } */
+     this.gameEngine.removeFromResourcesStorage(total);
+     if (this.buyItem.amount) {
+       this.buyItem.amount--;
+     } */
 
-      /* this.buy.emit(this.buyItem);
-    } else{
-      this.messagesService.postMessage({ title: "not enough resources!", type: MessageType.TOOLBAR })
-    } */
+    /* this.buy.emit(this.buyItem);
+  } else{
+    this.messagesService.postMessage({ title: "not enough resources!", type: MessageType.TOOLBAR })
+  } */
   }
 }

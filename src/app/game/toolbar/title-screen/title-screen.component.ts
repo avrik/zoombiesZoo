@@ -37,7 +37,7 @@ export class TitleScreenComponent implements OnInit {
       let newState: IState = this.gameEngine.store.getState();
       this.currentCard = newState.nextCard;
 
-      if (newState.currentMessage && newState.currentMessage.type == MessageType.TOOLBAR) {
+      if (newState.currentMessage && newState.currentMessage.type == MessageType.TOOLBAR && this.message != newState.currentMessage) {
         this.message = newState.currentMessage;
         this.animationState = "up"
       } else {
@@ -51,6 +51,6 @@ export class TitleScreenComponent implements OnInit {
   }
 
   onScaleDone() {
-    this.animationState="";
+    this.animationState = "";
   }
 }

@@ -116,6 +116,7 @@ export function clickTileOnBoard(state: IState): IState {
 
 
 export function nextTurn(newState: IState) {
+    newState.currentMessage = null;
     newState.turn++;
     moveWalkers(newState.tiles);
     let bombs: Tile[] = newState.tiles.filter(a => a != newState.tileClicked && a.card && a.card.family.name == CardFamilyTypeEnum.BOMB);
@@ -173,7 +174,7 @@ export function findMatch(tile: Tile) {
 
                 //move(linked, tile)
                 linked.movment = { dir: getMoveDir(linked, tile), img: linked.card.img };
-                tile.showDelay = "show";
+                tile.showDelay = "merge";
                 //linked.clear();
                 clearTile(linked);
             });
@@ -258,14 +259,16 @@ function handleWild(tile: Tile) {
 
 function getMoveDir(from: Tile, to: Tile): string {
     if (to.ypos < from.ypos && to.xpos < from.xpos) { return "upLeft" }
-    if (to.ypos < from.ypos && to.xpos > from.xpos) { return "upRight" }
-    if (to.ypos > from.ypos && to.xpos < from.xpos) { return "downLeft" }
-    if (to.ypos > from.ypos && to.xpos > from.xpos) { return "downRight" }
-
     if (to.ypos < from.ypos && to.xpos == from.xpos) { return "up" }
-    if (to.ypos > from.ypos && to.xpos == from.xpos) { return "down" }
-    if (to.xpos < from.xpos && to.ypos == from.ypos) { return "left" }
+    if (to.ypos < from.ypos && to.xpos > from.xpos) { return "upRight" }
+
     if (to.xpos > from.xpos && to.ypos == from.ypos) { return "right" }
+
+    if (to.ypos > from.ypos && to.xpos > from.xpos) { return "downRight" }
+    if (to.ypos > from.ypos && to.xpos == from.xpos) { return "down" }
+    if (to.ypos > from.ypos && to.xpos < from.xpos) { return "downLeft" }
+
+    if (to.xpos < from.xpos && to.ypos == from.ypos) { return "left" }
 }
 
 function getLinkedGroup(firstOne: Tile): Tile[] {

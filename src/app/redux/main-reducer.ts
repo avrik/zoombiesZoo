@@ -8,7 +8,7 @@ import { Tile } from './../game/board/tile/tile';
 import { CardState } from './../enums/card-state.enum';
 import { CardFamilyTypeEnum } from './../enums/card-family-type-enum.enum';
 import { cardCollection, ICardData, Card } from './../game/cards/card';
-import { PLACE_CARD_ON_TILE_ACTION, GENERATE_WORLD_ACTION, NEW_GAME_ACTION, COLLECT_RESOURCES_ACTION, INIT_GAME_ACTION, CLICK_TILE, PLACE_CARD_ON_STASH_ACTION, PLACE_BUILDING, UNDO_ACTION, SET_NEXT_CARD, MOVE_BUILDING_ACTION, PLACE_MOVE_BUILDING_ACTION, OPEN_STORE, CLOSE_STORE } from './actions/actions';
+import { PLACE_CARD_ON_TILE_ACTION, GENERATE_WORLD_ACTION, NEW_GAME_ACTION, COLLECT_RESOURCES_ACTION, INIT_GAME_ACTION, CLICK_TILE, PLACE_CARD_ON_STASH_ACTION, PLACE_BUILDING, UNDO_ACTION, SET_NEXT_CARD, MOVE_BUILDING_ACTION, PLACE_MOVE_BUILDING_ACTION, OPEN_STORE, CLOSE_STORE, BUY_ITEM } from './actions/actions';
 import { generateWorld, findMatch, moveWalkers, nextTurn } from 'app/redux/board-reducer';
 import { addResources, removeFromResourcesSawmill } from 'app/redux/resources-reducer';
 import { clickTileOnBoard } from './board-reducer';
@@ -21,6 +21,7 @@ import { TileState } from '../enums/tile-state.enum';
 import { clearTile } from './tile-reducer';
 import { IState, IAction, IBuyItem } from './interfaces';
 import { tileBuildingItems, tileStoreItems, mainStoreItems, getNewCard } from './common-reducer';
+import { StoreItemType } from 'app/enums/store-item-type.enum';
 
 export class MainReducer {
 
@@ -36,14 +37,14 @@ const initState: IState = {
     cardHint: null,
     level: new GameLevel(),
     cityLevel: new CityLevel(),
-    resources: { bricks: 0, lumber: 0, coins: 0, maxStorage: 0 },
+    resources: { bricks: 0, lumber: 0, coins: 100, maxStorage: 0 },
     score: 0,
     population: 0,
     prevState: null,
     floatTile: null,
     showStoreItems: null,
     currentMessage: null,
-    boardState:""
+    boardState: ""
 }
 
 let prevGameState: IState;
@@ -56,7 +57,7 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
     currentGameState = newState;
 
     states.push(newState);
-    newState.currentMessage = null;
+
 
     let tile: Tile;
     if (action.payload && action.payload instanceof Tile) {
@@ -92,7 +93,7 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             return newState;
 
         case SET_NEXT_CARD:
-            if (action.payload) newState.nextCard = getNewCard(action.payload);
+            if (action.payload) newState.nextCard = getNewCard(action.payload.type, action.payload.level);
             return newState;
 
         case CLICK_TILE:
@@ -140,6 +141,48 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             }
 
             return newState;
+
+        case BUY_ITEM:
+            let buyItem: IBuyItem = action.payload;
+            let purchased: boolean
+
+            switch (buyItem.store) {
+                case StoreItemType.MAIN_STORE:
+                    newState.nextCard = getNewCard(buyItem.type, buyItem.level)
+                    purchased = true;
+                    break;
+                case StoreItemType.TILE_STORE:
+                    if (buyBuilding(newState, buyItem)) {
+                        purchased = true;
+                        nextTurn(newState);
+                    }
+                    break;
+                case StoreItemType.TILE_CARD_STORE:
+                    if (buyItem.type == 10) {
+                        moveTileBuilding(newState, newState.tileClicked);
+                        purchased = true;                    } else {
+                        if (buyBuilding(newState, buyItem)) {
+                            purchased = true;
+                            nextTurn(newState);
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            if (purchased) {
+                newState.resources.coins -= buyItem.cost.coin;
+                if (buyItem.cost.block) {
+                    removeFromResourcesStorage(newState, buyItem.cost.block);
+                }
+
+                if (buyItem.cost.lumber) {
+                    removeFromResourcesSawmill(newState, buyItem.cost.lumber);
+                }
+            }
+
+            return newState;
         case UNDO_ACTION:
             //return prevGameState;
             return states[states.length - 2];
@@ -181,14 +224,14 @@ function buyBuilding(newState: IState, buyItem: IBuyItem): boolean {
         //newState.score += newState.tileClicked.card.value;
     }
 
-    newState.resources.coins -= buyItem.cost.coin;
+    /* newState.resources.coins -= buyItem.cost.coin;
     if (buyItem.cost.block) {
         removeFromResourcesStorage(newState, buyItem.cost.block);
     }
 
     if (buyItem.cost.lumber) {
         removeFromResourcesSawmill(newState, buyItem.cost.lumber);
-    }
+    } */
 
     return true;
 }
@@ -201,17 +244,15 @@ export function getNextCard(): Card {
         bombData.chance = 5;
     }
 
-    if (currentGameState.level.index > 2) {
+    if (currentGameState.level.index > 1) {
         let personCardData: ICardData = cardCollection.find(a => a.family.name == CardFamilyTypeEnum.PERSON);
         personCardData.chance = Math.min(25 + (currentGameState.cityLevel.index * 2), 50);
     }
 
-
-    if (currentGameState.level.index > 4) {
+    if (currentGameState.level.index > 3) {
         let animalCardData: ICardData = cardCollection.find(a => a.family.name == CardFamilyTypeEnum.ANIMAL);
         animalCardData.chance = Math.min(5 + (currentGameState.cityLevel.index * 2), 20);
     }
-
 
     let rand: number = Math.round(Math.random() * 100);
     let pickFrom: ICardData[] = [];

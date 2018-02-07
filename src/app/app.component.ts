@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { MessagesService, IMessage } from './services/messages.service';
 
 //BUGS :
-//+ move building complete - board disabled
+//+ store buy items bug
 //+ wild bugs - match near wood..
 //+ storage resource shows minus
-//+movment glitch
+//+ person/animal movment glitch
+//+ no message for house need road
 
 
 //TODOS :

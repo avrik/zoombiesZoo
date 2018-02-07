@@ -1,8 +1,8 @@
-<div (click)="clickTile()" [style.opacity]="tile.state===-1?0.2:1" [style.pointer-events]="tile.state===-1?'none':'pointer'">
+<div (click)="clickTile()" [style.opacity]="tile.state===-1?0.2:1" [style.pointer-events]="tile.state===-1?'none':'auto'">
 
     <div style="position:absolute;padding-left:8px" [style.z-index]="getIndex()">
 
-        <div *ngIf="tile.movment" [@moveAnimation]="tile.movment.dir" (@moveAnimation.done)=onMoveDone($event)>
+        <div *ngIf="tile.movment" [@moveAnimation]="moveState" (@moveAnimation.done)=onMoveDone($event)>
             <img [src]="tile.movment.img" alt="" height="50">
         </div>
 
@@ -21,7 +21,7 @@
 
         <!-- <div #cardRef [@moveAnimation]="moveState" (@moveAnimation.done)=onMoveDone($event) [@scaleAnimation]="scaleState" (@scaleAnimation.done)="onScaleDone($event)"> -->
         <div #cardRef [@visibilityChanged]="tile.showDelay">
-            <app-tile-card *ngIf="gotCard==true" [placed]="true" [card]="tile.card" [onTerrain]="tile.terrain.type"></app-tile-card>
+            <app-tile-card *ngIf="gotCard==true" [card]="tile.card" [onTerrain]="tile.terrain.type"></app-tile-card>
         </div>
 
 
@@ -37,7 +37,7 @@
     <div class="tile" *ngIf="tile" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()" (mouseup)="onMouseOut()" (mousedown)="onMouseOver()">
         <div class="over" *ngIf="tile.terrain?.clickable && gotCard==false"></div>
 
-        <div [@terrainAnimation]="terrainAnimationState" class="terrain" [style.margin-top.px]="tile.terrain.type==4?-45:-32">
+        <div class="terrain" [style.margin-top.px]="tile.terrain.type==4?-45:-32">
             <img [src]="tile.terrainTop?tile.terrainTop.url:tile.terrain.url" alt="" width="64">
         </div>
     </div>

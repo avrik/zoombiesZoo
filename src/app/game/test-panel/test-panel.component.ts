@@ -19,6 +19,6 @@ export class TestPanelComponent implements OnInit {
   }
 
   onItemClick(item: ICardData) {
-    this.gameEngine.store.dispatch({ type: SET_NEXT_CARD, payload: item.family.name });
+    this.gameEngine.store.dispatch({ type: SET_NEXT_CARD, payload: {type:item.family.name} });
   }
 }

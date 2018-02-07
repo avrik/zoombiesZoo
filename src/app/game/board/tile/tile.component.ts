@@ -39,14 +39,14 @@ import { IState } from '../../../redux/interfaces';
     ]),
 
     trigger('moveAnimation', [
-      state('up', style({ transform: 'translateY(-50px)' })),
-      state('down', style({ transform: 'translateY(50px)' })),
-      state('left', style({ transform: 'translateX(-50px)' })),
-      state('right', style({ transform: 'translateX(50px)' })),
-      state('upLeft', style({ transform: 'translateY(-50px) translateX(-50px)' })),
-      state('upRight', style({ transform: 'translateY(-50px) translateX(50px)' })),
-      state('downLeft', style({ transform: 'translateY(50px) translateX(-50px)' })),
-      state('downRight', style({ transform: 'translateY(50px) translateX(50px)' })),
+      state('up', style({ transform: 'translateY(-100%)' })),
+      state('down', style({ transform: 'translateY(100%)' })),
+      state('left', style({ transform: 'translateX(-100%)' })),
+      state('right', style({ transform: 'translateX(100%)' })),
+      state('upLeft', style({ transform: 'translateY(-100%) translateX(-100%)' })),
+      state('upRight', style({ transform: 'translateY(-100%) translateX(100%)' })),
+      state('downLeft', style({ transform: 'translateY(100%) translateX(-100%)' })),
+      state('downRight', style({ transform: 'translateY(100%) translateX(100%)' })),
 
       transition('* => up', animate('100ms ease-out')),
       transition('* => down', animate('100ms ease-out')),
@@ -65,13 +65,19 @@ import { IState } from '../../../redux/interfaces';
         ]))
       ]),
     ]),
-
+    
     trigger('visibilityChanged', [
-      transition('* => show', [
+      transition('* => merge', [
         animate('300ms ease', keyframes([
           style({ transform: 'scale(0)', opacity: 0, offset: 0 }),
           style({ transform: 'scale(1.4)', opacity: 1, offset: 0.6 }),
           style({ transform: 'scale(1)', opacity: 1, offset: 1.0 })
+        ]))
+      ]),
+      transition('* => show', [
+        animate('100ms', keyframes([
+          style({ opacity: 0, offset: 0 }),
+          style({ opacity: 1, offset: 1.0 }),
         ]))
       ]),
     ]),
@@ -89,6 +95,7 @@ export class TileComponent implements OnInit {
 
   currentState: IState;
   floatState: string = "";
+  moveState: string = "";
   currentCard: Card;
   showThinkBubble: boolean;
   isCardFloating: boolean;
@@ -101,7 +108,7 @@ export class TileComponent implements OnInit {
       this.isCardFloating = this.currentState.floatTile == this.tile ? true : false;
 
       this.floatState = this.isCardFloating ? 'up' : ""
-      //if (this.tile.movment) this.moveState = this.tile.movment.dir;
+      this.moveState = this.tile.movment?this.tile.movment.dir:"";
     }
     )
   }
@@ -196,5 +203,7 @@ export class TileComponent implements OnInit {
   onMoveDone(event) {
     this.tile.state = TileState.REGULAR;
     this.tile.movment = null;
+
+    
   }
 }
