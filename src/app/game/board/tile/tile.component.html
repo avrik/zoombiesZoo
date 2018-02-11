@@ -11,7 +11,7 @@
             <app-tile-card [card]="currentCard"></app-tile-card>
         </div>
 
-        <div class="card-float" [@floatOver]="floatState" (@floatOver.done)="onFloatDone($event)" *ngIf="isCardFloating">
+        <div class="card-float" [@floatOver]="floatState" (@floatOver.done)="onFloatDone($event)" *ngIf="isCardFloating==true">
             <app-tile-card [card]="currentCard"></app-tile-card>
         </div>
 

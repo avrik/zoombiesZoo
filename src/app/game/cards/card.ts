@@ -66,17 +66,17 @@ const palaceCard: ICardData = {
 }
 
 const churchCard: ICardData = {
-  level: 0, family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 2, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH1,
+  level: 0, family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 3, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH1,
   nextCard: {
-    level: 1, family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 6, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH2,
+    level: 1, family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 9, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH2,
     nextCard: {
-      level: 2, family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 18, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH3,
+      level: 2, family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 27, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH3,
       nextCard: {
-        level: 3, family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 54, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH4,
+        level: 3, family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 81, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH4,
         nextCard: {
-          level: 4, family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 162, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH5,
+          level: 4, family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 243, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH5,
           nextCard: {
-            level: 5, family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 506, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH6,
+            level: 5, family: familyChurch, mergeBy: MergeTypeEnum.MATCH, collect: 729, type: CardTypeEnum.BUILDING, img: UrlConst.CHURCH6,
           }
         }
       }
@@ -157,7 +157,7 @@ export const cardCollection: ICardData[] = [
   },
   {
     //level: 0, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, img: UrlConst.LUMBER1,
-    level: 0, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, chance: 60, img: UrlConst.LUMBER1,
+    level: 0, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, chance: 70, img: UrlConst.LUMBER1,
     nextCard: {
       //level: 1, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE,img: UrlConst.LUMBER2,
       level: 1, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, chance: 5, img: UrlConst.LUMBER2,

@@ -7,7 +7,6 @@ import { TerrainEnum } from './../enums/terrain.enum';
 import { Terrain } from './../game/board/tile/terrain';
 import { Tile } from './../game/board/tile/tile';
 import { TileState } from '../enums/tile-state.enum';
-import { addResources } from 'app/redux/resources-reducer';
 import { checkIfLevelCompleted } from './level-reducer';
 import { clearTile } from './tile-reducer';
 import { IState } from './interfaces';

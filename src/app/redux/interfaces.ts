@@ -28,6 +28,7 @@ export interface IState {
     currentMessage: IMessage;
     gameOver: boolean;
     boardState:string;
+    cardCollected?:Card;
 }
 
 export interface ICost {

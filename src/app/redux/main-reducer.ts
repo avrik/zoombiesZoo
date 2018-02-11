@@ -37,7 +37,7 @@ const initState: IState = {
     cardHint: null,
     level: new GameLevel(),
     cityLevel: new CityLevel(),
-    resources: { bricks: 0, lumber: 0, coins: 100, maxStorage: 0 },
+    resources: { bricks: 0, lumber: 0, coins: 0, maxStorage: 0 },
     score: 0,
     population: 0,
     prevState: null,
@@ -107,6 +107,8 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             let img: string = tile.card.img;
             if (addResources(newState, tile, tile.card.collected)) {
                 newState.tileClicked = tile;
+                newState.cardCollected = Object.assign({},tile.card);
+                clearTile(tile);
                 tile.movment = { dir: 'collect', img: img };
                 nextTurn(newState);
             }
@@ -249,9 +251,9 @@ export function getNextCard(): Card {
         personCardData.chance = Math.min(25 + (currentGameState.cityLevel.index * 2), 50);
     }
 
-    if (currentGameState.level.index > 3) {
+    if (currentGameState.level.index > 2) {
         let animalCardData: ICardData = cardCollection.find(a => a.family.name == CardFamilyTypeEnum.ANIMAL);
-        animalCardData.chance = Math.min(5 + (currentGameState.cityLevel.index * 2), 20);
+        animalCardData.chance = Math.min(10 + (currentGameState.cityLevel.index * 2), 20);
     }
 
     let rand: number = Math.round(Math.random() * 100);

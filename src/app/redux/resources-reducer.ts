@@ -8,7 +8,7 @@ export function addResources(state: IState, tile: Tile, amount: number): boolean
     switch (tile.card.family.name) {
         case CardFamilyTypeEnum.COIN:
             state.resources.coins += amount;
-            clearTile(tile);
+            //clearTile(tile);
             return true;
            // break;
 
@@ -17,7 +17,7 @@ export function addResources(state: IState, tile: Tile, amount: number): boolean
             if (sawmills.length) {
                 sawmills[0].card.collected += amount;
                 state.resources.lumber += amount;
-                clearTile(tile);
+               // clearTile(tile);
                 return true;
             } else {
                 let txt: string = state.tiles.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.SAWMILL).length ? "no place in sawmill" : "build a sawmill to store your lumber"
@@ -31,7 +31,7 @@ export function addResources(state: IState, tile: Tile, amount: number): boolean
             if (storages.length) {
                 storages[0].card.collected += amount;
                 state.resources.bricks += amount;
-                clearTile(tile);
+               // clearTile(tile);
                 return true;
             } else {
                 //console.log("no place in storage");

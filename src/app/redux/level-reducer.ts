@@ -2,7 +2,6 @@
 import { CityLevel, GameLevel } from '../game/levels/game-level';
 import { TerrainEnum } from '../enums/terrain.enum';
 import { MessageType } from '../enums/message-type.enum';
-import { addResources } from 'app/redux/resources-reducer';
 import { CardFamilyTypeEnum } from '../enums/card-family-type-enum.enum';
 import { Card } from 'app/game/cards/card';
 import { state } from '@angular/core';
@@ -11,7 +10,7 @@ import { getNewCard } from 'app/redux/common-reducer';
 
 export function checkIfLevelCompleted(state: IState): IState {
     let newState = state;
-    let newGameLevel:GameLevel;
+    let newGameLevel: GameLevel;
 
     //city level
     if (newState.population >= newState.cityLevel.goal) {
@@ -53,11 +52,14 @@ export function checkIfLevelCompleted(state: IState): IState {
         if (foundGoal) newGameLevel = new GameLevel(newState.level);
     }
 
-    if (newState.level.goal.resources) {
+    if (newState.level.goal.collect) {
+   
         let foundGoal: any = (
-            (newState.resources.bricks >= newState.level.goal.resources.bricks) &&
-            (newState.resources.lumber >= newState.level.goal.resources.lumber) &&
-            (newState.resources.coins >= newState.level.goal.resources.coins)
+            (
+                newState.cardCollected && newState.cardCollected.family &&
+                newState.cardCollected.family.name == newState.level.goal.collect.type &&
+                newState.cardCollected.level == newState.level.goal.collect.level 
+            )
         );
         if (foundGoal) {
             newGameLevel = new GameLevel(newState.level);
@@ -73,6 +75,6 @@ export function checkIfLevelCompleted(state: IState): IState {
         newState.level = newGameLevel;
     }
 
-    
+
     return newState;
 }
