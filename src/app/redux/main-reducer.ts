@@ -30,17 +30,17 @@ const initState: IState = {
     gameOver: false,
     tiles: [],
     turn: 0,
-    tileClicked: null,
-    pendingMoveCard: null,
-    nextCard: null,
-    cardHint: null,
-    level: new GameLevel(),
-    cityLevel: new CityLevel(),
-    resources: { bricks: 0, lumber: 0, coins: 0, maxStorage: 0 },
     score: 0,
     population: 0,
-    prevState: null,
+    resources: { bricks: 0, lumber: 0, coins: 0, maxStorage: 0 },
+
+    tileClicked: null,
     floatTile: null,
+    pendingMoveCard: null,
+    nextCard: null,
+    level: new GameLevel(),
+    cityLevel: new CityLevel(),
+    prevState: null,
     showStoreItems: null,
     currentMessage: null,
     boardState: ""
@@ -48,13 +48,10 @@ const initState: IState = {
 
 let prevGameState: IState;
 let states: IState[] = []
-export let currentGameState: IState;
 
 export function mainReducerFunc(state: IState = initState, action: IAction): IState {
     // prevGameState = Object.assign({}, state);
     let newState: IState = Object.assign({}, state);
-    currentGameState = newState;
-
     states.push(newState);
 
     let tile: Tile;
@@ -69,14 +66,15 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             return action.payload; */
 
         case Action.INIT_GAME:
-            newState = Object.assign({}, initState);
+            //newState = Object.assign({}, initState);
             newState.tiles = generateWorld(11, 5);
-            newState.nextCard = getNextCard();
+
             return newState;
 
         case Action.NEW_GAME:
-
-            newState.floatTile = newState.tiles.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
+            newState.nextCard = getNextCard(newState);
+            newState.floatTile = getFloatTile(newState);
+            //newState.floatTile = getFloatTile(newState);
             return newState;
 
         case Action.CLICK_STASH_TILE:
@@ -84,27 +82,28 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             return newState;
 
         case Action.SET_NEXT_CARD:
-            if (action.payload) newState.nextCard = getNewCard(action.payload.type, action.payload.level);
-            return newState;
+            if (action.payload) {
+                newState.nextCard = getNewCard(action.payload.type, action.payload.level);
+                return newState;
+            }  
 
         case Action.CLICK_TILE:
             newState.tileClicked = tile;
             clickTileOnBoard(newState);
             nextTurn(newState);
-            newState.nextCard = getNextCard();
+            newState.nextCard = getNextCard(newState);
             return newState;
 
         case Action.COLLECT_RESOURCES:
-            let img: string = tile.card.img;
+       
             if (addResources(newState, tile, tile.card.collected)) {
                 newState.tileClicked = tile;
                 newState.cardCollected = Object.assign({}, tile.card);
                 clearTile(tile);
-                tile.movment = { dir: 'collect', img: img };
+                tile.movment = { dir: 'collect', img: tile.card.img };
                 nextTurn(newState);
+                return newState;
             }
-
-            return newState;
 
         case Action.PLACE_MOVE_BUILDING:
             tile.card = newState.pendingMoveCard;
@@ -180,10 +179,14 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
     }
 }
 
+function getFloatTile(newState: IState): Tile {
+    return newState.tiles.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
+}
+
 function stashCard(newState: IState, tile: Tile) {
     let temp: Card = tile.card;
     tile.card = newState.nextCard;
-    newState.nextCard = temp ? temp : getNextCard();
+    newState.nextCard = temp ? temp : getNextCard(newState);
 }
 
 function moveTileBuilding(newState: IState, tile: Tile) {
@@ -225,21 +228,21 @@ function buyBuilding(newState: IState, buyItem: IBuyItem): boolean {
 }
 
 
-export function getNextCard(): Card {
-    let gotLab: Tile = currentGameState.tiles.find(a => a.card && a.card.family.name == CardFamilyTypeEnum.LABORATORY);
+export function getNextCard(newState: IState): Card {
+    let gotLab: Tile = newState.tiles.find(a => a.card && a.card.family.name == CardFamilyTypeEnum.LABORATORY);
     if (gotLab) {
         let bombData: ICardData = cardCollection.find(a => a.family.name == CardFamilyTypeEnum.BOMB);
         bombData.chance = 5;
     }
 
-    if (currentGameState.level.index > 1) {
+    if (newState.level.index > 1) {
         let personCardData: ICardData = cardCollection.find(a => a.family.name == CardFamilyTypeEnum.PERSON);
-        personCardData.chance = Math.min(20 + (currentGameState.cityLevel.index * 2), 50);
+        personCardData.chance = Math.min(20 + (newState.cityLevel.index * 2), 50);
     }
 
-    if (currentGameState.level.index > 2) {
+    if (newState.level.index > 2) {
         let animalCardData: ICardData = cardCollection.find(a => a.family.name == CardFamilyTypeEnum.ANIMAL);
-        animalCardData.chance = Math.min(10 + (currentGameState.cityLevel.index * 2), 20);
+        animalCardData.chance = Math.min(10 + (newState.cityLevel.index * 2), 20);
     }
 
     let rand: number = Math.round(Math.random() * 100);

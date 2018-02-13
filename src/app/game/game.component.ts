@@ -46,6 +46,7 @@ export class GameComponent implements OnInit {
   }
 
   restart() {
+    
     this.gameEngine.initGame();
     setTimeout(() => {
       this.gameEngine.newGame();

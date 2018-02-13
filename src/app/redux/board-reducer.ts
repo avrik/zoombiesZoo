@@ -11,8 +11,6 @@ import { checkIfLevelCompleted } from './level-reducer';
 import { clearTile } from './tile-reducer';
 import { IState } from './interfaces';
 import { getNewCard } from './common-reducer';
-import { currentGameState } from './main-reducer';
-
 
 export function generateWorld(totalRows: number, totalCols: number): Tile[] {
 
@@ -118,8 +116,8 @@ export function nextTurn(newState: IState) {
     newState.currentMessage = null;
     newState.turn++;
     moveWalkers(newState.tiles);
-    let bombs: Tile[] = newState.tiles.filter(a => a != newState.tileClicked && a.card && a.card.family.name == CardFamilyTypeEnum.BOMB);
-    checkBombs(bombs);
+    //let bombs: Tile[] = newState.tiles.filter(a => a != newState.tileClicked && a.card && a.card.family.name == CardFamilyTypeEnum.BOMB);
+    checkBombs(newState);
 
     newState.tiles.filter(a => a.card && a.card.type == CardTypeEnum.WALKER).forEach(a => a.card.state = CardState.REGULAR)
     //newState.nextCard = getNextCard();
@@ -288,8 +286,9 @@ function getLinkedGroup(firstOne: Tile): Tile[] {
     return group;
 }
 
-function checkBombs(tiles: Tile[]) {
-    let bombs: Tile[] = tiles.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.BOMB);
+function checkBombs(newState:IState) {
+    let bombs: Tile[] = newState.tiles.filter(a => a != newState.tileClicked && a.card && a.card.family.name == CardFamilyTypeEnum.BOMB);
+    //let bombs: Tile[] = tiles.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.BOMB);
     bombs.forEach(bomb => {
         bomb.card.collected--
 
@@ -299,13 +298,13 @@ function checkBombs(tiles: Tile[]) {
             around.forEach(tileNear => {
                 clearTile(tileNear);
                 tileNear.terrainTop = new Terrain(TerrainEnum.EXPLOSION);
-                currentGameState.boardState = "shake";
+                newState.boardState = "shake";
                 setTimeout(() => {
                     tileNear.terrainTop = null;
                 }, 300);
             })
         } else {
-            currentGameState.boardState = "";
+            newState.boardState = "";
         }
     })
 }

@@ -15,7 +15,7 @@ export interface IState {
     tiles: Tile[];
     tileClicked: Tile;
     nextCard: Card;
-    cardHint: Card;
+   // cardHint: Card;
     level: GameLevel;
     cityLevel: CityLevel;
     resources: IResourceStorage;
