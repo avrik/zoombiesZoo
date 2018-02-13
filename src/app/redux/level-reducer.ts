@@ -58,7 +58,7 @@ export function checkIfLevelCompleted(state: IState): IState {
             (
                 newState.cardCollected && newState.cardCollected.family &&
                 newState.cardCollected.family.name == newState.level.goal.collect.type &&
-                newState.cardCollected.level == newState.level.goal.collect.level 
+                newState.cardCollected.level >= newState.level.goal.collect.level 
             )
         );
         if (foundGoal) {

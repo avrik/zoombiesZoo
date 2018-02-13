@@ -1,5 +1,4 @@
 
-import { NEW_GAME_ACTION, CLOSE_STORE } from './../redux/actions/actions';
 import { environment } from './../../environments/environment';
 import { TerrainEnum } from './../enums/terrain.enum';
 import { Component, OnInit } from '@angular/core';
@@ -7,7 +6,6 @@ import { GameEngineService } from '../services/game-engine.service';
 import { MessagesService } from '../services/messages.service';
 import { MessageType } from '../enums/message-type.enum';
 import { Tile } from './board/tile/tile';
-import { INIT_GAME_ACTION } from '../redux/actions/actions';
 import { IBuyItem, IState } from 'app/redux/interfaces';
 
 @Component({
@@ -43,22 +41,21 @@ export class GameComponent implements OnInit {
 
   ngOnInit() {
     this.debug = !environment.production;
-    this.gameEngine.store.dispatch({ type: INIT_GAME_ACTION });
 
+    this.restart();
+  }
+
+  restart() {
+    this.gameEngine.initGame();
     setTimeout(() => {
-      this.gameEngine.store.dispatch({ type: NEW_GAME_ACTION });
+      this.gameEngine.newGame();
     }, 50);
   }
 
   onBuyItem(buyItem: IBuyItem) {
-    this.gameEngine.store.dispatch({ type: CLOSE_STORE });
+    //this.gameEngine.store.dispatch({ type: CLOSE_STORE });
+    this.gameEngine.closeStore();
   }
 
-  restart() {
-    this.gameEngine.store.dispatch({ type: INIT_GAME_ACTION });
-
-    setTimeout(() => {
-      this.gameEngine.store.dispatch({ type: NEW_GAME_ACTION });
-    }, 50);
-  }
+  
 }

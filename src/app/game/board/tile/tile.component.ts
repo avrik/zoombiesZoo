@@ -1,5 +1,5 @@
 
-import { PLACE_CARD_ON_TILE_ACTION, COLLECT_RESOURCES_ACTION, MOVE_BUILDING_ACTION, PLACE_MOVE_BUILDING_ACTION, OPEN_STORE } from './../../../redux/actions/actions';
+
 import { CardState } from './../../../enums/card-state.enum';
 import { TileCardComponent } from './tile-card/tile-card.component';
 import { UrlConst } from './../../../consts/url-const';
@@ -17,7 +17,6 @@ import { CardFamilyTypeEnum } from '../../../enums/card-family-type-enum.enum';
 import { MessagesService } from '../../../services/messages.service';
 import { MessageType } from '../../../enums/message-type.enum';
 import { TileState } from '../../../enums/tile-state.enum';
-import { CLICK_TILE, PLACE_CARD_ON_STASH_ACTION, PLACE_BUILDING } from '../../../redux/actions/actions';
 import { IState } from '../../../redux/interfaces';
 
 @Component({
@@ -65,7 +64,7 @@ import { IState } from '../../../redux/interfaces';
         ]))
       ]),
     ]),
-    
+
     trigger('visibilityChanged', [
       transition('* => merge', [
         animate('300ms ease', keyframes([
@@ -108,7 +107,7 @@ export class TileComponent implements OnInit {
       this.isCardFloating = this.currentState.floatTile == this.tile ? true : false;
 
       this.floatState = this.isCardFloating ? 'up' : ""
-      this.moveState = this.tile.movment?this.tile.movment.dir:"";
+      this.moveState = this.tile.movment ? this.tile.movment.dir : "";
     }
     )
   }
@@ -120,22 +119,27 @@ export class TileComponent implements OnInit {
   clickTile() {
     if (this.tile.terrain.type == TerrainEnum.CITY) {
       if (this.tile.state == TileState.WAIT_FOR_MOVE) {
-        this.gameEngine.store.dispatch({ type: PLACE_MOVE_BUILDING_ACTION, payload: this.tile })
+        //this.gameEngine.store.dispatch({ type: PLACE_MOVE_BUILDING_ACTION, payload: this.tile })
+        this.gameEngine.placeMovingBuilding(this.tile);
       } else {
-        this.gameEngine.store.dispatch({ type: OPEN_STORE, payload: { tile: this.tile } })
+        //this.gameEngine.store.dispatch({ type: OPEN_STORE, payload: { tile: this.tile } })
+        this.gameEngine.openStore(this.tile);
       }
     } else {
       if (this.tile.terrain.type == TerrainEnum.CARD_HOLDER) {
-        this.gameEngine.store.dispatch({ type: PLACE_CARD_ON_STASH_ACTION, payload: this.tile })
+        //this.gameEngine.store.dispatch({ type: PLACE_CARD_ON_STASH_ACTION, payload: this.tile })
+        this.gameEngine.clickStashTile(this.tile);
       } else
         if (this.tile.card) {
           if (this.tile.card.collect && this.tile.card.type == CardTypeEnum.RESOURCE) {
 
-            this.gameEngine.store.dispatch({ type: COLLECT_RESOURCES_ACTION, payload: this.tile })
+            //this.gameEngine.store.dispatch({ type: COLLECT_RESOURCES_ACTION, payload: this.tile })
+            this.gameEngine.collectResources(this.tile);
           }
         } else
           if (this.tile.terrain.type == TerrainEnum.RESOURCES) {
-            this.gameEngine.store.dispatch({ type: CLICK_TILE, payload: this.tile })
+            //this.gameEngine.store.dispatch({ type: CLICK_TILE, payload: this.tile })
+            this.gameEngine.clickTile(this.tile);
           }
     }
   }
@@ -204,6 +208,6 @@ export class TileComponent implements OnInit {
     this.tile.state = TileState.REGULAR;
     this.tile.movment = null;
 
-    
+
   }
 }

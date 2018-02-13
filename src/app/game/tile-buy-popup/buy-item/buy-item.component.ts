@@ -3,8 +3,6 @@ import { MessagesService } from 'app/services/messages.service';
 import { GameEngineService } from 'app/services/game-engine.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { IBuyItem, IResourceStorage, IState } from 'app/redux/interfaces';
-import { BUY_ITEM } from '../../../redux/actions/actions';
-
 
 @Component({
   selector: 'app-buy-item',
@@ -47,7 +45,9 @@ export class BuyItemComponent implements OnInit {
 
   onBuy() {
     this.buy.emit(this.buyItem);
-    this.gameEngine.store.dispatch({ type: BUY_ITEM, payload: this.buyItem })
+    //this.gameEngine.store.dispatch({ type: BUY_ITEM, payload: this.buyItem })
+
+    this.gameEngine.buyItem(this.buyItem);
     /* let testResources: IResourceStorage =
       {
         bricks: this.buyItem.cost.block ? this.resourceStorage.bricks - this.buyItem.cost.block : this.resourceStorage.bricks,

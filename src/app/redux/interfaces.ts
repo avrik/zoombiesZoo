@@ -7,7 +7,7 @@ import { IMessage } from 'app/services/messages.service';
 
 export interface IAction {
     payload: any;
-    type: string;
+    type: number;
 }
 
 export interface IState {

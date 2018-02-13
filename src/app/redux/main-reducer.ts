@@ -8,13 +8,11 @@ import { Tile } from './../game/board/tile/tile';
 import { CardState } from './../enums/card-state.enum';
 import { CardFamilyTypeEnum } from './../enums/card-family-type-enum.enum';
 import { cardCollection, ICardData, Card } from './../game/cards/card';
-import { PLACE_CARD_ON_TILE_ACTION, GENERATE_WORLD_ACTION, NEW_GAME_ACTION, COLLECT_RESOURCES_ACTION, INIT_GAME_ACTION, CLICK_TILE, PLACE_CARD_ON_STASH_ACTION, PLACE_BUILDING, UNDO_ACTION, SET_NEXT_CARD, MOVE_BUILDING_ACTION, PLACE_MOVE_BUILDING_ACTION, OPEN_STORE, CLOSE_STORE, BUY_ITEM } from './actions/actions';
 import { generateWorld, findMatch, moveWalkers, nextTurn } from 'app/redux/board-reducer';
 import { addResources, removeFromResourcesSawmill } from 'app/redux/resources-reducer';
 import { clickTileOnBoard } from './board-reducer';
 import { removeFromResourcesStorage } from './resources-reducer';
 import { UrlConst } from '../consts/url-const';
-import { IMessage } from 'app/services/messages.service';
 import { MessageType } from '../enums/message-type.enum';
 import { CityLevel } from '../game/levels/game-level';
 import { TileState } from '../enums/tile-state.enum';
@@ -22,6 +20,7 @@ import { clearTile } from './tile-reducer';
 import { IState, IAction, IBuyItem } from './interfaces';
 import { tileBuildingItems, tileStoreItems, mainStoreItems, getNewCard } from './common-reducer';
 import { StoreItemType } from 'app/enums/store-item-type.enum';
+import { Action } from './actions/action.enum';
 
 export class MainReducer {
 
@@ -58,7 +57,6 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
 
     states.push(newState);
 
-
     let tile: Tile;
     if (action.payload && action.payload instanceof Tile) {
         tile = action.payload;
@@ -67,47 +65,40 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
     console.info('new action ' + action.type);
 
     switch (action.type) {
-        case "from_saved":
-            return action.payload;
+        /* case "from_saved":
+            return action.payload; */
 
-        case INIT_GAME_ACTION:
+        case Action.INIT_GAME:
             newState = Object.assign({}, initState);
             newState.tiles = generateWorld(11, 5);
             newState.nextCard = getNextCard();
             return newState;
 
-        case NEW_GAME_ACTION:
+        case Action.NEW_GAME:
 
             newState.floatTile = newState.tiles.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
             return newState;
 
-        case PLACE_CARD_ON_STASH_ACTION:
+        case Action.CLICK_STASH_TILE:
             stashCard(newState, tile);
             return newState;
 
-        case PLACE_BUILDING:
-            newState.tileClicked = action.payload.tile;
-            if (buyBuilding(newState, action.payload.buyItem)) {
-                nextTurn(newState);
-            }
-            return newState;
-
-        case SET_NEXT_CARD:
+        case Action.SET_NEXT_CARD:
             if (action.payload) newState.nextCard = getNewCard(action.payload.type, action.payload.level);
             return newState;
 
-        case CLICK_TILE:
+        case Action.CLICK_TILE:
             newState.tileClicked = tile;
             clickTileOnBoard(newState);
             nextTurn(newState);
             newState.nextCard = getNextCard();
             return newState;
 
-        case COLLECT_RESOURCES_ACTION:
+        case Action.COLLECT_RESOURCES:
             let img: string = tile.card.img;
             if (addResources(newState, tile, tile.card.collected)) {
                 newState.tileClicked = tile;
-                newState.cardCollected = Object.assign({},tile.card);
+                newState.cardCollected = Object.assign({}, tile.card);
                 clearTile(tile);
                 tile.movment = { dir: 'collect', img: img };
                 nextTurn(newState);
@@ -115,21 +106,13 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
 
             return newState;
 
-        case PLACE_MOVE_BUILDING_ACTION:
-            //moveTileBuilding(newState, tile);
+        case Action.PLACE_MOVE_BUILDING:
             tile.card = newState.pendingMoveCard;
             newState.pendingMoveCard = null;
             newState.tiles.forEach(a => a.state = TileState.REGULAR);
             return newState;
 
-        case MOVE_BUILDING_ACTION:
-            moveTileBuilding(newState, tile);
-            return newState;
-
-        case CLOSE_STORE:
-            newState.showStoreItems = null;
-            return newState;
-        case OPEN_STORE:
+        case Action.OPEN_STORE:
             newState.tileClicked = action.payload ? action.payload.tile : null;
             if (newState.tileClicked) {
                 if (newState.tileClicked.card) {
@@ -144,7 +127,7 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
 
             return newState;
 
-        case BUY_ITEM:
+        case Action.BUY_ITEM:
             let buyItem: IBuyItem = action.payload;
             let purchased: boolean
 
@@ -162,7 +145,8 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
                 case StoreItemType.TILE_CARD_STORE:
                     if (buyItem.type == 10) {
                         moveTileBuilding(newState, newState.tileClicked);
-                        purchased = true;                    } else {
+                        purchased = true;
+                    } else {
                         if (buyBuilding(newState, buyItem)) {
                             purchased = true;
                             nextTurn(newState);
@@ -185,14 +169,16 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             }
 
             return newState;
-        case UNDO_ACTION:
-            //return prevGameState;
-            return states[states.length - 2];
+        case Action.CLOSE_STORE:
+            newState.showStoreItems = null;
+            return newState;
+
+        /* case UNDO_ACTION:
+            return states[states.length - 2]; */
         default:
             return newState;
     }
 }
-
 
 function stashCard(newState: IState, tile: Tile) {
     let temp: Card = tile.card;
@@ -248,7 +234,7 @@ export function getNextCard(): Card {
 
     if (currentGameState.level.index > 1) {
         let personCardData: ICardData = cardCollection.find(a => a.family.name == CardFamilyTypeEnum.PERSON);
-        personCardData.chance = Math.min(25 + (currentGameState.cityLevel.index * 2), 50);
+        personCardData.chance = Math.min(20 + (currentGameState.cityLevel.index * 2), 50);
     }
 
     if (currentGameState.level.index > 2) {

@@ -1,0 +1,14 @@
+export enum Action {
+    INIT_GAME,
+    NEW_GAME,
+
+    CLICK_TILE,
+    COLLECT_RESOURCES,
+    CLICK_STASH_TILE,
+    PLACE_MOVE_BUILDING,
+    SET_NEXT_CARD,
+
+    OPEN_STORE,
+    BUY_ITEM,
+    CLOSE_STORE,
+}

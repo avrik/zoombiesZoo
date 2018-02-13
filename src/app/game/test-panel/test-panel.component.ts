@@ -1,7 +1,6 @@
 import { Card, ICardData, cardCollection } from './../cards/card';
 import { Component, OnInit } from '@angular/core';
 import { GameEngineService } from 'app/services/game-engine.service';
-import { SET_NEXT_CARD } from 'app/redux/actions/actions';
 
 @Component({
   selector: 'test-panel',
@@ -19,6 +18,7 @@ export class TestPanelComponent implements OnInit {
   }
 
   onItemClick(item: ICardData) {
-    this.gameEngine.store.dispatch({ type: SET_NEXT_CARD, payload: {type:item.family.name} });
+    //this.gameEngine.store.dispatch({ type: SET_NEXT_CARD, payload: {type:item.family.name} });
+    this.gameEngine.setNextCard(item)
   }
 }

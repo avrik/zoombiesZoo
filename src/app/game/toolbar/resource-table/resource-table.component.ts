@@ -3,7 +3,6 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { UrlConst } from '../../../consts/url-const';
 import { GameEngineService } from 'app/services/game-engine.service';
 import { CardFamilyTypeEnum } from 'app/enums/card-family-type-enum.enum';
-import { OPEN_STORE } from '../../../redux/actions/actions';
 import { IResourceStorage, IState } from 'app/redux/interfaces';
 
 @Component({
@@ -42,7 +41,8 @@ export class ResourceTableComponent implements OnInit {
   }
 
   openStore() {
-    this.gameEngine.store.dispatch({ type: OPEN_STORE });
+    //this.gameEngine.store.dispatch({ type: OPEN_STORE });
+    this.gameEngine.openStore();
   }
 
   /* onBuyItem(buyItem: IBuyItem) {
