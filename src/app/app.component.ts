@@ -6,8 +6,7 @@ import { MessagesService, IMessage } from './services/messages.service';
 //+ wild bugs - match near wood..
 //+ storage resource shows minus
 //+ person/animal movment glitch
-//+ no message for house need road
-//+resource collect goal bug
+
 
 //TODOS :
 

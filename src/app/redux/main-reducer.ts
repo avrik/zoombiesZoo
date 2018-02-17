@@ -84,9 +84,10 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
         case Action.SET_NEXT_CARD:
             if (action.payload) {
                 newState.nextCard = getNewCard(action.payload.type, action.payload.level);
-                return newState;
+                
             }  
-
+            return newState;
+            
         case Action.CLICK_TILE:
             newState.tileClicked = tile;
             clickTileOnBoard(newState);
@@ -99,12 +100,12 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             if (addResources(newState, tile, tile.card.collected)) {
                 newState.tileClicked = tile;
                 newState.cardCollected = Object.assign({}, tile.card);
-                clearTile(tile);
                 tile.movment = { dir: 'collect', img: tile.card.img };
+                clearTile(tile);
                 nextTurn(newState);
-                return newState;
+                
             }
-
+            return newState;
         case Action.PLACE_MOVE_BUILDING:
             tile.card = newState.pendingMoveCard;
             newState.pendingMoveCard = null;
@@ -112,7 +113,7 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             return newState;
 
         case Action.OPEN_STORE:
-            newState.tileClicked = action.payload ? action.payload.tile : null;
+            newState.tileClicked = action.payload;
             if (newState.tileClicked) {
                 if (newState.tileClicked.card) {
                     newState.showStoreItems = tileBuildingItems;
