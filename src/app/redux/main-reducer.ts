@@ -9,22 +9,46 @@ import { CardState } from './../enums/card-state.enum';
 import { CardFamilyTypeEnum } from './../enums/card-family-type-enum.enum';
 import { cardCollection, ICardData, Card } from './../game/cards/card';
 import { generateWorld, findMatch, moveWalkers, nextTurn } from 'app/redux/board-reducer';
-import { addResources, removeFromResourcesSawmill } from 'app/redux/resources-reducer';
+import { addResources, removeFromResourcesSawmill } from 'app/redux/reducers/resources-reducer';
 import { clickTileOnBoard } from './board-reducer';
-import { removeFromResourcesStorage } from './resources-reducer';
+import { removeFromResourcesStorage } from './reducers/resources-reducer';
 import { UrlConst } from '../consts/url-const';
 import { MessageType } from '../enums/message-type.enum';
 import { CityLevel } from '../game/levels/game-level';
 import { TileState } from '../enums/tile-state.enum';
 import { clearTile } from './tile-reducer';
 import { IState, IAction, IBuyItem } from './interfaces';
-import { tileBuildingItems, tileStoreItems, mainStoreItems, getNewCard } from './common-reducer';
 import { StoreItemType } from 'app/enums/store-item-type.enum';
 import { Action } from './actions/action.enum';
+import { getNextCard } from './reducers/getNextCard-reducre';
+import { getCardByFamily } from './reducers/getCardByFamily-reducer';
 
 export class MainReducer {
 
 }
+
+export const tileStoreItems: IBuyItem[] = [
+    { store: StoreItemType.TILE_STORE, label: 'road', cost: { block: 3, lumber: 0, coin: 0 }, icon: UrlConst.ROAD, type: CardFamilyTypeEnum.ROAD, description: "roads will direct the people in the right path" },
+    { store: StoreItemType.TILE_STORE, label: 'storage', cost: { block: 9, lumber: 0, coin: 0 }, icon: UrlConst.STORAGE1, type: CardFamilyTypeEnum.STORAGE, description: "our resources need storage" },
+    { store: StoreItemType.TILE_STORE, label: 'swamill', cost: { block: 9, lumber: 0, coin: 0 }, icon: UrlConst.SAWMILL1, type: CardFamilyTypeEnum.SAWMILL, description: "use sawmills to store lumber" },
+    { store: StoreItemType.TILE_STORE, label: 'house', cost: { block: 9, lumber: 6, coin: 0 }, icon: UrlConst.HOUSE1, type: CardFamilyTypeEnum.HOUSE, description: "our people need houses" },
+    { store: StoreItemType.TILE_STORE, label: 'laboratory', cost: { block: 12, lumber: 6, coin: 3 }, icon: UrlConst.LABORATORY, type: CardFamilyTypeEnum.LABORATORY, description: "produce TNT!" },
+    { store: StoreItemType.TILE_STORE, label: 'church', cost: { block: 15, lumber: 9, coin: 3 }, icon: UrlConst.CHURCH1, type: CardFamilyTypeEnum.CHURCH, description: "cathedrals are used to trap the undead" },
+]
+
+export const tileBuildingItems: IBuyItem[] = [
+    { store: StoreItemType.TILE_CARD_STORE, label: 'road', cost: { block: 3, lumber: 0, coin: 0 }, icon: UrlConst.ROAD, type: CardFamilyTypeEnum.ROAD, description: "add road" },
+    { store: StoreItemType.TILE_CARD_STORE, label: 'move', cost: { block: 0, lumber: 0, coin: 3 }, icon: UrlConst.MOVE, type: 10, description: "move me" },
+]
+
+export const mainStoreItems: IBuyItem[] = [
+    { store: StoreItemType.MAIN_STORE, label: "tree", cost: { coin: 1 }, icon: UrlConst.LUMBER1, type: CardFamilyTypeEnum.LUMBER, amount: 6, description: "plant tree" },
+    { store: StoreItemType.MAIN_STORE, label: "brick", cost: { coin: 3 }, icon: UrlConst.BRICK2, type: CardFamilyTypeEnum.BRICK, level: 1, amount: 3, description: "buy brick" },
+    { store: StoreItemType.MAIN_STORE, label: "lumber", cost: { coin: 3 }, icon: UrlConst.LUMBER2, type: CardFamilyTypeEnum.LUMBER, level: 1, amount: 3, description: "buy lumber" },
+    { store: StoreItemType.MAIN_STORE, label: "wild", cost: { coin: 4 }, icon: UrlConst.WILD, type: CardFamilyTypeEnum.WILD, amount: 3, description: "buy wild-card" },
+    { store: StoreItemType.MAIN_STORE, label: "bomb", cost: { coin: 4 }, icon: UrlConst.BOMB, type: CardFamilyTypeEnum.BOMB, amount: 3, description: "buy TNT" },
+    { store: StoreItemType.MAIN_STORE, label: "undo", cost: { coin: 0 }, icon: UrlConst.UNDO, type: 99, amount: 9, description: "undo last action" },
+]
 
 const initState: IState = {
     gameOver: false,
@@ -83,7 +107,7 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
 
         case Action.SET_NEXT_CARD:
             if (action.payload) {
-                newState.nextCard = getNewCard(action.payload.type, action.payload.level);
+                newState.nextCard = getCardByFamily(action.payload.type, action.payload.level);
                 
             }  
             return newState;
@@ -96,15 +120,17 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             return newState;
 
         case Action.COLLECT_RESOURCES:
-       
-            if (addResources(newState, tile, tile.card.collected)) {
-                newState.tileClicked = tile;
+            newState.tileClicked = tile;
+            let leftover:number = addResources(newState, tile)
+            if (leftover) {
+                tile.card.collected = leftover;
+            } else {
                 newState.cardCollected = Object.assign({}, tile.card);
                 tile.movment = { dir: 'collect', img: tile.card.img };
-                clearTile(tile);
                 nextTurn(newState);
-                
+                clearTile(tile);
             }
+
             return newState;
         case Action.PLACE_MOVE_BUILDING:
             tile.card = newState.pendingMoveCard;
@@ -133,7 +159,7 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
 
             switch (buyItem.store) {
                 case StoreItemType.MAIN_STORE:
-                    newState.nextCard = getNewCard(buyItem.type, buyItem.level)
+                    newState.nextCard = getCardByFamily(buyItem.type, buyItem.level)
                     purchased = true;
                     break;
                 case StoreItemType.TILE_STORE:
@@ -211,7 +237,7 @@ function buyBuilding(newState: IState, buyItem: IBuyItem): boolean {
             return false;
         }
 
-        newState.tileClicked.card = getNewCard(buyItem.type);
+        newState.tileClicked.card = getCardByFamily(buyItem.type);
         findMatch(newState.tileClicked);
         //newState.score += newState.tileClicked.card.value;
     }
@@ -229,7 +255,7 @@ function buyBuilding(newState: IState, buyItem: IBuyItem): boolean {
 }
 
 
-export function getNextCard(newState: IState): Card {
+/* export function getNextCard(newState: IState): Card {
     let gotLab: Tile = newState.tiles.find(a => a.card && a.card.family.name == CardFamilyTypeEnum.LABORATORY);
     if (gotLab) {
         let bombData: ICardData = cardCollection.find(a => a.family.name == CardFamilyTypeEnum.BOMB);
@@ -259,7 +285,7 @@ export function getNextCard(newState: IState): Card {
     let randCard: ICardData = pickFrom[Math.floor(Math.random() * pickFrom.length)];
 
     return new Card(randCard);
-}
+} */
 
 
 

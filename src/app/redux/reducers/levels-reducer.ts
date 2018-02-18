@@ -1,12 +1,10 @@
-
-import { CityLevel, GameLevel } from '../game/levels/game-level';
-import { TerrainEnum } from '../enums/terrain.enum';
-import { MessageType } from '../enums/message-type.enum';
-import { CardFamilyTypeEnum } from '../enums/card-family-type-enum.enum';
-import { Card } from 'app/game/cards/card';
-import { state } from '@angular/core';
-import { IState } from './interfaces';
-import { getNewCard } from 'app/redux/common-reducer';
+import { GameLevel, CityLevel } from "../../game/levels/game-level";
+import { IState } from "../interfaces";
+import { getCardByFamily } from "./getCardByFamily-reducer";
+import { Card } from "../../game/cards/card";
+import { MessageType } from "../../enums/message-type.enum";
+import { CardFamilyTypeEnum } from "../../enums/card-family-type-enum.enum";
+import { TerrainEnum } from "../../enums/terrain.enum";
 
 export function checkIfLevelCompleted(state: IState): IState {
     let newState = state;
@@ -25,7 +23,7 @@ export function checkIfLevelCompleted(state: IState): IState {
         if (newCityLevel.reward) {
             if (newCityLevel.reward.coins) {
                 //for (let i = 0; i < newCityLevel.reward.coins; i++) {
-                let coinCard: Card = getNewCard(CardFamilyTypeEnum.COIN);
+                let coinCard: Card = getCardByFamily(CardFamilyTypeEnum.COIN);
                 coinCard.collected = newCityLevel.reward.coins;
                 newState.tiles.find(a => a.terrain.type == TerrainEnum.RESOURCES && !a.card).card = coinCard
                 //}

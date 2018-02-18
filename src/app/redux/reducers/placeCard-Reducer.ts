@@ -1,7 +1,6 @@
 import { CardTypeEnum } from './../../enums/card-type-enum.enum';
 import { Card } from './../../game/cards/card';
 import { MergeTypeEnum } from './../../enums/merge-type-enum.enum';
-import { getNewCard } from 'app/redux/common-reducer';
 import { Tile } from './../../game/board/tile/tile';
 import { CardFamilyTypeEnum } from './../../enums/card-family-type-enum.enum';
 import { TerrainEnum } from './../../enums/terrain.enum';

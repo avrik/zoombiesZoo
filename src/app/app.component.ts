@@ -4,7 +4,6 @@ import { MessagesService, IMessage } from './services/messages.service';
 //BUGS :
 //+ store buy items bug
 //+ wild bugs - match near wood..
-//+ storage resource shows minus
 //+ person/animal movment glitch
 
 

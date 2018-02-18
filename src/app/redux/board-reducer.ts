@@ -7,10 +7,10 @@ import { TerrainEnum } from './../enums/terrain.enum';
 import { Terrain } from './../game/board/tile/terrain';
 import { Tile } from './../game/board/tile/tile';
 import { TileState } from '../enums/tile-state.enum';
-import { checkIfLevelCompleted } from './level-reducer';
 import { clearTile } from './tile-reducer';
 import { IState } from './interfaces';
-import { getNewCard } from './common-reducer';
+import { getCardByFamily } from './reducers/getCardByFamily-reducer';
+import { checkIfLevelCompleted } from './reducers/levels-reducer';
 
 export function generateWorld(totalRows: number, totalCols: number): Tile[] {
 
@@ -55,7 +55,7 @@ export function generateWorld(totalRows: number, totalCols: number): Tile[] {
     for (let i = 0; i < 5; i++) {
         let tile: Tile = getRandomTile(tiles.filter(a => a.terrain.type == TerrainEnum.RESOURCES && !a.card));
         let rand: number = Math.floor(Math.random() * options.length);
-        tile.card = getNewCard(options[rand]);
+        tile.card = getCardByFamily(options[rand]);
         tile.card.autoPlaced = true;
     }
 
@@ -64,7 +64,7 @@ export function generateWorld(totalRows: number, totalCols: number): Tile[] {
     randTile.setCard(getNewCard(CardFamilyTypeEnum.STORAGE));
     randTile.card.autoPlaced = true; */
 
-    tiles.find(a => a.ypos == 0 && a.xpos == 0).card = getNewCard(CardFamilyTypeEnum.STORAGE);
+    tiles.find(a => a.ypos == 0 && a.xpos == 0).card = getCardByFamily(CardFamilyTypeEnum.STORAGE);
 
 
 
@@ -81,10 +81,10 @@ export function clickTileOnBoard(state: IState): IState {
     if (newState.tileClicked.terrain.type == TerrainEnum.CARD_HOLDER) {
         if (newState.tileClicked.card) {
             let temp = Object.assign({}, newState.tileClicked.card);
-            newState.tileClicked.card = getNewCard(newState.nextCard.family.name);
+            newState.tileClicked.card = getCardByFamily(newState.nextCard.family.name);
             newState.nextCard = temp;
         } else {
-            newState.tileClicked.card = getNewCard(newState.nextCard.family.name);
+            newState.tileClicked.card = getCardByFamily(newState.nextCard.family.name);
         }
     } else {
         newState.tileClicked.card = newState.nextCard;
@@ -181,7 +181,7 @@ export function findMatch(tile: Tile) {
             if (tile.card.reward) {
                 let emptyTile: Tile = tile.linked.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
                 if (emptyTile) {
-                    emptyTile.card = getNewCard(CardFamilyTypeEnum.COIN);
+                    emptyTile.card = getCardByFamily(CardFamilyTypeEnum.COIN);
                     emptyTile.card.collected = tile.card.reward;
                 }
             }
@@ -251,7 +251,7 @@ function handleWild(tile: Tile) {
     });
 
     // tile.card = optionsForWild.length ? optionsForWild[0].card : this.getNewCard(CardFamilyTypeEnum.GRAVE);
-    tile.card = optionsForWild.length ? optionsForWild[0].card : getNewCard(CardFamilyTypeEnum.GRAVE);
+    tile.card = optionsForWild.length ? optionsForWild[0].card : getCardByFamily(CardFamilyTypeEnum.GRAVE);
 }
 
 function getMoveDir(from: Tile, to: Tile): string {
@@ -375,7 +375,7 @@ function testGroupTrapped(walkers: Tile[]) {
 }
 
 function trapWalkersGroup(walkerGroup: Tile[]) {
-    walkerGroup.forEach(walker => walker.card = getNewCard(CardFamilyTypeEnum.GRAVE));
+    walkerGroup.forEach(walker => walker.card = getCardByFamily(CardFamilyTypeEnum.GRAVE));
 }
 
 function moveZoombiesToRandomEmpty(tile: Tile): boolean {

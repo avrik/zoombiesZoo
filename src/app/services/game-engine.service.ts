@@ -15,7 +15,6 @@ export class GameEngineService {
 
   constructor() {
     this.store = createStore(mainReducerFunc);
-
   }
 
   initGame() {
