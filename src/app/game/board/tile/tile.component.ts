@@ -32,9 +32,9 @@ import { IState } from '../../../redux/interfaces';
         transform: 'scale(1.2)', opacity: 0.6
       })),
       transition('* => up', animate('300ms ease-out')),
-      transition('* => down', animate('300ms ease-out')),
       transition('up => down', animate('300ms ease-out')),
-      transition('down => up', animate('300ms ease-out'))
+      //transition('up => down', animate('300ms ease-out')),
+      //transition('down => up', animate('300ms ease-out'))
     ]),
 
     trigger('moveAnimation', [
@@ -86,11 +86,18 @@ import { IState } from '../../../redux/interfaces';
       transition('* => up', animate('50ms ease-out')),
       transition('* => down', animate('50ms ease-out'))
     ]),
+    trigger('terrainAnimation', [
+      state('up', style({ transform: 'translateY(-10%)' })),
+      state('down', style({ transform: 'translateY(0%)' })),
+      transition('* => up', animate('150ms ease-out')),
+      transition('up => down', animate('150ms ease-out'))
+    ]),
   ]
 })
 
 export class TileComponent implements OnInit {
   @Input() tile: Tile;
+  terrainAnimation:string;
 
   currentState: IState;
   floatState: string = "";
@@ -104,7 +111,7 @@ export class TileComponent implements OnInit {
     this.gameEngine.store.subscribe(() => {
       this.currentState = this.gameEngine.store.getState();
       this.currentCard = this.currentState.nextCard;
-      this.isCardFloating = this.currentState.floatTile == this.tile ? true : false;
+      this.isCardFloating = (this.currentState.floatTile && this.currentState.floatTile.id == this.tile.id )? true : false;
 
       this.floatState = this.isCardFloating ? 'up' : ""
       this.moveState = this.tile.movment ? this.tile.movment.dir : "";
@@ -113,10 +120,11 @@ export class TileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    this.terrainAnimation = "down";
   }
 
   clickTile() {
+    if (!this.tile.terrain) return;
     if (this.tile.terrain.type == TerrainEnum.CITY) {
       if (this.tile.state == TileState.WAIT_FOR_MOVE) {
         //this.gameEngine.store.dispatch({ type: PLACE_MOVE_BUILDING_ACTION, payload: this.tile })
@@ -158,22 +166,31 @@ export class TileComponent implements OnInit {
         this.showThinkBubble = false;
       }
     }
+
+    //if (this.terrainAnimation == "up") {
+      this.terrainAnimation = "down";
+    //}
   }
 
   onMouseOver() {
     this.onMe = true;
 
-    if (this.tile.terrain.type == TerrainEnum.CARD_HOLDER) {
+    if (this.tile.terrain && this.tile.terrain.type == TerrainEnum.CARD_HOLDER) {
       this.tile.terrainTop = new Terrain(TerrainEnum.CARD_HOLDER_OPEN)
     }
 
     if (this.gameEngine.rollOverTile != this.tile) {
       this.gameEngine.rollOverTile = this.tile;
+
+      if (!this.tile.card && this.tile.terrain && this.tile.terrain.clickable) {
+        this.terrainAnimation = "up";
+      }
+      
     }
 
-    if (this.isCardFloating) {
+    /* if (this.isCardFloating) {
       this.floatState = 'up';
-    }
+    } */
     else
       if (this.tile.card) {
         if (this.tile.card.family.name == CardFamilyTypeEnum.PERSON) {
@@ -191,11 +208,16 @@ export class TileComponent implements OnInit {
     return this.tile.card ? true : false;
   }
 
-  getIndex() {
-    return this.tile.ypos * 10;
+  get getIndex():number {
+    return this.tile.ypos;
   }
 
   onFloatDone(event) {
+    if (!event) {
+      this.floatState = "";
+      return;
+    }
+
     if (event.toState == 'up') {
       this.floatState = 'down';
     } else if (event.toState == 'down') {

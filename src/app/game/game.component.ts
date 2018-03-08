@@ -42,14 +42,14 @@ export class GameComponent implements OnInit {
   ngOnInit() {
     this.debug = !environment.production;
 
-    this.restart();
+    this.restart(true);
   }
 
-  restart() {
+  restart(restoreState:boolean=false) {
     
     this.gameEngine.initGame();
     setTimeout(() => {
-      this.gameEngine.newGame();
+      this.gameEngine.newGame(restoreState);
     }, 50);
   }
 

@@ -15,6 +15,7 @@ export class ResourceTableComponent implements OnInit {
   @ViewChild('brickRef') brickRef;
   @ViewChild('lumberRef') lumberRef;
   @ViewChild('coinRef') coinRef;
+  @ViewChild('silverRef') silverRef;
 
   resourceStorage: IResourceStorage;
 
@@ -29,6 +30,7 @@ export class ResourceTableComponent implements OnInit {
           if (newState.resources.bricks > this.resourceStorage.bricks) this.brickRef.animate();
           if (newState.resources.lumber > this.resourceStorage.lumber) this.lumberRef.animate();
           if (newState.resources.coins > this.resourceStorage.coins) this.coinRef.animate();
+          if (newState.resources.silver > this.resourceStorage.silver) this.silverRef.animate();
         }
 
         this.resourceStorage = Object.assign({}, newState.resources);
@@ -45,16 +47,5 @@ export class ResourceTableComponent implements OnInit {
     this.gameEngine.openStore();
   }
 
-  /* onBuyItem(buyItem: IBuyItem) {
-    this.showStore = false;
-
-    if (!buyItem) return;
-
-    if (buyItem.type == 99) {
-      this.gameEngine.store.dispatch({ type: UNDO_ACTION });
-    } else {
-      this.gameEngine.store.dispatch({ type: SET_NEXT_CARD, payload: buyItem.type });
-    }
-  } */
 
 }

@@ -1,5 +1,5 @@
 
-<div *ngIf="card" class="container">
+<div [@animState]="animState" *ngIf="card" class="container">
     <div *ngIf="card.collect && (card.type == 0 || card.type == 4)" class="count-frame">
         <div class="collect-box">x{{card.collected}}</div>
     </div>

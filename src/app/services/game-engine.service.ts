@@ -21,8 +21,11 @@ export class GameEngineService {
     this.store.dispatch({ type: Action.INIT_GAME });
   }
 
-  newGame() {
+  newGame(restoreState:boolean) {
     this.store.dispatch({ type: Action.NEW_GAME });
+    if (restoreState) {
+      this.store.dispatch({ type: Action.RESTORE_GAMESTATE });
+    }
   }
 
   setNextCard(card: ICardData) {
@@ -52,7 +55,12 @@ export class GameEngineService {
   }
 
   buyItem(buyItem: IBuyItem) {
-    this.store.dispatch({ type: Action.BUY_ITEM, payload: buyItem })
+    if (buyItem.type == 99) {
+      this.store.dispatch({ type: Action.UNDO, payload: buyItem })
+    } else {
+      this.store.dispatch({ type: Action.BUY_ITEM, payload: buyItem })
+    }
+
   }
 
   closeStore() {

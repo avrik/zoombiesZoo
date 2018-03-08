@@ -42,34 +42,8 @@ export class BuyItemComponent implements OnInit {
     }
   }
 
-
   onBuy() {
     this.buy.emit(this.buyItem);
-    //this.gameEngine.store.dispatch({ type: BUY_ITEM, payload: this.buyItem })
-
     this.gameEngine.buyItem(this.buyItem);
-    /* let testResources: IResourceStorage =
-      {
-        bricks: this.buyItem.cost.block ? this.resourceStorage.bricks - this.buyItem.cost.block : this.resourceStorage.bricks,
-        lumber: this.buyItem.cost.lumber ? this.resourceStorage.lumber - this.buyItem.cost.lumber : this.resourceStorage.lumber,
-        coins: this.buyItem.cost.coin ? this.resourceStorage.coins - this.buyItem.cost.coin : this.resourceStorage.coins
-      }
-
-    if (testResources.bricks >= 0 && testResources.lumber >= 0 && testResources.coins >= 0) { */
-
-    /*  this.gameEngine.updateResourceStorage = testResources;
-     let total: number = 0;
-     if (this.buyItem.cost.block) total += this.buyItem.cost.block;
-     if (this.buyItem.cost.lumber) total += this.buyItem.cost.lumber;
-
-     this.gameEngine.removeFromResourcesStorage(total);
-     if (this.buyItem.amount) {
-       this.buyItem.amount--;
-     } */
-
-    /* this.buy.emit(this.buyItem);
-  } else{
-    this.messagesService.postMessage({ title: "not enough resources!", type: MessageType.TOOLBAR })
-  } */
   }
 }

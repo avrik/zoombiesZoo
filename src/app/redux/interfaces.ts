@@ -13,7 +13,7 @@ export interface IAction {
 export interface IState {
     pendingMoveCard: Card;
     tiles: Tile[];
-    tileClicked: Tile;
+    tileClicked?: Tile;
     nextCard: Card;
    // cardHint: Card;
     level: GameLevel;
@@ -53,5 +53,6 @@ export interface IResourceStorage {
     bricks?: number,
     lumber?: number,
     coins?: number,
+    silver?: number,
     maxStorage?: number,
   }

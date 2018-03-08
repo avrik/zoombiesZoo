@@ -29,6 +29,7 @@ export interface ICardData {
 const familyBrick: ICardFamily = { name: CardFamilyTypeEnum.BRICK, value: 5 };
 const familyLumber: ICardFamily = { name: CardFamilyTypeEnum.LUMBER, value: 10 };
 const familyCoin: ICardFamily = { name: CardFamilyTypeEnum.COIN, value: 50 };
+const familyCoinSilver: ICardFamily = { name: CardFamilyTypeEnum.COIN_SILVER, value: 1 };
 const familyPerson: ICardFamily = { name: CardFamilyTypeEnum.PERSON, value: 100 };
 
 const familyRoad: ICardFamily = { label: 'road', name: CardFamilyTypeEnum.ROAD, value: 90 };
@@ -41,6 +42,7 @@ const familyPalace: ICardFamily = { label: 'palace', name: CardFamilyTypeEnum.PA
 
 //[3,8,27,81,243,72,2187,6561,19683,59049]
 const coinCard: ICardData = { level: 0, family: familyCoin, mergeBy: MergeTypeEnum.NONE, collect: 1, type: CardTypeEnum.RESOURCE, img: UrlConst.COIN };
+const coinSilverCard: ICardData = { level: 0, family: familyCoinSilver, mergeBy: MergeTypeEnum.NONE, collect: 1, type: CardTypeEnum.RESOURCE, img: UrlConst.COIN_SILVER };
 //const goldChest: ICardData = { level: 1, family: { name: CardFamilyTypeEnum.GOLD_CHEST, value: 1250 }, mergeBy: MergeTypeEnum.NONE, collect: 10, type: CardTypeEnum.BUILDING, img: "assets/resources/Chest Closed.png" }
 
 const laboratoryCard: ICardData = {
@@ -187,6 +189,7 @@ export const cardCollection: ICardData[] = [
   },
   zoombieCard,
   coinCard,
+  coinSilverCard,
   graveCard,
   tntCard,
   sawmillCard,

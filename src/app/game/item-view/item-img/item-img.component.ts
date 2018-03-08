@@ -19,6 +19,9 @@ export class ItemImgComponent implements OnInit {
       case 'coin':
         this.url = UrlConst.COIN;
         break;
+      case 'coin_silver':
+        this.url = UrlConst.COIN_SILVER;
+        break;
       case 'brick':
         this.url = UrlConst.BRICK2;
         break;

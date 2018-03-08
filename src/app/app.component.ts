@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MessagesService, IMessage } from './services/messages.service';
 
 //BUGS :
-//+ store buy items bug
+
 //+ wild bugs - match near wood..
 //+ person/animal movment glitch
 
@@ -12,17 +12,18 @@ import { MessagesService, IMessage } from './services/messages.service';
 // + undo implementation
 // + save game state implementation
 
-// + handle score
-// + pricing
+// ++ handle score
+// ++ pricing
 // ++ move building implementation
-// + restart game fixing
+// ++ restart game fixing
 // ++ fix next card hinting
-// + gold reward handling
+// ++ gold reward handling
 // ++ progress bar animation
 // ++ add match hint animation on rollover
 // ++ add remove resource/bomb card
 // ++ fix curtain animation
 // + add game settings button + window
+
 // + high score
 // + add seasons (winter ,spring...)
 // + tutorial
