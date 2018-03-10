@@ -11,4 +11,6 @@ export enum Action {
     OPEN_STORE,
     BUY_ITEM,
     CLOSE_STORE,
+    UNDO,
+    RESTORE_GAMESTATE,
 }

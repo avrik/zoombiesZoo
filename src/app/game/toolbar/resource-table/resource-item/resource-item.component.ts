@@ -1,6 +1,9 @@
 import { Component, OnInit, Input, trigger, state, style, transition, animate } from '@angular/core';
 import { GameEngineService } from 'app/services/game-engine.service';
 import { IResourceStorage, IState } from 'app/redux/interfaces';
+import { CardFamilyTypeEnum } from '../../../../enums/card-family-type-enum.enum';
+import { Card } from '../../../cards/card';
+import { Tile } from '../../../board/tile/tile';
 
 @Component({
   selector: 'app-resource-item',
@@ -27,7 +30,8 @@ export class ResourceItemComponent implements OnInit {
 
   state: string = "out";
   resourceStorage: IResourceStorage;
-  currentState:IState;
+  currentState: IState;
+  totalStorage: number;
 
   constructor(private gameEngine: GameEngineService) {
 
@@ -36,51 +40,25 @@ export class ResourceItemComponent implements OnInit {
   ngOnInit() {
 
     this.gameEngine.store.subscribe(() => {
-     // debugger;
       let newState: IState = this.gameEngine.store.getState();
-      
-      //if (this.resourceStorage != newState.resources) {
-      
-        /* if (this.currentState)
-        {
-          switch (this.type) {
-            case 0:
-              if (newState.resources.bricks > this.currentState.resources.bricks) this.animate();
-              break;
-            case 1:
-              if (newState.resources.lumber > this.currentState.resources.lumber) this.animate();
-              break;
-            case 2:
-              if (newState.resources.coins > this.currentState.resources.coins) this.animate();
-              break;
-          }
-        }
-
-        this.currentState = newState; */
-      //}
-        
-      
-    })
-    /* this.gameEngine.resourceStorage$.subscribe(resourceStorage => {
-
-      if (resourceStorage && this.resourceStorage) {
-        switch (this.type) {
-          case 0:
-            if (resourceStorage.bricks > this.resourceStorage.bricks) this.animate();
-            break;
-          case 1:
-            if (resourceStorage.lumber > this.resourceStorage.lumber) this.animate();
-            break;
-          case 2:
-            if (resourceStorage.coins > this.resourceStorage.coins) this.animate();
-            break;
-        }
-
+      let storages: Tile[]
+      switch (this.type) {
+        case 0:
+          storages = newState.tiles.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.STORAGE);
+          this.totalStorage = storages.length ? storages.map(a => a.card.collect).reduce((prev, cur) => prev + cur) : 0;
+          break;
+        case 1:
+          storages = newState.tiles.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.SAWMILL);
+          this.totalStorage = storages.length ? storages.map(a => a.card.collect).reduce((prev, cur) => prev + cur) : 0;
+          break;
+        case 2:
+          this.totalStorage = 0
+          break;
+        default:
+          break;
       }
 
-      this.resourceStorage = Object.assign({}, resourceStorage);
-
-    }) */
+    })
   }
 
   animate() {
@@ -92,7 +70,6 @@ export class ResourceItemComponent implements OnInit {
 
   onClick() {
     this.amount++;
-    //this.gameEngine.addToStorage(this.type, 1);
   }
 
 }

@@ -7,6 +7,10 @@ import { MessageType } from "../../enums/message-type.enum";
 export function addResources(state: IState, tile: Tile): number {
     let amount: number = tile.card.collected;
     switch (tile.card.family.name) {
+        case CardFamilyTypeEnum.COIN_SILVER:
+            state.resources.silver += amount;
+
+            return 0;
         case CardFamilyTypeEnum.COIN:
             state.resources.coins += amount;
             return 0;

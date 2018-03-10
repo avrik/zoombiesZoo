@@ -1,6 +1,7 @@
 <div class="container">
     <!-- <div class="box" [style.color]="state=='in'?'rgb(22, 7, 39)':'gold'" [style.background-color]="state=='in'?'gold':'rgb(74, 13, 142)'">{{amount | number}} -->
-    <div class="box">x{{amount | number}}
+    <div class="box">x<span>{{amount | number}}</span>
+        <!-- <span style="opacity:0.5"> / {{totalStorage | number}}</span>  -->
         <!-- <button *ngIf="type>=0" style="position:absolute;margin-left: 15px" (click)="onClick()">+</button> -->
     </div>
     <div [@animate]="state">

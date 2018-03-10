@@ -3,6 +3,7 @@ export enum CardFamilyTypeEnum {
     BRICK = 0,
     LUMBER = 1,
     COIN = 10,
+    COIN_SILVER = 9,
 
     BOMB = 20,
     GRAVE = 50,

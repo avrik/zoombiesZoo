@@ -50,6 +50,7 @@ export const UrlConst = {
     LUMBER6:"assets/resources/z-lumber5.png",
 
     COIN:"assets/resources/coin.png",
+    COIN_SILVER:"assets/resources/coin_silver.png",
     WILD:"assets/resources/diamond.png",
 
     PERSON1:"assets/people/Character Boy.png",

@@ -66,8 +66,6 @@ export function generateWorld(totalRows: number, totalCols: number): Tile[] {
 
     tiles.find(a => a.ypos == 0 && a.xpos == 0).card = getCardByFamily(CardFamilyTypeEnum.STORAGE);
 
-
-
     //randTile = getRandomTile(arr.filter(a => !a.card));
     //randTile.setCard(getNewCard(CardFamilyTypeEnum.HOUSE));
     //randTile.card.autoPlaced = true;
@@ -77,8 +75,9 @@ export function generateWorld(totalRows: number, totalCols: number): Tile[] {
 
 export function clickTileOnBoard(state: IState): IState {
     let newState: IState = state;
-
-    if (newState.tileClicked.terrain.type == TerrainEnum.CARD_HOLDER) {
+    if (!newState.tileClicked) return newState;
+    
+    if (newState.tileClicked.terrain && newState.tileClicked.terrain.type == TerrainEnum.CARD_HOLDER) {
         if (newState.tileClicked.card) {
             let temp = Object.assign({}, newState.tileClicked.card);
             newState.tileClicked.card = getCardByFamily(newState.nextCard.family.name);
@@ -93,55 +92,16 @@ export function clickTileOnBoard(state: IState): IState {
             findMatch(newState.tileClicked);
         }
 
-        /* newState.tiles = moveWalkers(newState.tiles);
-        newState.tiles.filter(a => a.card && a.card.type == CardTypeEnum.WALKER).forEach(a => a.card.state = CardState.REGULAR)
-        newState.nextCard = getNextCard(); */
     }
 
-    /* let found: Tile = newState.tileClicked.linked.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES)
-    newState.floatTile = found ? found : newState.tiles.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
 
-    let houses: Tile[] = newState.tiles.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.HOUSE)
-    if (houses.length) {
-        newState.population = houses.map(a => a.card.collected).reduce((prev, cur) => prev + cur);
-    }
-
-    newState.score += newState.tileClicked.card ? newState.tileClicked.card.value : 0; */
 
     return newState;
 }
 
 
-export function nextTurn(newState: IState) {
-    newState.currentMessage = null;
-    newState.turn++;
-    moveWalkers(newState.tiles);
-    //let bombs: Tile[] = newState.tiles.filter(a => a != newState.tileClicked && a.card && a.card.family.name == CardFamilyTypeEnum.BOMB);
-    checkBombs(newState);
 
-    newState.tiles.filter(a => a.card && a.card.type == CardTypeEnum.WALKER).forEach(a => a.card.state = CardState.REGULAR)
-    //newState.nextCard = getNextCard();
 
-    let found: Tile = newState.tileClicked.linked.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES)
-    newState.floatTile = found ? found : newState.tiles.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
-
-    let houses: Tile[] = newState.tiles.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.HOUSE)
-    if (houses.length) {
-        newState.population = houses.map(a => a.card.collected).reduce((prev, cur) => prev + cur);
-    }
-
-    newState.score += newState.tileClicked.card ? newState.tileClicked.card.value : 0;
-
-    checkIfLevelCompleted(newState);
-    checkIfGameOver(newState)
-}
-
-function checkIfGameOver(newState: IState) {
-    let emptyInCity: number = newState.tiles.filter(a => a.terrain.type == TerrainEnum.CITY && !a.card).length;
-    let emptyInResources: number = newState.tiles.filter(a => a.terrain.type == TerrainEnum.RESOURCES && !a.card).length;
-
-    if (!emptyInCity || !emptyInResources) newState.gameOver = true;
-}
 
 
 
@@ -188,11 +148,16 @@ export function findMatch(tile: Tile) {
 
             tile.card.collected = totalCollected;
 
-            /* let extra: number = matchedTiles.length - (tile.card.minForNextLevel - 1);
+            let extra: number = matchedTiles.length - (tile.card.minForNextLevel - 1);
             if (extra) {
-              const arr = [1, 10, 50, 100, 200, 500, 1000, 2000, 5000];
-              this.addToStorage(CardFamilyTypeEnum.COIN, (extra / 100) * (arr[(tile.card.level - 1)]));
-            } */
+              //const arr = [1, 10, 50, 100, 200, 500, 1000, 2000, 5000];
+              //this.addToStorage(CardFamilyTypeEnum.COIN, (extra / 100) * (arr[(tile.card.level - 1)]));
+              let emptyTile: Tile = tile.linked.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
+                if (emptyTile) {
+                    emptyTile.card = getCardByFamily(CardFamilyTypeEnum.COIN_SILVER);
+                    emptyTile.card.collected = extra;
+                }
+            }
 
             findMatch(tile);
         }
@@ -223,9 +188,6 @@ function getMatchesAround(tile: Tile): Tile[] {
     }
     return collector;
 }
-
-
-
 
 function handleWild(tile: Tile) {
 
@@ -286,7 +248,7 @@ function getLinkedGroup(firstOne: Tile): Tile[] {
     return group;
 }
 
-function checkBombs(newState:IState) {
+export function checkBombs(newState:IState) {
     let bombs: Tile[] = newState.tiles.filter(a => a != newState.tileClicked && a.card && a.card.family.name == CardFamilyTypeEnum.BOMB);
     //let bombs: Tile[] = tiles.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.BOMB);
     bombs.forEach(bomb => {

@@ -1,23 +1,12 @@
-import { CardTypeEnum } from 'app/enums/card-type-enum.enum';
-import { CardState } from './../../../enums/card-state.enum';
-import { TileState } from './../../../enums/tile-state.enum';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Card } from '../../cards/card';
-import { Terrain } from './terrain';
-import { MergeTypeEnum } from 'app/enums/merge-type-enum.enum';
-
-
-export interface ITileMove {
-    dir: string;
-    img: string;
-}
+import { Card } from "../../cards/card";
+import { Terrain } from "./terrain";
+import { ITileMove } from "../../interfaces/ITileMove";
+import { TileState } from "../../../enums/tile-state.enum";
 
 export class Tile {
 
     linked: Tile[] = [];
     card: Card;
-    //cardsHistroy: Card[] = [];
     terrain: Terrain;
     terrainTop: Terrain;
     movment: ITileMove;
@@ -25,71 +14,26 @@ export class Tile {
     showDelay: string;
 
     constructor(public ypos: number = -1, public xpos: number = -1) {
-        //this.terrain = new Terrain();
         this.state = TileState.REGULAR;
     }
 
-    set moveMe(value: string) {
-        this.state = TileState.MOVING;
-        this.card.state = CardState.MOVING;
-    };
-
-    //set select(value: boolean) { this._selected$.next(value) };
-
-    /* getMatchesAround(): Tile[] {
-        let collector: Tile[] = [];
-
-        if (this.linked) {
-            let func: Function = (arr: Tile[]) => {
-                arr.filter(item =>
-                    this != item &&
-                    this.card && item.card &&
-                    ((this.card.mergeBy == MergeTypeEnum.MATCH && item.card.mergeBy == MergeTypeEnum.MATCH) ||
-                        (this.card.mergeBy == MergeTypeEnum.MATCH_COLLECTED && item.card.mergeBy == MergeTypeEnum.MATCH_COLLECTED
-                            && this.card.collect == this.card.collected && item.card.collect == item.card.collected)) &&
-                    collector.indexOf(item) == -1 &&
-                    (item.card.value === this.card.value))
-                    .forEach(item => {
-                        collector.push(item);
-                        func(item.linked);
-                    });
-            }
-
-            func(this.linked);
-        }
-        return collector;
-    } */
-
-    /* clear() {
-        this.card = null;
-        this.state = TileState.REGULAR;
-    } */
-
-    /* reset() {
-        this.clear();
-        this.terrainTop = null;
-    } */
-
-    /* setCard(card: Card) {
-        this.card = card;
-    } */
-
-   /*  setNextTurn() {
-        if (this.card) {
-            this.card.age++;
-            this.card.state = CardState.REGULAR;
-        }
- 
-        this.cardsHistroy.push(Object.assign({}, this).card);
-    } */
-
-    /* undo() {
-        if (this.cardsHistroy.length >= 2) {
-            this.card = this.cardsHistroy[this.cardsHistroy.length - 2];
-        }
-    } */
+    get id(): string {
+        return this.xpos.toString() + this.ypos.toString()
+    }
 
     toString() {
-        return JSON.stringify(this);
+
+        let newObj: any = {};
+        newObj.linked = [];
+        newObj.card = this.card;
+        newObj.terrain = this.terrain;
+        newObj.terrainTop = this.terrainTop;
+        newObj.movment = this.movment;
+        newObj.state = this.state;
+        newObj.showDelay = this.showDelay;
+        newObj.ypos = this.ypos;
+        newObj.xpos = this.xpos;
+
+        return newObj;
     }
 }

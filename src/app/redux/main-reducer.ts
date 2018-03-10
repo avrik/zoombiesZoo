@@ -8,9 +8,9 @@ import { Tile } from './../game/board/tile/tile';
 import { CardState } from './../enums/card-state.enum';
 import { CardFamilyTypeEnum } from './../enums/card-family-type-enum.enum';
 import { cardCollection, ICardData, Card } from './../game/cards/card';
-import { generateWorld, findMatch, moveWalkers, nextTurn } from 'app/redux/board-reducer';
+import { generateWorld, findMatch, moveWalkers } from 'app/redux/board-reducer';
 import { addResources, removeFromResourcesSawmill } from 'app/redux/reducers/resources-reducer';
-import { clickTileOnBoard } from './board-reducer';
+import { clickTileOnBoard, checkBombs } from './board-reducer';
 import { removeFromResourcesStorage } from './reducers/resources-reducer';
 import { UrlConst } from '../consts/url-const';
 import { MessageType } from '../enums/message-type.enum';
@@ -22,6 +22,7 @@ import { StoreItemType } from 'app/enums/store-item-type.enum';
 import { Action } from './actions/action.enum';
 import { getNextCard } from './reducers/getNextCard-reducre';
 import { getCardByFamily } from './reducers/getCardByFamily-reducer';
+import { checkIfLevelCompleted } from './reducers/levels-reducer';
 
 export class MainReducer {
 
@@ -56,7 +57,7 @@ const initState: IState = {
     turn: 0,
     score: 0,
     population: 0,
-    resources: { bricks: 0, lumber: 0, coins: 0, maxStorage: 0 },
+    resources: { bricks: 0, lumber: 0, coins: 0, silver: 0, maxStorage: 0 },
 
     tileClicked: null,
     floatTile: null,
@@ -71,12 +72,67 @@ const initState: IState = {
 }
 
 let prevGameState: IState;
-let states: IState[] = []
+//let states: IState[] = []
 
 export function mainReducerFunc(state: IState = initState, action: IAction): IState {
     // prevGameState = Object.assign({}, state);
+    if (action.type == Action.CLICK_TILE) {
+        prevGameState = {
+            gameOver: state.gameOver,
+            tiles: state.tiles.map(a => Object.assign({}, a)),
+            turn: state.turn,
+            score: state.score,
+            population: state.population,
+            resources: Object.assign({}, state.resources),
+
+            tileClicked: Object.assign({}, state.tileClicked),
+            floatTile: Object.assign({}, state.floatTile),
+            pendingMoveCard: Object.assign({}, state.pendingMoveCard),
+            nextCard: Object.assign({}, state.nextCard),
+            level: Object.assign({}, state.level),
+            cityLevel: Object.assign({}, state.cityLevel),
+            showStoreItems: state.showStoreItems,
+            currentMessage: Object.assign({}, state.currentMessage),
+            boardState: state.boardState,
+            prevState: state.prevState
+        }
+
+
+
+        let savedata = {
+            gameOver: state.gameOver,
+            tiles: state.tiles.map(a => Object.assign({}, a)),
+            turn: state.turn,
+            score: state.score,
+            population: state.population,
+            resources: Object.assign({}, state.resources),
+
+            tileClicked: state.tileClicked ? state.tileClicked.toString() : null,
+            floatTile: state.floatTile ? state.floatTile.toString() : null,
+            pendingMoveCard: Object.assign({}, state.pendingMoveCard),
+            nextCard: Object.assign({}, state.nextCard),
+            level: Object.assign({}, state.level),
+            cityLevel: Object.assign({}, state.cityLevel),
+            showStoreItems: state.showStoreItems,
+            currentMessage: Object.assign({}, state.currentMessage),
+            boardState: state.boardState,
+            prevState: state.prevState
+        }
+
+        savedata.tiles.forEach(a => a.linked = a.linked.map(b => b.toString()));
+
+
+
+        localStorage.setItem('lastState', JSON.stringify(savedata));
+    }
+
+
+
+
     let newState: IState = Object.assign({}, state);
-    states.push(newState);
+
+
+    //states.push(newState);
 
     let tile: Tile;
     if (action.payload && action.payload instanceof Tile) {
@@ -86,8 +142,22 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
     console.info('new action ' + action.type);
 
     switch (action.type) {
-        /* case "from_saved":
-            return action.payload; */
+        case Action.RESTORE_GAMESTATE:
+            let lastState: string = localStorage.getItem('lastState');
+
+            /* if (lastState) {
+                let parsedState: IState = JSON.parse(lastState);
+                if (parsedState && parsedState.tiles && parsedState.tiles.length) {
+                    //debugger;
+                    parsedState.nextCard = getNextCard(parsedState);
+                    parsedState.floatTile = getFloatTile(parsedState);
+                    //debugger;
+                    return parsedState;
+                }
+            } */
+
+            return newState;
+
 
         case Action.INIT_GAME:
             //newState = Object.assign({}, initState);
@@ -108,10 +178,10 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
         case Action.SET_NEXT_CARD:
             if (action.payload) {
                 newState.nextCard = getCardByFamily(action.payload.type, action.payload.level);
-                
-            }  
+
+            }
             return newState;
-            
+
         case Action.CLICK_TILE:
             newState.tileClicked = tile;
             clickTileOnBoard(newState);
@@ -121,7 +191,7 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
 
         case Action.COLLECT_RESOURCES:
             newState.tileClicked = tile;
-            let leftover:number = addResources(newState, tile)
+            let leftover: number = addResources(newState, tile)
             if (leftover) {
                 tile.card.collected = leftover;
             } else {
@@ -199,8 +269,11 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             newState.showStoreItems = null;
             return newState;
 
-        /* case UNDO_ACTION:
-            return states[states.length - 2]; */
+        case Action.UNDO:
+            return prevGameState
+        //return Object.assign({},prevGameState);
+
+        //return newState;
         default:
             return newState;
     }
@@ -254,38 +327,39 @@ function buyBuilding(newState: IState, buyItem: IBuyItem): boolean {
     return true;
 }
 
+function nextTurn(newState: IState) {
 
-/* export function getNextCard(newState: IState): Card {
-    let gotLab: Tile = newState.tiles.find(a => a.card && a.card.family.name == CardFamilyTypeEnum.LABORATORY);
-    if (gotLab) {
-        let bombData: ICardData = cardCollection.find(a => a.family.name == CardFamilyTypeEnum.BOMB);
-        bombData.chance = 5;
+
+    newState.currentMessage = null;
+    newState.turn++;
+    moveWalkers(newState.tiles);
+    //let bombs: Tile[] = newState.tiles.filter(a => a != newState.tileClicked && a.card && a.card.family.name == CardFamilyTypeEnum.BOMB);
+    checkBombs(newState);
+
+    newState.tiles.filter(a => a.card && a.card.type == CardTypeEnum.WALKER).forEach(a => a.card.state = CardState.REGULAR)
+    //newState.nextCard = getNextCard();
+
+    let found: Tile = newState.tileClicked.linked.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES)
+    newState.floatTile = found ? found : newState.tiles.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
+
+    let houses: Tile[] = newState.tiles.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.HOUSE)
+    if (houses.length) {
+        newState.population = houses.map(a => a.card.collected).reduce((prev, cur) => prev + cur);
     }
 
-    if (newState.level.index > 1) {
-        let personCardData: ICardData = cardCollection.find(a => a.family.name == CardFamilyTypeEnum.PERSON);
-        personCardData.chance = Math.min(20 + (newState.cityLevel.index * 2), 50);
-    }
+    newState.score += newState.tileClicked.card ? newState.tileClicked.card.value : 0;
 
-    if (newState.level.index > 2) {
-        let animalCardData: ICardData = cardCollection.find(a => a.family.name == CardFamilyTypeEnum.ANIMAL);
-        animalCardData.chance = Math.min(10 + (newState.cityLevel.index * 2), 20);
-    }
+    checkIfLevelCompleted(newState);
+    checkIfGameOver(newState);
+}
 
-    let rand: number = Math.round(Math.random() * 100);
-    let pickFrom: ICardData[] = [];
-    cardCollection.filter(item => item.chance).forEach(a => {
-        pickFrom.push(a);
-        if (a.nextCard && a.nextCard.chance) {
-            pickFrom.push(a.nextCard);
-        }
-    })
 
-    pickFrom = pickFrom.filter(item => item.chance >= rand)
-    let randCard: ICardData = pickFrom[Math.floor(Math.random() * pickFrom.length)];
+function checkIfGameOver(newState: IState) {
+    let emptyInCity: number = newState.tiles.filter(a => a.terrain.type == TerrainEnum.CITY && !a.card).length;
+    let emptyInResources: number = newState.tiles.filter(a => a.terrain.type == TerrainEnum.RESOURCES && !a.card).length;
 
-    return new Card(randCard);
-} */
+    if (!emptyInCity || !emptyInResources) newState.gameOver = true;
+}
 
 
 
