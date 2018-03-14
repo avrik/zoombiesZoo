@@ -20,33 +20,40 @@ export class ToolbarComponent implements OnInit {
   score: number = 0;
   population: number;
 
-  popProgress: number = 0;
-  currentLevel: GameLevel;
+  //popProgress: number = 0;
+ currentLevel: GameLevel;
   currentCityLevel: CityLevel;
 
-  timeout: any;
-  populationTarget: number;
-  popCount: number;
+  //timeout: any;
+  //populationTarget: number;
+  //popCount: number;
 
+  percent: number;
   constructor(public gameEngine: GameEngineService) {
-    
+
     this.gameEngine.store.subscribe(() => {
       let newState: IState = this.gameEngine.store.getState()
-      this.years = Math.round(newState.turn/360)+1;
+      this.years = Math.round(newState.turn / 360) + 1;
       this.days = newState.turn;
       this.score = newState.score;
       this.currentLevel = newState.level;
+      this.currentCityLevel = newState.cityLevel;
       
       if (this.population != newState.population) {
         this.population = newState.population;
-        this.popCount++;
-        let percent: number = Math.min(Math.round(this.popCount / this.populationTarget * 100), 100);
+        //this.popCount++;
+        //let percent: number = Math.min(Math.round(this.popCount / this.populationTarget * 100), 100);
 
-        console.log("PERCENT!!! " + percent)
-        this.move(percent);
+        let prevGoal: number = newState.cityLevel.prevLevel ? newState.cityLevel.prevLevel.goal : 0;
+        let curGoal: number = newState.cityLevel.goal - prevGoal;
+
+        this.percent = Math.max(Math.round((this.population-prevGoal) / curGoal * 100), 0);
+        //debugger
+        console.log("PERCENT!!! " + this.percent)
+        // this.move(percent);
       }
 
-      if (this.currentCityLevel != newState.cityLevel) {
+      /* if (this.currentCityLevel != newState.cityLevel) {
         
         this.popCount = 0;
         this.populationTarget = this.currentCityLevel ? newState.cityLevel.goal - this.currentCityLevel.goal : newState.cityLevel.goal;
@@ -56,7 +63,7 @@ export class ToolbarComponent implements OnInit {
         }, 2500);
 
         this.currentCityLevel = newState.cityLevel;
-      }
+      } */
     })
   }
 
@@ -64,7 +71,7 @@ export class ToolbarComponent implements OnInit {
 
   }
 
-  move(target: number) {
+ /*  move(target: number) {
     clearTimeout(this.timeout);
     let frame = () => {
       if (target == 0 && this.popProgress > 0) {
@@ -83,6 +90,6 @@ export class ToolbarComponent implements OnInit {
     }
 
     frame()
-  }
+  } */
 
 }

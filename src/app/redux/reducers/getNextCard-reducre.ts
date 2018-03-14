@@ -12,7 +12,7 @@ export function getNextCard(newState: IState): Card {
 
     if (newState.level.index > 1) {
         let personCardData: ICardData = cardCollection.find(a => a.family.name == CardFamilyTypeEnum.PERSON);
-        personCardData.chance = Math.min(20 + (newState.cityLevel.index * 2), 50);
+        personCardData.chance = Math.min(25 + (newState.cityLevel.index * 2), 50);
     }
 
     if (newState.level.index > 2) {

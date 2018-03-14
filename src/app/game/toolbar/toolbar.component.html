@@ -46,8 +46,9 @@
 
         <div class="progress-bar">
 
-            <div #myBar class="progress-bar-inside" [style.width]="popProgress+'%'">
-                <b style="color:white;">{{popProgress | number : '1.0-0'}}%</b>
+            <!-- <div #myBar class="progress-bar-inside" [style.width]="popProgress+'%'"> -->
+            <div #myBar class="progress-bar-inside" [style.width]="percent+'%'">
+                <b style="color:white;">{{percent | number : '1.0-0'}}%</b>
                 <!-- <b style="color:white;">{{population | number}}/{{currentCityLevel.goal | number}}</b> -->
             </div>
         </div>

@@ -15,7 +15,7 @@ export class ResourceTableComponent implements OnInit {
   @ViewChild('brickRef') brickRef;
   @ViewChild('lumberRef') lumberRef;
   @ViewChild('coinRef') coinRef;
-  @ViewChild('silverRef') silverRef;
+  //@ViewChild('silverRef') silverRef;
 
   resourceStorage: IResourceStorage;
 
@@ -23,14 +23,14 @@ export class ResourceTableComponent implements OnInit {
 
     this.gameEngine.store.subscribe(() => {
       let newState: IState = this.gameEngine.store.getState();
-
+      
       if (this.resourceStorage != newState.resources) {
 
         if (this.resourceStorage) {
-          if (newState.resources.bricks > this.resourceStorage.bricks) this.brickRef.animate();
-          if (newState.resources.lumber > this.resourceStorage.lumber) this.lumberRef.animate();
-          if (newState.resources.coins > this.resourceStorage.coins) this.coinRef.animate();
-          if (newState.resources.silver > this.resourceStorage.silver) this.silverRef.animate();
+          if (this.brickRef && newState.resources.bricks > this.resourceStorage.bricks) this.brickRef.animate();
+          if (this.lumberRef && newState.resources.lumber > this.resourceStorage.lumber) this.lumberRef.animate();
+          if (this.coinRef && newState.resources.coins > this.resourceStorage.coins) this.coinRef.animate();
+          //if (newState.resources.silver > this.resourceStorage.silver) this.silverRef.animate();
         }
 
         this.resourceStorage = Object.assign({}, newState.resources);
@@ -39,7 +39,12 @@ export class ResourceTableComponent implements OnInit {
   }
 
   ngOnInit() {
+    
+  }
 
+  openSettings() {
+    //this.gameEngine.newGame();
+    this.gameEngine.restart();
   }
 
   openStore() {

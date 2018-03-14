@@ -1,13 +1,21 @@
 <!-- <tile-buy-popup *ngIf="showStore" [items]="items" title="store" (buyItem)="onBuyItem($event)"></tile-buy-popup> -->
 <div *ngIf="resourceStorage" class="container">
+    <div class="settings-btn" (click)="openSettings()">
+        <p>
+           <img src="assets/settings.png" width="20" alt="">
+        </p>
+    </div>
+    
     <app-resource-item #brickRef [amount]="resourceStorage.bricks" [type]="0" icon="brick"></app-resource-item>
     <app-resource-item #lumberRef [amount]="resourceStorage.lumber" [type]="1" icon="lumber"></app-resource-item>
-    
-    <app-resource-item #silverRef [amount]="resourceStorage.silver" [type]="3" icon="coin_silver"></app-resource-item>
+
+    <!-- <app-resource-item #silverRef [amount]="resourceStorage.silver" [type]="3" icon="coin_silver"></app-resource-item> -->
     <app-resource-item #coinRef [amount]="resourceStorage.coins" [type]="2" icon="coin"></app-resource-item>
 
     <div class="store-btn" (click)="openStore()">
-        <p><b>+</b></p>
+        <p>
+            <b>+</b>
+        </p>
     </div>
 
 </div>

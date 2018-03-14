@@ -107,21 +107,26 @@ export class TileComponent implements OnInit {
   isCardFloating: boolean;
   onMe: boolean;
 
+
   constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
+    
+  }
+
+  ngOnInit(): void {
+    this.terrainAnimation = "down";
+
     this.gameEngine.store.subscribe(() => {
       this.currentState = this.gameEngine.store.getState();
       this.currentCard = this.currentState.nextCard;
       this.isCardFloating = (this.currentState.floatTile && this.currentState.floatTile.id == this.tile.id )? true : false;
-
+      
       this.floatState = this.isCardFloating ? 'up' : ""
       this.moveState = this.tile.movment ? this.tile.movment.dir : "";
     }
     )
   }
 
-  ngOnInit(): void {
-    this.terrainAnimation = "down";
-  }
+ 
 
   clickTile() {
     if (!this.tile.terrain) return;

@@ -8,7 +8,6 @@ import { IBuyItem } from '../redux/interfaces';
 
 export class GameEngineService {
   store: Store<any>;
-
   totalRows: number = 11;
   totalCols: number = 5;
   rollOverTile: Tile;
@@ -21,17 +20,32 @@ export class GameEngineService {
     this.store.dispatch({ type: Action.INIT_GAME });
   }
 
-  newGame(restoreState:boolean) {
-    this.store.dispatch({ type: Action.NEW_GAME });
+  restart(restoreState: boolean = false) {
+    this.initGame();
+
     if (restoreState) {
       this.store.dispatch({ type: Action.RESTORE_GAMESTATE });
+
+    } else {
+      localStorage.removeItem('lastState');
+      this.store.dispatch({ type: Action.NEW_GAME });
     }
+    setTimeout(() => { this.store.dispatch({ type: Action.NEW_FLOATTILE }) }, 50);
   }
+
+  /* newGame(restoreState: boolean = false) {
+
+    if (restoreState) {
+      this.store.dispatch({ type: Action.RESTORE_GAMESTATE });
+    } else {
+      this.store.dispatch({ type: Action.NEW_GAME });
+    }
+  } */
+
 
   setNextCard(card: ICardData) {
     this.store.dispatch({ type: Action.SET_NEXT_CARD, payload: { type: card.family.name } });
   }
-
 
   clickTile(tile: Tile) {
     this.store.dispatch({ type: Action.CLICK_TILE, payload: tile })
@@ -49,18 +63,17 @@ export class GameEngineService {
     this.store.dispatch({ type: Action.PLACE_MOVE_BUILDING, payload: tile })
   }
 
-
   openStore(tile: Tile = null) {
     this.store.dispatch({ type: Action.OPEN_STORE, payload: tile })
   }
 
   buyItem(buyItem: IBuyItem) {
     if (buyItem.type == 99) {
-      this.store.dispatch({ type: Action.UNDO, payload: buyItem })
+      this.store.dispatch({ type: Action.UNDO, payload: buyItem });
+      setTimeout(() => { this.store.dispatch({ type: Action.NEW_FLOATTILE }) }, 50);
     } else {
       this.store.dispatch({ type: Action.BUY_ITEM, payload: buyItem })
     }
-
   }
 
   closeStore() {

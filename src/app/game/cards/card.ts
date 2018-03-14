@@ -214,7 +214,7 @@ export class Card implements ICardData {
   collected: number;
   state: number = 0;
   autoPlaced: boolean = false;
-  preTile: Tile;
+ // preTile: Tile;
 
   constructor(data: ICardData) {
     if (!data) return;

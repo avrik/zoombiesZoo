@@ -74,14 +74,15 @@ export class CityLevel {
     index: number = 0;
     goal: number;
     reward: IResourceStorage;
-    name: string
+    name: string;
+    prevLevel:CityLevel;
 
     constructor(prevCityLevel: CityLevel = null) {
 
         /* for (let i = 0; i < 10; i++) {
             console.log(Math.floor(Math.exp((i) + basePop)));
         } */
-
+        this.prevLevel = prevCityLevel;
         if (prevCityLevel) {
             this.index = prevCityLevel.index + 1;
         }

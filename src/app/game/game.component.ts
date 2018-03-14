@@ -43,14 +43,16 @@ export class GameComponent implements OnInit {
     this.debug = !environment.production;
 
     this.restart(true);
+   
   }
 
-  restart(restoreState:boolean=false) {
-    
-    this.gameEngine.initGame();
+  restart(restoreState: boolean = false) {
+
+    /* this.gameEngine.initGame();
     setTimeout(() => {
       this.gameEngine.newGame(restoreState);
-    }, 50);
+    }, 50); */
+    this.gameEngine.restart(restoreState);
   }
 
   onBuyItem(buyItem: IBuyItem) {
@@ -58,5 +60,5 @@ export class GameComponent implements OnInit {
     this.gameEngine.closeStore();
   }
 
-  
+
 }

@@ -12,9 +12,26 @@ export class Tile {
     movment: ITileMove;
     state: number = 0;
     showDelay: string;
+    ypos: number = -1;
+    xpos: number = -1;
 
-    constructor(public ypos: number = -1, public xpos: number = -1) {
+    constructor(data: any = null) {
         this.state = TileState.REGULAR;
+        this.linked = [];
+        if (data) {
+            /* if (data.linked) {
+                this.linked = data.linked.foreach(a => a = new Tile(a));
+            } */
+
+            this.xpos = data.xpos;
+            this.ypos = data.ypos;
+            this.card = data.card;
+            this.terrain = data.terrain;
+            this.terrainTop = data.terrainTop;
+            this.movment = data.movment;
+            this.state = data.state;
+            this.showDelay = data.showDelay;
+        }
     }
 
     get id(): string {
@@ -24,11 +41,10 @@ export class Tile {
     toString() {
 
         let newObj: any = {};
-        newObj.linked = [];
-        newObj.card = this.card;
-        newObj.terrain = this.terrain;
-        newObj.terrainTop = this.terrainTop;
-        newObj.movment = this.movment;
+        newObj.card = this.card?Object.assign({}, this.card):null;
+        newObj.terrain = this.terrain?Object.assign({}, this.terrain):null;
+        newObj.terrainTop = this.terrainTop?Object.assign({}, this.terrainTop):null;
+        newObj.movment = this.movment?Object.assign({}, this.movment):null;
         newObj.state = this.state;
         newObj.showDelay = this.showDelay;
         newObj.ypos = this.ypos;

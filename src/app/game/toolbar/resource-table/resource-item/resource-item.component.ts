@@ -41,15 +41,21 @@ export class ResourceItemComponent implements OnInit {
 
     this.gameEngine.store.subscribe(() => {
       let newState: IState = this.gameEngine.store.getState();
-      let storages: Tile[]
+      let storages: Tile[];
+
       switch (this.type) {
         case 0:
-          storages = newState.tiles.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.STORAGE);
-          this.totalStorage = storages.length ? storages.map(a => a.card.collect).reduce((prev, cur) => prev + cur) : 0;
+          if (newState.tiles) {
+            storages = newState.tiles.filter(a => a.card && a.card.family &&  a.card.family.name == CardFamilyTypeEnum.STORAGE);
+            this.totalStorage = storages.length ? storages.map(a => a.card.collect).reduce((prev, cur) => prev + cur) : 0;
+          }
+
           break;
         case 1:
-          storages = newState.tiles.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.SAWMILL);
-          this.totalStorage = storages.length ? storages.map(a => a.card.collect).reduce((prev, cur) => prev + cur) : 0;
+          if (newState.tiles) {
+            storages = newState.tiles.filter(a => a.card && a.card.family && a.card.family.name == CardFamilyTypeEnum.SAWMILL);
+            this.totalStorage = storages.length ? storages.map(a => a.card.collect).reduce((prev, cur) => prev + cur) : 0;
+          }
           break;
         case 2:
           this.totalStorage = 0

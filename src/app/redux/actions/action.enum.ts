@@ -13,4 +13,5 @@ export enum Action {
     CLOSE_STORE,
     UNDO,
     RESTORE_GAMESTATE,
+    NEW_FLOATTILE
 }

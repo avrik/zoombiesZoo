@@ -8,9 +8,9 @@ import { Tile } from './../game/board/tile/tile';
 import { CardState } from './../enums/card-state.enum';
 import { CardFamilyTypeEnum } from './../enums/card-family-type-enum.enum';
 import { cardCollection, ICardData, Card } from './../game/cards/card';
-import { generateWorld, findMatch, moveWalkers } from 'app/redux/board-reducer';
+import { generateWorld, findMatch, moveWalkers, mapLinkedTiles } from 'app/redux/board-reducer';
 import { addResources, removeFromResourcesSawmill } from 'app/redux/reducers/resources-reducer';
-import { clickTileOnBoard, checkBombs } from './board-reducer';
+import { clickTileOnBoard, checkBombs, setNewWorld } from './board-reducer';
 import { removeFromResourcesStorage } from './reducers/resources-reducer';
 import { UrlConst } from '../consts/url-const';
 import { MessageType } from '../enums/message-type.enum';
@@ -48,7 +48,7 @@ export const mainStoreItems: IBuyItem[] = [
     { store: StoreItemType.MAIN_STORE, label: "lumber", cost: { coin: 3 }, icon: UrlConst.LUMBER2, type: CardFamilyTypeEnum.LUMBER, level: 1, amount: 3, description: "buy lumber" },
     { store: StoreItemType.MAIN_STORE, label: "wild", cost: { coin: 4 }, icon: UrlConst.WILD, type: CardFamilyTypeEnum.WILD, amount: 3, description: "buy wild-card" },
     { store: StoreItemType.MAIN_STORE, label: "bomb", cost: { coin: 4 }, icon: UrlConst.BOMB, type: CardFamilyTypeEnum.BOMB, amount: 3, description: "buy TNT" },
-    { store: StoreItemType.MAIN_STORE, label: "undo", cost: { coin: 0 }, icon: UrlConst.UNDO, type: 99, amount: 9, description: "undo last action" },
+    { store: StoreItemType.MAIN_STORE, label: "undo", cost: { coin: 1 }, icon: UrlConst.UNDO, type: 99, amount: 9, description: "undo last action" },
 ]
 
 const initState: IState = {
@@ -72,69 +72,36 @@ const initState: IState = {
 }
 
 let prevGameState: IState;
-//let states: IState[] = []
 
 export function mainReducerFunc(state: IState = initState, action: IAction): IState {
     // prevGameState = Object.assign({}, state);
+    //localStorage.removeItem("lastState");
     if (action.type == Action.CLICK_TILE) {
-        prevGameState = {
-            gameOver: state.gameOver,
-            tiles: state.tiles.map(a => Object.assign({}, a)),
-            turn: state.turn,
-            score: state.score,
-            population: state.population,
-            resources: Object.assign({}, state.resources),
+        prevGameState = getCurState(state);
+        /* {
+           gameOver: state.gameOver,
+           tiles: state.tiles.map(a => Object.assign({}, a)),
+           turn: state.turn,
+           score: state.score,
+           population: state.population,
+           resources: Object.assign({}, state.resources),
 
-            tileClicked: Object.assign({}, state.tileClicked),
-            floatTile: Object.assign({}, state.floatTile),
-            pendingMoveCard: Object.assign({}, state.pendingMoveCard),
-            nextCard: Object.assign({}, state.nextCard),
-            level: Object.assign({}, state.level),
-            cityLevel: Object.assign({}, state.cityLevel),
-            showStoreItems: state.showStoreItems,
-            currentMessage: Object.assign({}, state.currentMessage),
-            boardState: state.boardState,
-            prevState: state.prevState
-        }
-
-
-
-        let savedata = {
-            gameOver: state.gameOver,
-            tiles: state.tiles.map(a => Object.assign({}, a)),
-            turn: state.turn,
-            score: state.score,
-            population: state.population,
-            resources: Object.assign({}, state.resources),
-
-            tileClicked: state.tileClicked ? state.tileClicked.toString() : null,
-            floatTile: state.floatTile ? state.floatTile.toString() : null,
-            pendingMoveCard: Object.assign({}, state.pendingMoveCard),
-            nextCard: Object.assign({}, state.nextCard),
-            level: Object.assign({}, state.level),
-            cityLevel: Object.assign({}, state.cityLevel),
-            showStoreItems: state.showStoreItems,
-            currentMessage: Object.assign({}, state.currentMessage),
-            boardState: state.boardState,
-            prevState: state.prevState
-        }
-
-        savedata.tiles.forEach(a => a.linked = a.linked.map(b => b.toString()));
-
-
-
-        localStorage.setItem('lastState', JSON.stringify(savedata));
+           tileClicked: Object.assign({}, state.tileClicked),
+           floatTile: Object.assign({}, state.floatTile),
+           pendingMoveCard: Object.assign({}, state.pendingMoveCard),
+           nextCard: Object.assign({}, state.nextCard),
+           level: Object.assign({}, state.level),
+           cityLevel: Object.assign({}, state.cityLevel),
+           showStoreItems: state.showStoreItems,
+           currentMessage: Object.assign({}, state.currentMessage),
+           boardState: state.boardState,
+           prevState: state.prevState
+       } */
     }
 
-
-
-
     let newState: IState = Object.assign({}, state);
-
-
-    //states.push(newState);
-
     let tile: Tile;
+
     if (action.payload && action.payload instanceof Tile) {
         tile = action.payload;
     }
@@ -143,31 +110,44 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
 
     switch (action.type) {
         case Action.RESTORE_GAMESTATE:
+
             let lastState: string = localStorage.getItem('lastState');
 
-            /* if (lastState) {
+            if (lastState) {
                 let parsedState: IState = JSON.parse(lastState);
+
                 if (parsedState && parsedState.tiles && parsedState.tiles.length) {
                     //debugger;
-                    parsedState.nextCard = getNextCard(parsedState);
-                    parsedState.floatTile = getFloatTile(parsedState);
+                    parsedState.tiles = parsedState.tiles.map(a => new Tile(a));
+                    mapLinkedTiles(parsedState.tiles);
+
+                    // parsedState.floatTile = new Tile(parsedState.floatTile);
+                    //parsedState.floatTile = new Tile(parsedState.floatTile);
+                    //parsedState.tileClicked = new Tile(parsedState.tileClicked);
+
                     //debugger;
+
                     return parsedState;
                 }
-            } */
+            }
 
             return newState;
 
 
+        case Action.NEW_FLOATTILE:
+            newState.floatTile = getFloatTile(newState);
+            return newState;
+
         case Action.INIT_GAME:
-            //newState = Object.assign({}, initState);
+            newState = Object.assign({}, initState);
             newState.tiles = generateWorld(11, 5);
 
             return newState;
 
         case Action.NEW_GAME:
+            setNewWorld(newState.tiles);
             newState.nextCard = getNextCard(newState);
-            newState.floatTile = getFloatTile(newState);
+            //newState.floatTile = getFloatTile(newState);
             //newState.floatTile = getFloatTile(newState);
             return newState;
 
@@ -185,8 +165,11 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
         case Action.CLICK_TILE:
             newState.tileClicked = tile;
             clickTileOnBoard(newState);
-            nextTurn(newState);
             newState.nextCard = getNextCard(newState);
+
+            nextTurn(newState);
+            saveState(newState);
+
             return newState;
 
         case Action.COLLECT_RESOURCES:
@@ -270,13 +253,48 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             return newState;
 
         case Action.UNDO:
-            return prevGameState
+            if (prevGameState) {
+                prevGameState.tiles = prevGameState.tiles.map(a => new Tile(a));
+                mapLinkedTiles(prevGameState.tiles);
+                return prevGameState
+            }
+            return newState;
         //return Object.assign({},prevGameState);
 
         //return newState;
         default:
             return newState;
     }
+}
+
+
+function getCurState(state: IState): IState {
+    return {
+        gameOver: state.gameOver,
+        tiles: state.tiles.map(a => a.toString()),
+        turn: state.turn,
+        score: state.score,
+        population: state.population,
+        resources: state.resources ? Object.assign({}, state.resources) : null,
+
+        tileClicked: state.tileClicked ? state.tileClicked.toString() : null,
+        floatTile: state.floatTile ? state.floatTile.toString() : null,
+        pendingMoveCard: state.pendingMoveCard ? Object.assign({}, state.pendingMoveCard) : null,
+        nextCard: state.nextCard ? Object.assign({}, state.nextCard) : null,
+        level: state.level ? Object.assign({}, state.level) : null,
+        cityLevel: state.cityLevel ? Object.assign({}, state.cityLevel) : null,
+        showStoreItems: state.showStoreItems,
+        currentMessage: state.currentMessage ? Object.assign({}, state.currentMessage) : null,
+        boardState: state.boardState,
+        prevState: state.prevState
+    }
+}
+
+
+function saveState(state: IState) {
+    let savedata = getCurState(state);
+    //debugger;
+    localStorage.setItem('lastState', JSON.stringify(savedata));
 }
 
 function getFloatTile(newState: IState): Tile {
@@ -328,8 +346,6 @@ function buyBuilding(newState: IState, buyItem: IBuyItem): boolean {
 }
 
 function nextTurn(newState: IState) {
-
-
     newState.currentMessage = null;
     newState.turn++;
     moveWalkers(newState.tiles);
@@ -339,7 +355,11 @@ function nextTurn(newState: IState) {
     newState.tiles.filter(a => a.card && a.card.type == CardTypeEnum.WALKER).forEach(a => a.card.state = CardState.REGULAR)
     //newState.nextCard = getNextCard();
 
-    let found: Tile = newState.tileClicked.linked.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES)
+    let found: Tile;
+    if (newState.tileClicked && newState.tileClicked.linked) {
+        found = newState.tileClicked.linked.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
+    }
+
     newState.floatTile = found ? found : newState.tiles.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
 
     let houses: Tile[] = newState.tiles.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.HOUSE)

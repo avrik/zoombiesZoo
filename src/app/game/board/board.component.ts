@@ -36,7 +36,6 @@ export class BoardComponent implements OnInit {
     this.gameEngine.store.subscribe(() => {
       let newState: IState = this.gameEngine.store.getState();
       this.state = newState.boardState;
-
       this.tiles = newState.tiles;
     })
   }

@@ -18,10 +18,12 @@
 }
 
 .progress-bar {
+    
     border: 1px solid #160728!important;
     border-radius: 5px;
     margin: 3px 10px;
     background-color: #160728;
+ 
 }
 
 .progress-bar-inside {
@@ -32,6 +34,8 @@
     /* width:10%; */
     text-align: center;
     line-height: 15px;
+    transition: width 1s;
+    width:0;
 }
 
 .big-number {

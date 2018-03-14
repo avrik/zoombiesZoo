@@ -18,12 +18,16 @@ export function generateWorld(totalRows: number, totalCols: number): Tile[] {
 
     for (var i = 0; i < totalCols; i++) {
         for (var j = 0; j < totalRows; j++) {
-            let newTile: Tile = new Tile(i, j);
+            let newTile: Tile = new Tile();
+            newTile.xpos = j;
+            newTile.ypos = i;
             let terrainType: number = j >= Math.floor(totalRows / 2) ? TerrainEnum.RESOURCES : TerrainEnum.CITY;
             newTile.terrain = new Terrain(terrainType);
             tiles.push(newTile);
         }
     }
+
+    mapLinkedTiles(tiles);
 
     let middle: number = Math.floor(totalRows / 2);
     tiles.find(a => a.ypos == 0 && a.xpos == middle).terrain = new Terrain(TerrainEnum.WATER);
@@ -34,16 +38,10 @@ export function generateWorld(totalRows: number, totalCols: number): Tile[] {
 
     tiles.find(a => a.ypos == 0 && a.xpos == totalRows - 1).terrain = new Terrain(TerrainEnum.CARD_HOLDER);
 
-    tiles.forEach(tile => {
-        let tileLeft = tiles.find(a => a.ypos == tile.ypos - 1 && a.xpos == tile.xpos);
-        if (tileLeft) tile.linked.push(tileLeft);
-        let tileRight = tiles.find(a => a.ypos == tile.ypos + 1 && a.xpos == tile.xpos);
-        if (tileRight) tile.linked.push(tileRight);
-        let tileUp = tiles.find(a => a.ypos == tile.ypos && a.xpos == tile.xpos - 1);
-        if (tileUp) tile.linked.push(tileUp);
-        let tileDown = tiles.find(a => a.ypos == tile.ypos && a.xpos == tile.xpos + 1);
-        if (tileDown) tile.linked.push(tileDown);
-    });
+    return tiles;
+}
+
+export function setNewWorld(tiles: Tile[]) {
 
     const options: number[] = [CardFamilyTypeEnum.BRICK, CardFamilyTypeEnum.LUMBER];
 
@@ -59,24 +57,13 @@ export function generateWorld(totalRows: number, totalCols: number): Tile[] {
         tile.card.autoPlaced = true;
     }
 
-    /* let arr: Tile[] = tiles.filter(a => a.terrain.type == TerrainEnum.CITY && a.xpos > 0 && a.xpos < (totalRows / 2 - 2) && a.linked.length > 3);
-    let randTile: Tile = getRandomTile(arr.filter(a => !a.card));
-    randTile.setCard(getNewCard(CardFamilyTypeEnum.STORAGE));
-    randTile.card.autoPlaced = true; */
-
     tiles.find(a => a.ypos == 0 && a.xpos == 0).card = getCardByFamily(CardFamilyTypeEnum.STORAGE);
-
-    //randTile = getRandomTile(arr.filter(a => !a.card));
-    //randTile.setCard(getNewCard(CardFamilyTypeEnum.HOUSE));
-    //randTile.card.autoPlaced = true;
-
-    return tiles;
 }
 
 export function clickTileOnBoard(state: IState): IState {
     let newState: IState = state;
     if (!newState.tileClicked) return newState;
-    
+
     if (newState.tileClicked.terrain && newState.tileClicked.terrain.type == TerrainEnum.CARD_HOLDER) {
         if (newState.tileClicked.card) {
             let temp = Object.assign({}, newState.tileClicked.card);
@@ -101,7 +88,19 @@ export function clickTileOnBoard(state: IState): IState {
 
 
 
-
+export function mapLinkedTiles(tiles: Tile[]) {
+    // debugger;
+    tiles.forEach(tile => {
+        let tileLeft = tiles.find(a => a.ypos == tile.ypos - 1 && a.xpos == tile.xpos);
+        if (tileLeft) tile.linked.push(tileLeft);
+        let tileRight = tiles.find(a => a.ypos == tile.ypos + 1 && a.xpos == tile.xpos);
+        if (tileRight) tile.linked.push(tileRight);
+        let tileUp = tiles.find(a => a.ypos == tile.ypos && a.xpos == tile.xpos - 1);
+        if (tileUp) tile.linked.push(tileUp);
+        let tileDown = tiles.find(a => a.ypos == tile.ypos && a.xpos == tile.xpos + 1);
+        if (tileDown) tile.linked.push(tileDown);
+    });
+}
 
 
 
@@ -150,12 +149,17 @@ export function findMatch(tile: Tile) {
 
             let extra: number = matchedTiles.length - (tile.card.minForNextLevel - 1);
             if (extra) {
-              //const arr = [1, 10, 50, 100, 200, 500, 1000, 2000, 5000];
-              //this.addToStorage(CardFamilyTypeEnum.COIN, (extra / 100) * (arr[(tile.card.level - 1)]));
-              let emptyTile: Tile = tile.linked.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
-                if (emptyTile) {
-                    emptyTile.card = getCardByFamily(CardFamilyTypeEnum.COIN_SILVER);
-                    emptyTile.card.collected = extra;
+                let random: number = Math.floor(Math.random() * 100);
+                console.log(random)
+                if (extra >= random) {
+                    //const arr = [1, 10, 50, 100, 200, 500, 1000, 2000, 5000];
+                    //this.addToStorage(CardFamilyTypeEnum.COIN, (extra / 100) * (arr[(tile.card.level - 1)]));
+                    let emptyTile: Tile = tile.linked.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
+                    if (emptyTile) {
+                        emptyTile.card = getCardByFamily(CardFamilyTypeEnum.COIN_SILVER);
+                        // emptyTile.card.collected = extra;
+                        emptyTile.card.collected = 1;
+                    }
                 }
             }
 
@@ -248,7 +252,7 @@ function getLinkedGroup(firstOne: Tile): Tile[] {
     return group;
 }
 
-export function checkBombs(newState:IState) {
+export function checkBombs(newState: IState) {
     let bombs: Tile[] = newState.tiles.filter(a => a != newState.tileClicked && a.card && a.card.family.name == CardFamilyTypeEnum.BOMB);
     //let bombs: Tile[] = tiles.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.BOMB);
     bombs.forEach(bomb => {
@@ -386,9 +390,10 @@ function movePersonToRandomEmpty(tile: Tile): boolean {
         return true;
     } else {
         let empties: Tile[] = tile.linked.filter(a => !a.card && a.terrain.walkable);
-        let foundRoad: Tile = empties.find(a => a.terrainTop && a.terrainTop.type == TerrainEnum.ROAD && a != tile.card.preTile);
-        if (foundRoad) {
-            empties = [foundRoad];
+        // let foundRoad: Tile = empties.find(a => a.terrainTop && a.terrainTop.type == TerrainEnum.ROAD && a != tile.card.preTile);
+        let foundRoads: Tile[] = empties.filter(a => a.terrainTop && a.terrainTop.type == TerrainEnum.ROAD);
+        if (foundRoads && foundRoads.length) {
+            empties = foundRoads;
         } else {
             switch (tile.terrain.type) {
                 case TerrainEnum.BRIDGE:
@@ -411,7 +416,7 @@ function moveToRandomSpot(tile: Tile, empties: Tile[]): boolean {
 
         moveToTile.card = tile.card;
         moveToTile.card.state = CardState.MOVING;
-        moveToTile.card.preTile = tile;
+        //moveToTile.card.preTile = tile;
         moveToTile.showDelay = "show";
         tile.movment = { dir: getMoveDir(tile, moveToTile), img: tile.card.img };
         clearTile(tile);
