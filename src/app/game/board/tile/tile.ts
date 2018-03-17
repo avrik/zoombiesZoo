@@ -14,7 +14,7 @@ export class Tile {
     showDelay: string;
     ypos: number = -1;
     xpos: number = -1;
-
+    opacity:number=1;
     constructor(data: any = null) {
         this.state = TileState.REGULAR;
         this.linked = [];

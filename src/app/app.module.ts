@@ -57,7 +57,7 @@ import { ItemImgComponent } from './game/item-view/item-img/item-img.component';
   providers: [
     GameEngineService, 
     MessagesService,
-    { provide: LOCALE_ID, useValue: "he" },
+   // { provide: LOCALE_ID, useValue: "he" },
   ],
   bootstrap: [AppComponent]
 })

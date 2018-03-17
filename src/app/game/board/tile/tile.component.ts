@@ -87,7 +87,7 @@ import { IState } from '../../../redux/interfaces';
       transition('* => down', animate('50ms ease-out'))
     ]),
     trigger('terrainAnimation', [
-      state('up', style({ transform: 'translateY(-10%)' })),
+      state('up', style({ transform: 'translateY(-15%)' })),
       state('down', style({ transform: 'translateY(0%)' })),
       transition('* => up', animate('150ms ease-out')),
       transition('up => down', animate('150ms ease-out'))
@@ -130,6 +130,8 @@ export class TileComponent implements OnInit {
 
   clickTile() {
     if (!this.tile.terrain) return;
+
+
 
     switch (this.tile.terrain.type) {
       case TerrainEnum.BLOCKED:
@@ -183,6 +185,7 @@ export class TileComponent implements OnInit {
   }
 
   onMouseOut() {
+    this.tile.linked.forEach(a => a.opacity = 1)
     this.onMe = false;
 
     if (this.tile.terrainTop && this.tile.terrainTop.type == TerrainEnum.CARD_HOLDER_OPEN && !this.tile.card) {
@@ -203,6 +206,7 @@ export class TileComponent implements OnInit {
   }
 
   onMouseOver() {
+    
     this.onMe = true;
 
     if (this.tile.terrain && this.tile.terrain.type == TerrainEnum.CARD_HOLDER) {
@@ -214,6 +218,7 @@ export class TileComponent implements OnInit {
 
       if (!this.tile.card && this.tile.terrain && this.tile.terrain.clickable) {
         this.terrainAnimation = "up";
+        this.tile.linked.filter(a=>!a.card && a.terrain.clickable).forEach(a => a.opacity = 0.6)
       }
 
     }
