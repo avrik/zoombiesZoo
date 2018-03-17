@@ -1,6 +1,8 @@
 <div class="container" [@show]="state" [style.background-color]="currentMessage?.isWow?'rgb(169, 22, 199)':'rgb(199, 22, 22)'">
   <span *ngIf="currentMessage">
-    <h3 style="margin:2px 10px">{{currentMessage.title}}</h3>
-    <small style="white-space: pre-line;">{{currentMessage.message }}</small>
+    <!-- <h3 style="margin:2px 10px" i18n>{{currentMessage.title}}</h3> -->
+    <h3 style="margin:2px 10px" i18n="title">{title, select, gameOver {Game Over} resetGame {Reset Game}}</h3>
+    <small style="white-space: pre-line;" i18n>{{currentMessage.message }}</small>
+
   </span>
 </div>

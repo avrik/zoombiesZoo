@@ -24,7 +24,7 @@
     height: 54px;
     width: 64px;
     position: absolute;
-    z-index: 9;
+    /* z-index: 9; */
 }
 
 .over:hover {

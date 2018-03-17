@@ -10,4 +10,6 @@ export enum TerrainEnum {
     WALL = 6,
     ZOOMBIE_TRAP = 10,
     EXPLOSION = 11,
+    BLOCKED=100
+
 }

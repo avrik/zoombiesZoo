@@ -8,8 +8,8 @@ import { IBuyItem } from '../redux/interfaces';
 
 export class GameEngineService {
   store: Store<any>;
-  totalRows: number = 11;
-  totalCols: number = 5;
+  totalRows: number = 6;
+  totalCols: number = 11;
   rollOverTile: Tile;
 
   constructor() {
@@ -17,7 +17,7 @@ export class GameEngineService {
   }
 
   initGame() {
-    this.store.dispatch({ type: Action.INIT_GAME });
+    this.store.dispatch({ type: Action.INIT_GAME, payload: { rows: this.totalRows, cols: this.totalCols } });
   }
 
   restart(restoreState: boolean = false) {
@@ -67,13 +67,25 @@ export class GameEngineService {
     this.store.dispatch({ type: Action.OPEN_STORE, payload: tile })
   }
 
+  handleBlockedTile(tile: Tile) {
+    this.store.dispatch({ type: Action.OPEN_BLOCKED_TILE_OPTION, payload: tile })
+  }
+
   buyItem(buyItem: IBuyItem) {
-    if (buyItem.type == 99) {
-      this.store.dispatch({ type: Action.UNDO, payload: buyItem });
-      setTimeout(() => { this.store.dispatch({ type: Action.NEW_FLOATTILE }) }, 50);
-    } else {
-      this.store.dispatch({ type: Action.BUY_ITEM, payload: buyItem })
+
+    switch (buyItem.type) {
+      case 101:
+        this.store.dispatch({ type: Action.DEVELOP_TILE, payload: buyItem });
+      case 99:
+        this.store.dispatch({ type: Action.UNDO, payload: buyItem });
+        setTimeout(() => { this.store.dispatch({ type: Action.NEW_FLOATTILE }) }, 50);
+        break;
+
+      default:
+        this.store.dispatch({ type: Action.BUY_ITEM, payload: buyItem })
     }
+
+
   }
 
   closeStore() {

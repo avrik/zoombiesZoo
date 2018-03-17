@@ -21,7 +21,7 @@
     margin-left: auto;
     margin-right: auto;
     margin-top: 100px;
-    max-width: 550px;
+    max-width: 250px;
     background-color: #160727;
     /* border: 3px solid green; */
     /* padding: 5px; */
@@ -32,8 +32,10 @@
     /* display: flex; */
     pointer-events: all;
     display: grid;
-    grid-template-columns: auto auto auto;
-    grid-template-rows: auto auto;
+    /* grid-template-columns: auto auto auto; */
+    /* grid-template-rows: auto auto; */
+    max-height: 180px;
+    overflow: auto;
 }
 
 .header {

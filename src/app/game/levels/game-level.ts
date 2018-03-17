@@ -57,7 +57,7 @@ const gameLevelsData: IGameLevelData[] = [
     { goal: { verb: "populate", img: UrlConst.PERSON1, population: 12, amount: 12 }, reward: { coins: 2 } },
     { goal: { verb: "collect", img: UrlConst.BRICK3, collect: { type: CardFamilyTypeEnum.BRICK, level: 2 }, amount: 1 }, reward: { coins: 1 } },
     { goal: { verb: "build", img: UrlConst.HOUSE2, building: { type: CardFamilyTypeEnum.HOUSE, level: 2 }, amount: 1 }, reward: { coins: 1 } },
-    { goal: { verb: "build", img: UrlConst.LABORATORY, building: { type: CardFamilyTypeEnum.LABORATORY, level: 1 }, amount: 1 }, reward: { coins: 1 } },
+    //{ goal: { verb: "build", img: UrlConst.LABORATORY, building: { type: CardFamilyTypeEnum.LABORATORY, level: 1 }, amount: 1 }, reward: { coins: 1 } },
     { goal: { verb: "build", img: UrlConst.CHURCH1, building: { type: CardFamilyTypeEnum.CHURCH, level: 1 }, amount: 1 }, reward: { coins: 1 } },
     { goal: { verb: "collect", img: UrlConst.BRICK4, collect: { type: CardFamilyTypeEnum.BRICK, level: 3 }, amount: 1 }, reward: { coins: 1 } },
     { goal: { verb: "get", img: "", score: 100000, amount: 100000 }, reward: { coins: 3 } },

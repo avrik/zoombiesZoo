@@ -8,38 +8,49 @@ import { Tile } from './../game/board/tile/tile';
 import { CardState } from './../enums/card-state.enum';
 import { CardFamilyTypeEnum } from './../enums/card-family-type-enum.enum';
 import { cardCollection, ICardData, Card } from './../game/cards/card';
-import { generateWorld, findMatch, moveWalkers, mapLinkedTiles } from 'app/redux/board-reducer';
 import { addResources, removeFromResourcesSawmill } from 'app/redux/reducers/resources-reducer';
-import { clickTileOnBoard, checkBombs, setNewWorld } from './board-reducer';
 import { removeFromResourcesStorage } from './reducers/resources-reducer';
 import { UrlConst } from '../consts/url-const';
 import { MessageType } from '../enums/message-type.enum';
 import { CityLevel } from '../game/levels/game-level';
 import { TileState } from '../enums/tile-state.enum';
-import { clearTile } from './tile-reducer';
 import { IState, IAction, IBuyItem } from './interfaces';
 import { StoreItemType } from 'app/enums/store-item-type.enum';
 import { Action } from './actions/action.enum';
 import { getNextCard } from './reducers/getNextCard-reducre';
 import { getCardByFamily } from './reducers/getCardByFamily-reducer';
 import { checkIfLevelCompleted } from './reducers/levels-reducer';
+import { generateWorld, populateWorldWithResources, mapLinkedTiles } from './reducers/new-world-reducer';
+import { clickTile } from './reducers/tile-click-reducer';
+import { findMatch } from './reducers/find-match-reducer';
+import { checkBombs } from './reducers/check-bombs-reducer';
+import { clearTile } from './reducers/tile-reducer';
+import { moveWalkers } from './reducers/move-walkers-reducer';
 
 export class MainReducer {
 
 }
 
 export const tileStoreItems: IBuyItem[] = [
-    { store: StoreItemType.TILE_STORE, label: 'road', cost: { block: 3, lumber: 0, coin: 0 }, icon: UrlConst.ROAD, type: CardFamilyTypeEnum.ROAD, description: "roads will direct the people in the right path" },
+    { store: StoreItemType.TILE_STORE, label: 'road', cost: { block: 3, lumber: 0, coin: 0 }, icon: UrlConst.ROAD, type: CardFamilyTypeEnum.ROAD, description: "connect people to houses" },
     { store: StoreItemType.TILE_STORE, label: 'storage', cost: { block: 9, lumber: 0, coin: 0 }, icon: UrlConst.STORAGE1, type: CardFamilyTypeEnum.STORAGE, description: "our resources need storage" },
     { store: StoreItemType.TILE_STORE, label: 'swamill', cost: { block: 9, lumber: 0, coin: 0 }, icon: UrlConst.SAWMILL1, type: CardFamilyTypeEnum.SAWMILL, description: "use sawmills to store lumber" },
     { store: StoreItemType.TILE_STORE, label: 'house', cost: { block: 9, lumber: 6, coin: 0 }, icon: UrlConst.HOUSE1, type: CardFamilyTypeEnum.HOUSE, description: "our people need houses" },
-    { store: StoreItemType.TILE_STORE, label: 'laboratory', cost: { block: 12, lumber: 6, coin: 3 }, icon: UrlConst.LABORATORY, type: CardFamilyTypeEnum.LABORATORY, description: "produce TNT!" },
-    { store: StoreItemType.TILE_STORE, label: 'church', cost: { block: 15, lumber: 9, coin: 3 }, icon: UrlConst.CHURCH1, type: CardFamilyTypeEnum.CHURCH, description: "cathedrals are used to trap the undead" },
+    //{ store: StoreItemType.TILE_STORE, label: 'laboratory', cost: { block: 12, lumber: 6, coin: 3 }, icon: UrlConst.LABORATORY, type: CardFamilyTypeEnum.LABORATORY, description: "produce TNT!" },
+    { store: StoreItemType.TILE_STORE, label: 'church', cost: { block: 15, lumber: 9, coin: 3 }, icon: UrlConst.CHURCH1, type: CardFamilyTypeEnum.CHURCH, description: "for trapping the undead!" },
 ]
 
 export const tileBuildingItems: IBuyItem[] = [
     { store: StoreItemType.TILE_CARD_STORE, label: 'road', cost: { block: 3, lumber: 0, coin: 0 }, icon: UrlConst.ROAD, type: CardFamilyTypeEnum.ROAD, description: "add road" },
     { store: StoreItemType.TILE_CARD_STORE, label: 'move', cost: { block: 0, lumber: 0, coin: 3 }, icon: UrlConst.MOVE, type: 10, description: "move me" },
+]
+
+export const tileResourceBlockedItems: IBuyItem[] = [
+    { store: StoreItemType.TILE_STORE, label: 'develop', cost: { block: 0, lumber: 0, coin: 0 }, icon: UrlConst.TERRAIN_RESOURCE, type: 101, description: "discover new territory" }
+]
+
+export const tileCityBlockedItems: IBuyItem[] = [
+    { store: StoreItemType.TILE_STORE, label: 'develop', cost: { block: 0, lumber: 0, coin: 0 }, icon: UrlConst.TERRAIN_CITY, type: 101, description: "discover new territory" }
 ]
 
 export const mainStoreItems: IBuyItem[] = [
@@ -74,29 +85,10 @@ const initState: IState = {
 let prevGameState: IState;
 
 export function mainReducerFunc(state: IState = initState, action: IAction): IState {
-    // prevGameState = Object.assign({}, state);
+
     //localStorage.removeItem("lastState");
     if (action.type == Action.CLICK_TILE) {
         prevGameState = getCurState(state);
-        /* {
-           gameOver: state.gameOver,
-           tiles: state.tiles.map(a => Object.assign({}, a)),
-           turn: state.turn,
-           score: state.score,
-           population: state.population,
-           resources: Object.assign({}, state.resources),
-
-           tileClicked: Object.assign({}, state.tileClicked),
-           floatTile: Object.assign({}, state.floatTile),
-           pendingMoveCard: Object.assign({}, state.pendingMoveCard),
-           nextCard: Object.assign({}, state.nextCard),
-           level: Object.assign({}, state.level),
-           cityLevel: Object.assign({}, state.cityLevel),
-           showStoreItems: state.showStoreItems,
-           currentMessage: Object.assign({}, state.currentMessage),
-           boardState: state.boardState,
-           prevState: state.prevState
-       } */
     }
 
     let newState: IState = Object.assign({}, state);
@@ -110,14 +102,10 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
 
     switch (action.type) {
         case Action.RESTORE_GAMESTATE:
-
             let lastState: string = localStorage.getItem('lastState');
-
             if (lastState) {
                 let parsedState: IState = JSON.parse(lastState);
-
                 if (parsedState && parsedState.tiles && parsedState.tiles.length) {
-                    //debugger;
                     parsedState.tiles = parsedState.tiles.map(a => new Tile(a));
                     mapLinkedTiles(parsedState.tiles);
 
@@ -125,30 +113,24 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
                     //parsedState.floatTile = new Tile(parsedState.floatTile);
                     //parsedState.tileClicked = new Tile(parsedState.tileClicked);
 
-                    //debugger;
-
                     return parsedState;
                 }
             }
 
             return newState;
 
-
-        case Action.NEW_FLOATTILE:
-            newState.floatTile = getFloatTile(newState);
-            return newState;
-
         case Action.INIT_GAME:
             newState = Object.assign({}, initState);
-            newState.tiles = generateWorld(11, 5);
-
+            newState.tiles = generateWorld(action.payload.rows, action.payload.cols);
             return newState;
 
         case Action.NEW_GAME:
-            setNewWorld(newState.tiles);
+            populateWorldWithResources(newState.tiles);
             newState.nextCard = getNextCard(newState);
-            //newState.floatTile = getFloatTile(newState);
-            //newState.floatTile = getFloatTile(newState);
+            return newState;
+
+        case Action.NEW_FLOATTILE:
+            newState.floatTile = getFloatTile(newState);
             return newState;
 
         case Action.CLICK_STASH_TILE:
@@ -158,13 +140,12 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
         case Action.SET_NEXT_CARD:
             if (action.payload) {
                 newState.nextCard = getCardByFamily(action.payload.type, action.payload.level);
-
             }
             return newState;
 
         case Action.CLICK_TILE:
             newState.tileClicked = tile;
-            clickTileOnBoard(newState);
+            clickTile(newState);
             newState.nextCard = getNextCard(newState);
 
             nextTurn(newState);
@@ -189,6 +170,12 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             tile.card = newState.pendingMoveCard;
             newState.pendingMoveCard = null;
             newState.tiles.forEach(a => a.state = TileState.REGULAR);
+            return newState;
+
+        case Action.OPEN_BLOCKED_TILE_OPTION:
+            newState.tileClicked = action.payload;
+            let isResourceTile = newState.tileClicked.linked.find(a => a.terrain.type == TerrainEnum.RESOURCES)?true:false;
+            newState.showStoreItems = isResourceTile ? tileResourceBlockedItems : tileCityBlockedItems;
             return newState;
 
         case Action.OPEN_STORE:
@@ -248,6 +235,14 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             }
 
             return newState;
+
+        
+        case Action.DEVELOP_TILE:
+
+            //ugly -FIXXX
+            if (newState.tileClicked) newState.tileClicked.terrain = new Terrain(newState.tileClicked.linked.find(a=>a.terrain.type!=TerrainEnum.BLOCKED).terrain.type);
+            return newState;
+
         case Action.CLOSE_STORE:
             newState.showStoreItems = null;
             return newState;
@@ -259,14 +254,11 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
                 return prevGameState
             }
             return newState;
-        //return Object.assign({},prevGameState);
 
-        //return newState;
         default:
             return newState;
     }
 }
-
 
 function getCurState(state: IState): IState {
     return {
@@ -290,7 +282,6 @@ function getCurState(state: IState): IState {
     }
 }
 
-
 function saveState(state: IState) {
     let savedata = getCurState(state);
     //debugger;
@@ -298,7 +289,13 @@ function saveState(state: IState) {
 }
 
 function getFloatTile(newState: IState): Tile {
-    return newState.tiles.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
+    let found: Tile;
+    if (newState.tileClicked && newState.tileClicked.linked) {
+        found = newState.tileClicked.linked.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
+    }
+
+    return found ? found : newState.tiles.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
+    //return newState.tiles.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
 }
 
 function stashCard(newState: IState, tile: Tile) {
@@ -349,18 +346,18 @@ function nextTurn(newState: IState) {
     newState.currentMessage = null;
     newState.turn++;
     moveWalkers(newState.tiles);
-    //let bombs: Tile[] = newState.tiles.filter(a => a != newState.tileClicked && a.card && a.card.family.name == CardFamilyTypeEnum.BOMB);
     checkBombs(newState);
 
     newState.tiles.filter(a => a.card && a.card.type == CardTypeEnum.WALKER).forEach(a => a.card.state = CardState.REGULAR)
     //newState.nextCard = getNextCard();
 
-    let found: Tile;
+    /* let found: Tile;
     if (newState.tileClicked && newState.tileClicked.linked) {
         found = newState.tileClicked.linked.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
     }
 
-    newState.floatTile = found ? found : newState.tiles.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
+    newState.floatTile = found ? found : newState.tiles.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES); */
+    newState.floatTile = getFloatTile(newState);
 
     let houses: Tile[] = newState.tiles.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.HOUSE)
     if (houses.length) {

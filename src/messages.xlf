@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="year" datatype="html">
+        <source>year</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/game/toolbar/toolbar.component.ts</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="day" datatype="html">
+        <source>day</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/game/toolbar/toolbar.component.ts</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="level" datatype="html">
+        <source>level</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/game/toolbar/toolbar.component.ts</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="goaltest" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{currentLevel?.goal.verb}}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/game/toolbar/toolbar.component.ts</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="score" datatype="html">
+        <source>score </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/game/toolbar/toolbar.component.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="citzens" datatype="html">
+        <source>citzens in</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/game/toolbar/toolbar.component.ts</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="05aafd4b82a9d3496cf109e8f6c3944c66169f5a" datatype="html">
+        <source><x id="ICU" equiv-text="{levelName, select, the wilderness {...} camp {...} tribe {...}}"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/game/toolbar/toolbar.component.ts</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+        <note priority="1" from="description">levelName</note>
+      </trans-unit>
+      <trans-unit id="ec446fb7354ef06aacc9dfb17c4246ff69c9667c" datatype="html">
+        <source>{VAR_SELECT, select, the wilderness {the wilderness} camp {camp} tribe {tribe} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/game/toolbar/toolbar.component.ts</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="place" datatype="html">
+        <source>place</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/game/toolbar/title-screen/title-screen.component.ts</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8c4976a0b579c491227bcd7ad96733293b42b3cf" datatype="html">
+        <source>{VAR_SELECT, select, gameOver {Game Over} resetGame {Reset Game} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/game/toolbar/message-window/message-window.component.ts</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <note priority="1" from="description">title</note>
+      </trans-unit>
+      <trans-unit id="ffb2e90795b56c5a8dd90f122b00573b94955ad6" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{currentMessage.message }}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/game/toolbar/message-window/message-window.component.ts</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

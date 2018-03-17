@@ -51,12 +51,12 @@ export function checkIfLevelCompleted(state: IState): IState {
     }
 
     if (newState.level.goal.collect) {
-   
+
         let foundGoal: any = (
             (
                 newState.cardCollected && newState.cardCollected.family &&
                 newState.cardCollected.family.name == newState.level.goal.collect.type &&
-                newState.cardCollected.level >= newState.level.goal.collect.level 
+                newState.cardCollected.level >= newState.level.goal.collect.level
             )
         );
         if (foundGoal) {
@@ -67,11 +67,22 @@ export function checkIfLevelCompleted(state: IState): IState {
     if (newGameLevel) {
 
         newState.currentMessage = {
-            type: MessageType.CURTAIN, title: "Well done! ", message: `achievement ${newGameLevel.index} completed!\n${newGameLevel.reward.coins} coin rewarded`
+            type: MessageType.CURTAIN, title: "Well done! ", message: `achievement ${newGameLevel.index} completed!\n${newGameLevel.reward.coins} silver coin rewarded`
             , butns: [{ label: 'next level' }]
         };
         newState.level = newGameLevel;
+
+        if (newGameLevel.reward) {
+            if (newGameLevel.reward.coins) {
+                let coinCard: Card = getCardByFamily(CardFamilyTypeEnum.COIN_SILVER);
+                coinCard.collected = newGameLevel.reward.coins;
+                newState.tiles.find(a => a.terrain.type == TerrainEnum.RESOURCES && !a.card).card = coinCard
+            }
+        }
     }
+
+
+
 
 
     return newState;

@@ -3,10 +3,13 @@
 <div class="container">
 
     <div class="text-box" style="display:flex;justify-content:space-around">
-        <span>year :
+
+        <span>
+            <ng-container i18n="@@year">year</ng-container> :
             <b class="big-number">{{years| number}}</b>
         </span>
-        <span>day :
+        <span>
+            <ng-container i18n="@@day">day</ng-container> :
             <b class="big-number">{{days| number}}</b>
         </span>
     </div>
@@ -17,13 +20,13 @@
     <div class="text-box">
         <div style="display:flex;justify-content:space-around">
             <span>
-                level :
+                <ng-container i18n="@@level">level</ng-container> :
                 <b class="big-number">{{currentLevel?.index+1}}</b>
             </span>
             <h2 style="margin:0px">➡</h2>
             <span>
                 <!-- goal :  -->
-                {{currentLevel?.goal.verb}}
+               <span i18n="@@goaltest">{{currentLevel?.goal.verb}}</span> 
                 <b class="big-number">{{currentLevel?.goal.amount | number}}</b>
                 <img [src]="currentLevel?.goal.img" alt="" height="30" style="float: right;margin: -7px 0 0 5px;">
             </span>
@@ -31,7 +34,7 @@
     </div>
 
 
-    <div class="text-box">score :
+    <div class="text-box"><ng-container i18n="@@score">score </ng-container> :
         <b class="big-number" style="line-height:40px">{{score| number}}</b>
     </div>
 
@@ -41,7 +44,9 @@
 
         <span style="text-align:left">
             <!-- citzens : -->
-            <b class="big-number">{{population | number}}</b> citzens in {{currentCityLevel?.name}}
+            <b class="big-number">{{population | number}}</b> 
+            <ng-container i18n="@@citzens">citzens in</ng-container> 
+            <ng-container i18n="levelName">{levelName, select, the wilderness {the wilderness} camp {camp} tribe {tribe}} </ng-container> 
         </span>
 
         <div class="progress-bar">

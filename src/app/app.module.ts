@@ -1,7 +1,7 @@
 
 
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { GameComponent } from './game/game.component';
@@ -54,7 +54,11 @@ import { ItemImgComponent } from './game/item-view/item-img/item-img.component';
     BrowserAnimationsModule,
     FormsModule,
   ],
-  providers: [GameEngineService, MessagesService],
+  providers: [
+    GameEngineService, 
+    MessagesService,
+    { provide: LOCALE_ID, useValue: "he" },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

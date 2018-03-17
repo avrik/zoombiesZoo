@@ -25,7 +25,7 @@ import { IState } from 'app/redux/interfaces';
 export class TitleScreenComponent implements OnInit {
   animationState: string;
   currentCard: Card;
-  title: string = "Zoombie Zoo";
+  //title: string = "Zoombie Zoo";
   message: IMessage;
 
   constructor(public gameEngine: GameEngineService, private messageService: MessagesService) {

@@ -26,10 +26,12 @@ import { IState } from 'app/redux/interfaces';
 export class MessageWindowComponent implements OnInit {
   state: string = '';
   currentMessage: IMessage;
-
+  title 
   constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
+
     this.messagesService.currentMessage$.subscribe(currentMessage => {
       if (currentMessage && currentMessage.type == MessageType.CURTAIN) {
+        this.title = currentMessage.title;
         this.currentMessage = currentMessage;
         this.showCurtain();
       }

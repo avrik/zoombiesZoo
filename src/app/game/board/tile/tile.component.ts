@@ -97,7 +97,7 @@ import { IState } from '../../../redux/interfaces';
 
 export class TileComponent implements OnInit {
   @Input() tile: Tile;
-  terrainAnimation:string;
+  terrainAnimation: string;
 
   currentState: IState;
   floatState: string = "";
@@ -109,7 +109,7 @@ export class TileComponent implements OnInit {
 
 
   constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
-    
+
   }
 
   ngOnInit(): void {
@@ -118,43 +118,68 @@ export class TileComponent implements OnInit {
     this.gameEngine.store.subscribe(() => {
       this.currentState = this.gameEngine.store.getState();
       this.currentCard = this.currentState.nextCard;
-      this.isCardFloating = (this.currentState.floatTile && this.currentState.floatTile.id == this.tile.id )? true : false;
-      
+      this.isCardFloating = (this.currentState.floatTile && this.currentState.floatTile.id == this.tile.id) ? true : false;
+
       this.floatState = this.isCardFloating ? 'up' : ""
       this.moveState = this.tile.movment ? this.tile.movment.dir : "";
     }
     )
   }
 
- 
+
 
   clickTile() {
     if (!this.tile.terrain) return;
+
+    switch (this.tile.terrain.type) {
+      case TerrainEnum.BLOCKED:
+        this.gameEngine.handleBlockedTile(this.tile);
+        break;
+
+      case TerrainEnum.CARD_HOLDER:
+        this.gameEngine.clickStashTile(this.tile);
+        break;
+
+      case TerrainEnum.CITY:
+        if (this.tile.state == TileState.WAIT_FOR_MOVE) {
+          this.gameEngine.placeMovingBuilding(this.tile);
+        } else {
+          this.gameEngine.openStore(this.tile);
+        }
+        break;
+
+      case TerrainEnum.RESOURCES:
+        if (this.tile.card && this.tile.card.collect && this.tile.card.type == CardTypeEnum.RESOURCE) {
+          this.gameEngine.collectResources(this.tile);
+        } else {
+          this.gameEngine.clickTile(this.tile);
+        }
+        break;
+    }
+
+    /* if (this.tile.terrain.type == TerrainEnum.BLOCKED) {
+      this.gameEngine.handleBlockedTile(this.tile);
+    }
+
     if (this.tile.terrain.type == TerrainEnum.CITY) {
       if (this.tile.state == TileState.WAIT_FOR_MOVE) {
-        //this.gameEngine.store.dispatch({ type: PLACE_MOVE_BUILDING_ACTION, payload: this.tile })
         this.gameEngine.placeMovingBuilding(this.tile);
       } else {
-        //this.gameEngine.store.dispatch({ type: OPEN_STORE, payload: { tile: this.tile } })
         this.gameEngine.openStore(this.tile);
       }
     } else {
       if (this.tile.terrain.type == TerrainEnum.CARD_HOLDER) {
-        //this.gameEngine.store.dispatch({ type: PLACE_CARD_ON_STASH_ACTION, payload: this.tile })
         this.gameEngine.clickStashTile(this.tile);
       } else
         if (this.tile.card) {
           if (this.tile.card.collect && this.tile.card.type == CardTypeEnum.RESOURCE) {
-
-            //this.gameEngine.store.dispatch({ type: COLLECT_RESOURCES_ACTION, payload: this.tile })
             this.gameEngine.collectResources(this.tile);
           }
         } else
           if (this.tile.terrain.type == TerrainEnum.RESOURCES) {
-            //this.gameEngine.store.dispatch({ type: CLICK_TILE, payload: this.tile })
             this.gameEngine.clickTile(this.tile);
           }
-    }
+    } */
   }
 
   onMouseOut() {
@@ -173,7 +198,7 @@ export class TileComponent implements OnInit {
     }
 
     //if (this.terrainAnimation == "up") {
-      this.terrainAnimation = "down";
+    this.terrainAnimation = "down";
     //}
   }
 
@@ -190,7 +215,7 @@ export class TileComponent implements OnInit {
       if (!this.tile.card && this.tile.terrain && this.tile.terrain.clickable) {
         this.terrainAnimation = "up";
       }
-      
+
     }
 
     /* if (this.isCardFloating) {
@@ -213,7 +238,7 @@ export class TileComponent implements OnInit {
     return this.tile.card ? true : false;
   }
 
-  get getIndex():number {
+  get getIndex(): number {
     return this.tile.ypos;
   }
 

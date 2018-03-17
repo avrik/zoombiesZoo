@@ -1,28 +1,20 @@
 <div class="container" [style.opacity]="enabled?1:0.5" [style.pointer-events]="enabled?'pointer':'none'" (click)="onBuy()">
-
-    <div style="text-align:center;display:flex">
+    <div style="text-align:center;display:flex;justify-content:space-between">
         <!-- {{title}} -->
-        <span *ngIf="buyItem.amount" class="multi-amount">x{{buyItem.amount}}</span>
-        <div [style.opacity]="enabled?1:0.5">
-
+        
+        <div [style.opacity]="enabled?1:0.8">
             <img [style.padding-left.px]="buyItem.amount?25:0" [src]="icon" alt="" height="40">
 
             <br>
 
             <button [disabled]="!enabled" >{{buyItem.label?buyItem.label:'buy'}}</button>
-
+            <span *ngIf="buyItem.amount" class="multi-amount">x{{buyItem.amount}}</span>
         </div>
 
-        <span *ngIf="resourceNeeded" style="margin-left:10px;display:flex;padding:2px">
+        <div *ngIf="resourceNeeded" style="display:flex;padding:2px;">
           <app-resource-item *ngIf="buyItem.cost.block" [amount]="buyItem.cost.block" icon="brick"></app-resource-item>
           <app-resource-item *ngIf="buyItem.cost.lumber" [amount]="buyItem.cost.lumber" icon="lumber"></app-resource-item>
           <app-resource-item *ngIf="buyItem.cost.coin" [amount]="buyItem.cost.coin" icon="coin"></app-resource-item>
-       </span>
-
-
+       </div>
     </div>
-
 </div>
-
-
-<!-- <button type="button" (click)="onClick()">buy</button> -->

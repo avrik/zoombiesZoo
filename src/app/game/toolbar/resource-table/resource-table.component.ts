@@ -4,6 +4,9 @@ import { UrlConst } from '../../../consts/url-const';
 import { GameEngineService } from 'app/services/game-engine.service';
 import { CardFamilyTypeEnum } from 'app/enums/card-family-type-enum.enum';
 import { IResourceStorage, IState } from 'app/redux/interfaces';
+import { MessagesService } from 'app/services/messages.service';
+import { MessageType } from '../../../enums/message-type.enum';
+import { Messages } from '../../../enums/messages.enum';
 
 @Component({
   selector: 'app-resource-table',
@@ -19,11 +22,11 @@ export class ResourceTableComponent implements OnInit {
 
   resourceStorage: IResourceStorage;
 
-  constructor(public gameEngine: GameEngineService) {
+  constructor(public gameEngine: GameEngineService, private messagesService: MessagesService) {
 
     this.gameEngine.store.subscribe(() => {
       let newState: IState = this.gameEngine.store.getState();
-      
+
       if (this.resourceStorage != newState.resources) {
 
         if (this.resourceStorage) {
@@ -39,12 +42,20 @@ export class ResourceTableComponent implements OnInit {
   }
 
   ngOnInit() {
-    
+
   }
 
   openSettings() {
     //this.gameEngine.newGame();
-    this.gameEngine.restart();
+    this.messagesService.postMessage(
+      {
+        type: MessageType.POPUP, title: Messages.GAME_RESET_TITLE,
+        message: Messages.GAME_RESET_MESSAGE, butns: [
+          { label: Messages.GAME_RESET_BUTN1, action: a => { this.gameEngine.restart() } },
+          { label: Messages.GAME_RESET_BUTN2, action: a => { } }
+        ]
+      })
+
   }
 
   openStore() {

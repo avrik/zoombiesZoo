@@ -9,7 +9,7 @@ export function addResources(state: IState, tile: Tile): number {
     switch (tile.card.family.name) {
         case CardFamilyTypeEnum.COIN_SILVER:
             state.resources.silver += amount;
-
+            state.resources.coins += amount/100;
             return 0;
         case CardFamilyTypeEnum.COIN:
             state.resources.coins += amount;
