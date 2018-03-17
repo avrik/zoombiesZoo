@@ -47,13 +47,28 @@ export class BoardComponent implements OnInit {
   getCols() {
     let str: string = ''
     for (var i = 0; i < this.gameEngine.totalCols; i++) {
-      str += '63px '
+      str += "69px ";
+    }
+    return str;
+  }
+
+  getRows() {
+    let str: string = ''
+    for (var i = 0; i < this.gameEngine.totalRows; i++) {
+      str += "50px ";
     }
     return str;
   }
 
   onAnimationDone() {
-    
+
   }
 
+  getIndex(tile: Tile) {
+    return tile.xpos % 2 == 1 ? 10 + (tile.ypos * 10) : 20 + (tile.ypos * 10);
+  }
+
+  getMargin(tile: Tile) {
+    return tile.xpos % 2 == 0 ? "0" : "-35% 0 0 0";
+  }
 }

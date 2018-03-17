@@ -1,12 +1,19 @@
 export const UrlConst = {
+    TERRAIN_BLOCKED:"assets/terrain/hex_grass.png",
+    TERRAIN_RESOURCE:"assets/terrain/hex_grass.png",
+    TERRAIN_CITY:"assets/terrain/hex_grass.png",
+    TERRAIN_WATER:"assets/terrain/hex_grass.png",
+    TERRAIN_BRIDGE:"assets/terrain/hex_grass.png",
+    TERRAIN_CARD_HOLDER:"assets/terrain/hex_grass.png",
+    TERRAIN_CARD_HOLDER_OPEN:"assets/terrain/hex_grass.png",
 
-    TERRAIN_BLOCKED:"assets/terrain/Plain Block.png",
+    /* TERRAIN_BLOCKED:"assets/terrain/Plain Block.png",
     TERRAIN_RESOURCE:"assets/terrain/Grass Block.png",
     TERRAIN_CITY:"assets/terrain/Dirt Block.png",
     TERRAIN_WATER:"assets/terrain/Water Block.png",
     TERRAIN_BRIDGE:"assets/terrain/Wood Block.png",
     TERRAIN_CARD_HOLDER:"assets/resources/Chest Closed.png",
-    TERRAIN_CARD_HOLDER_OPEN:"assets/resources/Chest Open.png",
+    TERRAIN_CARD_HOLDER_OPEN:"assets/resources/Chest Open.png", */
     TERRAIN_ROAD:"assets/terrain/Stone Block.png",
     TERRAIN_EXPLOSION:"assets/resources/explosion.png",
 

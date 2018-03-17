@@ -72,5 +72,18 @@ export function mapLinkedTiles(tiles: Tile[]) {
         if (tileUp) tile.linked.push(tileUp);
         let tileDown = tiles.find(a => a.ypos == tile.ypos && a.xpos == tile.xpos + 1);
         if (tileDown) tile.linked.push(tileDown);
+
+
+        let tileUpLeft = tiles.find(a => a.ypos == tile.ypos - 1 && a.xpos == tile.xpos - 1);
+        if (tileUpLeft) tile.linked.push(tileUpLeft);
+
+        let tileUpRight = tiles.find(a => a.ypos == tile.ypos + 1 && a.xpos == tile.xpos + 1);
+        if (tileUpRight) tile.linked.push(tileUpRight);
+
+        /* let tileDownLeft = tiles.find(a => a.ypos == tile.ypos + 1 && a.xpos == tile.xpos - 1);
+        if (tileDownLeft) tile.linked.push(tileDownLeft);
+
+        let tileDownRight = tiles.find(a => a.ypos == tile.ypos + 1 && a.xpos == tile.xpos + 1);
+        if (tileDownRight) tile.linked.push(tileDownRight); */
     });
 }

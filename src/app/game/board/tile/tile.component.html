@@ -2,7 +2,7 @@
 
     <div style="position:absolute;padding-left:8px" >
 
-        <div *ngIf="tile.movment" [@moveAnimation]="moveState" (@moveAnimation.done)=onMoveDone($event)>
+        <div *ngIf="tile.movment" [@moveAnimation]="moveState" (@moveAnimation.done)="onMoveDone($event)">
             <img [src]="tile.movment.img" alt="" height="50">
         </div>
 
@@ -34,11 +34,11 @@
 
     <!-- /TERRAIN -->
 
-    <div  [style.transform]="tile.terrain.type==2?'translateY(15%)':'none'" class="tile" *ngIf="tile" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()" (mouseup)="onMouseOut()" (mousedown)="onMouseOver()">
+    <div  class="tile" *ngIf="tile" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()" (mouseup)="onMouseOut()" (mousedown)="onMouseOver()">
         <div class="over" *ngIf="tile.terrain?.clickable && gotCard==false"></div>
 
-        <div *ngIf="tile.terrain" class="terrain"  [style.margin-top.px]="tile.terrain.type==4?-45:-32">
-            <img [src]="tile.terrainTop?tile.terrainTop.url:tile.terrain.url" alt="" width="64">
+        <div *ngIf="tile.terrain" class="terrain"  >
+            <img [src]="tile.terrainTop?tile.terrainTop.url:tile.terrain.url" alt="" width="90" >
         </div>
     </div>
 </div>
