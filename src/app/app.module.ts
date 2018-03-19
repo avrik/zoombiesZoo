@@ -26,6 +26,7 @@ import { TitleScreenComponent } from './game/toolbar/title-screen/title-screen.c
 import { MessageWindowComponent } from './game/toolbar/message-window/message-window.component';
 import { LumberComponent } from './game/item-view/lumber/lumber.component';
 import { ItemImgComponent } from './game/item-view/item-img/item-img.component';
+import { TileFrameComponent } from './game/board/tile/tile-frame/tile-frame.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { ItemImgComponent } from './game/item-view/item-img/item-img.component';
     MessageWindowComponent,
     LumberComponent,
     ItemImgComponent,
+    TileFrameComponent,
 
   ],
   imports: [

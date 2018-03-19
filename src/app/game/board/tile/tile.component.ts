@@ -200,13 +200,13 @@ export class TileComponent implements OnInit {
       }
     }
 
-    //if (this.terrainAnimation == "up") {
-    this.terrainAnimation = "down";
-    //}
+    if (this.terrainAnimation != "down") {
+      this.terrainAnimation = "down";
+    }
   }
 
   onMouseOver() {
-    
+
     this.onMe = true;
 
     if (this.tile.terrain && this.tile.terrain.type == TerrainEnum.CARD_HOLDER) {
@@ -217,8 +217,11 @@ export class TileComponent implements OnInit {
       this.gameEngine.rollOverTile = this.tile;
 
       if (!this.tile.card && this.tile.terrain && this.tile.terrain.clickable) {
-        this.terrainAnimation = "up";
-        this.tile.linked.filter(a=>!a.card && a.terrain.clickable).forEach(a => a.opacity = 0.6)
+        if (this.terrainAnimation != "up") {
+          this.terrainAnimation = "up";
+        }
+
+        this.tile.linked.filter(a => !a.card && a.terrain.clickable).forEach(a => a.opacity = 0.6)
       }
 
     }
