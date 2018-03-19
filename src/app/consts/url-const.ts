@@ -3,7 +3,7 @@ export const UrlConst = {
     TERRAIN_RESOURCE:"assets/terrain/hex_grass.png",
     TERRAIN_CITY:"assets/terrain/hex_plain.png",
     TERRAIN_WATER:"assets/terrain/hex_water.png",
-    TERRAIN_BRIDGE:"assets/terrain/hex_grass.png",
+    TERRAIN_BRIDGE:"assets/terrain/hex_bridge.png",
     TERRAIN_CARD_HOLDER:"assets/terrain/hex_grass.png",
     TERRAIN_CARD_HOLDER_OPEN:"assets/terrain/hex_grass.png",
 
