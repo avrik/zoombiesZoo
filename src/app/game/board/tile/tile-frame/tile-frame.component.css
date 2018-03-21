@@ -11,49 +11,18 @@
     margin-top: -12px;
     border: 2px solid gold;
     padding: 0 2px 0 2px;
+    position: absolute;
 }
 
 .count-frame {
-    display: flex;
+
+    /* display: flex; */
     position: absolute;
-    border: 2px solid gold;
+    /* border: 2px solid gold;
     width: 58px;
-    height: 48px;
-    border-radius: 5px;
-    justify-content: center;
-    margin-left: -6px;
-    cursor: pointer;
+    height: 48px; */
+    /* border-radius: 5px; */
+    /* justify-content: center; */
+    /* margin: 18px 0 0 -20px; */
+    /* cursor: pointer; */
 }
-
-
-/* .hexagon {
-    position: absolute;
-    width: 60px; 
-    height: 34.64px;
-    margin: 17.32px 0;
-    border-left: solid 2px gold;
-    border-right: solid 2px gold;
-  }
-  
-  .hexagon:before,
-  .hexagon:after {
-    content: "";
-    position: absolute;
-    z-index: 1;
-    width: 42.43px;
-    height: 42.43px;
-    transform: scaleY(0.5774) rotate(-45deg);
-    left: 7.7868px;
-  }
-  
-  .hexagon:before {
-    top: -21.2132px;
-    border-top: solid 2px gold;
-    border-right: solid 2px gold;
-  }
-  
-  .hexagon:after {
-    bottom: -21.2132px;
-    border-bottom: solid 2px gold;
-    border-left: solid 2px gold;
-  } */

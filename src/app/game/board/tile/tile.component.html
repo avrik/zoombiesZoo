@@ -1,29 +1,28 @@
 <div *ngIf="tile.terrain" [@terrainAnimation]="terrainAnimation" (click)="clickTile()" [style.opacity]="tile.state===-1?0.2:1" [style.pointer-events]="tile.state===-1?'none':'auto'">
 
-    <div style="position:absolute;padding-left:18px;margin-top:-15px">
+    <div *ngIf="!tile.terrain.locked" style="position:absolute">
 
         <div *ngIf="tile.movment" [@moveAnimation]="moveState" (@moveAnimation.done)="onMoveDone($event)">
             <img [src]="tile.movment.img" alt="" height="50">
         </div>
 
-
-        <div *ngIf="onMe &&  !isCardFloating && (tile.terrain.type==0 || tile.terrain.type==4) && !tile.card" style="opacity:0.3;">
+        <div *ngIf="onMe && (tile.terrain.type==0 || tile.terrain.type==4) && !tile.card" style="opacity:0.4;margin-top:-10px">
             <app-tile-card [card]="currentCard"></app-tile-card>
         </div>
 
-        <div class="card-float" [@floatOver]="floatState" (@floatOver.done)="onFloatDone($event)" *ngIf="isCardFloating">
+        <!-- <div class="card-float" [@floatOver]="floatState" (@floatOver.done)="onFloatDone($event)" *ngIf="isCardFloating">
             <app-tile-card [card]="currentCard"></app-tile-card>
-        </div>
+        </div> -->
 
         <span #resourceRef style="position:absolute">
             <item-img *ngIf="collectedIcon" [type]="collectedIcon" size="35"></item-img>
         </span>
 
-        <!-- <div #cardRef [@moveAnimation]="moveState" (@moveAnimation.done)=onMoveDone($event) [@scaleAnimation]="scaleState" (@scaleAnimation.done)="onScaleDone($event)"> -->
-        <div #cardRef [@visibilityChanged]="tile.showDelay">
-            <app-tile-card *ngIf="gotCard==true" [card]="tile.card" [onTerrain]="tile.terrain.type"></app-tile-card>
+        <!-- <div #cardRef *ngIf="gotCard==true" [@visibilityChanged]="tile.showDelay"> -->
+        <div #cardRef *ngIf="gotCard==true" >
+            <app-tile-card  [card]="tile.card" [onTerrain]="tile.terrain.type"></app-tile-card>
         </div>
-
+        
 
         <div *ngIf="showThinkBubble" style="position:absolute;margin-top:-30px;margin-left:30px">
             <img src="assets/people/SpeechBubble.png" alt="" height="64">
@@ -34,11 +33,11 @@
 
     <!-- /TERRAIN -->
 
-    <div [style.opacity]="tile.opacity" class="tile" *ngIf="tile" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()" (mouseup)="onMouseOut()" (mousedown)="onMouseOver()">
+    <div [style.opacity]="tile.opacity" [style.margin]="gettilemargin()" class="tile" *ngIf="tile" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()" (mouseup)="onMouseOut()" (mousedown)="onMouseOver()">
         <div class="over" *ngIf="tile.terrain?.clickable && gotCard==false"></div>
 
         <div *ngIf="tile.terrain" class="terrain">
-            <img [src]="tile.terrainTop?tile.terrainTop.url:tile.terrain.url" alt="" width="90">
+            <img [style.opacity]="tile.terrain.locked?0.3:1" [src]="tile.terrainTop?tile.terrainTop.url:tile.terrain.url" alt="" width="90">
         </div>
     </div>
 </div>

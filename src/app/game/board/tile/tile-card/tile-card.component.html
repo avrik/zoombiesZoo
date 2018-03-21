@@ -1,9 +1,10 @@
-
 <div [@animState]="animState" *ngIf="card" class="container">
 
-    <tile-frame *ngIf="card.collect && (card.type == 0 || card.type == 4)" [card]="card"></tile-frame>
 
-   <!--  <div *ngIf="card.collect && (card.type == 0 || card.type == 4)" class="hex">
+    <tile-frame *ngIf="card.collect" [card]="card"></tile-frame>
+
+
+    <!--  <div *ngIf="card.collect && (card.type == 0 || card.type == 4)" class="hex">
         <div class="collect-box">x{{card.collected}}</div>
     </div>
 
@@ -11,9 +12,8 @@
         <div class="collect-box">{{card.collected | number : '1.0-0'}}/{{card.collect | number : '1.0-0'}}</div>
     </div> -->
 
-    <div class="in-place" [style.padding.px]="onTerrain==4?5:0">
-        <img *ngIf="!card && onTerrain==4" src="assets/resources/Chest Closed.png" alt="" >
+    <div style="position: absolute;" [style.padding.px]="onTerrain==4?5:0" [style.margin]="getMargin()">
+        <img *ngIf="!card && onTerrain==4" src="assets/resources/Chest Closed.png" alt="">
         <img *ngIf="card.img" [src]="card.img" alt="" [height]="getheight()" [style.margin-top.px]="onTerrain==4?-10:0">
     </div>
 </div>
-

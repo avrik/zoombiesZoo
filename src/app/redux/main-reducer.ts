@@ -174,7 +174,7 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
 
         case Action.OPEN_BLOCKED_TILE_OPTION:
             newState.tileClicked = action.payload;
-            let isResourceTile = newState.tileClicked.linked.find(a => a.terrain.type == TerrainEnum.RESOURCES)?true:false;
+            let isResourceTile = newState.tileClicked.linked.find(a => a.terrain.type == TerrainEnum.RESOURCES) ? true : false;
             newState.showStoreItems = isResourceTile ? tileResourceBlockedItems : tileCityBlockedItems;
             return newState;
 
@@ -236,11 +236,9 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
 
             return newState;
 
-        
-        case Action.DEVELOP_TILE:
 
-            //ugly -FIXXX
-            if (newState.tileClicked) newState.tileClicked.terrain = new Terrain(newState.tileClicked.linked.find(a=>a.terrain.type!=TerrainEnum.BLOCKED).terrain.type);
+        case Action.DEVELOP_TILE:
+            if (newState.tileClicked) newState.tileClicked.terrain.locked = false;
             return newState;
 
         case Action.CLOSE_STORE:
@@ -316,14 +314,20 @@ function moveTileBuilding(newState: IState, tile: Tile) {
 function buyBuilding(newState: IState, buyItem: IBuyItem): boolean {
 
     if (buyItem.type == CardFamilyTypeEnum.ROAD) {
-        newState.tileClicked.terrainTop = new Terrain(TerrainEnum.ROAD)
+        let roadNear = newState.tileClicked.linked.find(a => a.terrainTop && a.terrainTop.type == TerrainEnum.ROAD || a.terrain.type == TerrainEnum.BRIDGE)
+        if (!roadNear) {
+            newState.currentMessage = { title: "connect road to bridge", type: MessageType.TOOLBAR }
+            return false;
+        }
+
+        newState.tileClicked.terrainTop = new Terrain(TerrainEnum.ROAD);
     }
     else {
-        let roadNear = newState.tileClicked.linked.find(a => a.terrainTop && a.terrainTop.type == TerrainEnum.ROAD)
+        /* let roadNear = newState.tileClicked.linked.find(a => a.terrainTop && a.terrainTop.type == TerrainEnum.ROAD)
         if (buyItem.type == CardFamilyTypeEnum.HOUSE && !roadNear) {
             newState.currentMessage = { title: "houses needs roads!", type: MessageType.TOOLBAR }
             return false;
-        }
+        } */
 
         newState.tileClicked.card = getCardByFamily(buyItem.type);
         findMatch(newState.tileClicked);

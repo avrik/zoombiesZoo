@@ -54,5 +54,15 @@ export class TileCardComponent implements OnInit {
     
   }
 
+  getMargin() {
+    switch (this.card.type) {
+      case CardTypeEnum.WALKER:
+      return "-28px 0 0 20px"
+      default:
+      return "-8px 0 0 15px"
+    }
+    
+  }
+
 
 }

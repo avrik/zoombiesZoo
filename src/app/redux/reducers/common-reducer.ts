@@ -1,7 +1,7 @@
 import { Tile } from "../../game/board/tile/tile";
 
 export function getMoveDir(from: Tile, to: Tile): string {
-    if (to.ypos < from.ypos && to.xpos < from.xpos) { return "upLeft" }
+    /* if (to.ypos < from.ypos && to.xpos < from.xpos) { return "upLeft" }
     if (to.ypos < from.ypos && to.xpos == from.xpos) { return "up" }
     if (to.ypos < from.ypos && to.xpos > from.xpos) { return "upRight" }
 
@@ -11,7 +11,20 @@ export function getMoveDir(from: Tile, to: Tile): string {
     if (to.ypos > from.ypos && to.xpos == from.xpos) { return "down" }
     if (to.ypos > from.ypos && to.xpos < from.xpos) { return "downLeft" }
 
-    if (to.xpos < from.xpos && to.ypos == from.ypos) { return "left" }
+    if (to.xpos < from.xpos && to.ypos == from.ypos) { return "left" } */
+
+
+    if (to.ypos < from.ypos && to.xpos < from.xpos) { return "upLeft" }
+    if (to.ypos < from.ypos && to.xpos == from.xpos) { return "up" }
+    if (to.ypos < from.ypos && to.xpos > from.xpos) { return "upRight" }
+
+    if (to.xpos > from.xpos && to.ypos == from.ypos) { return "downRight" }
+
+   // if (to.ypos > from.ypos && to.xpos > from.xpos) { return "downRight" }
+    if (to.ypos > from.ypos && to.xpos == from.xpos) { return "down" }
+   // if (to.ypos > from.ypos && to.xpos < from.xpos) { return "downLeft" }
+
+    if (to.xpos < from.xpos && to.ypos == from.ypos) { return "downLeft" }
 }
 
 export function getLinkedGroup(firstOne: Tile): Tile[] {
