@@ -6,7 +6,7 @@ export const UrlConst = {
     TERRAIN_BRIDGE:"assets/terrain/hex_bridge.png",
     TERRAIN_CARD_HOLDER:"assets/terrain/hex_grass.png",
     TERRAIN_CARD_HOLDER_OPEN:"assets/terrain/hex_grass.png",
-
+    TERRAIN_ROAD:"assets/terrain/hex_road.png",
     /* TERRAIN_BLOCKED:"assets/terrain/Plain Block.png",
     TERRAIN_RESOURCE:"assets/terrain/Grass Block.png",
     TERRAIN_CITY:"assets/terrain/Dirt Block.png",
@@ -14,7 +14,7 @@ export const UrlConst = {
     TERRAIN_BRIDGE:"assets/terrain/Wood Block.png",
     TERRAIN_CARD_HOLDER:"assets/resources/Chest Closed.png",
     TERRAIN_CARD_HOLDER_OPEN:"assets/resources/Chest Open.png", */
-    TERRAIN_ROAD:"assets/terrain/Stone Block.png",
+    //TERRAIN_ROAD:"assets/terrain/Stone Block.png",
     TERRAIN_EXPLOSION:"assets/resources/explosion.png",
 
     ROAD:"assets/buildings/Stone Block.png",
@@ -73,7 +73,8 @@ export const UrlConst = {
 
     //PERSON1:"assets/people/Character Boy.png",
     PERSON1:"assets/people/person1.png",
-    PERSON2:"assets/people/Character Cat Girl.png",
+   // PERSON2:"assets/people/Character Cat Girl.png",
+    PERSON2:"assets/people/person2.png",
     PERSON3:"assets/people/Character Horn Girl.png",
     PERSON4:"assets/people/Character Pink Girl.png",
 
