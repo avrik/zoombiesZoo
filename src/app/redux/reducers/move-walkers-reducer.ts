@@ -124,9 +124,10 @@ function movePersonToRandomEmpty(tile: Tile): boolean {
         clearTile(tile);
         return true;
     } else {
-        let empties: Tile[] = tile.linked.filter(a => !a.card && a.terrain.walkable);
+        //let empties: Tile[] = tile.linked.filter(a => !a.card && a.terrain.walkable);
+        let empties: Tile[] = tile.linked.filter(a => !a.card &&  ((a.terrainTop && a.terrainTop.type == TerrainEnum.ROAD && a.terrain.type == TerrainEnum.CITY) || (a.terrain.type == TerrainEnum.BRIDGE) || (a.terrain.type == TerrainEnum.RESOURCES)));
         // let foundRoad: Tile = empties.find(a => a.terrainTop && a.terrainTop.type == TerrainEnum.ROAD && a != tile.card.preTile);
-        let foundRoads: Tile[] = empties.filter(a => a.terrainTop && a.terrainTop.type == TerrainEnum.ROAD);
+        /* let foundRoads: Tile[] = empties.filter(a => a.terrainTop && a.terrainTop.type == TerrainEnum.ROAD);
         if (foundRoads && foundRoads.length) {
             empties = foundRoads;
         } else {
@@ -138,7 +139,7 @@ function movePersonToRandomEmpty(tile: Tile): boolean {
                     empties = empties.filter(a => (a.terrain.type != TerrainEnum.BRIDGE));
                     break;
             }
-        }
+        } */
 
         return moveToRandomSpot(tile, empties);
     }

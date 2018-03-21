@@ -9,8 +9,8 @@ import { MessagesService, IMessage } from './services/messages.service';
 
 //TODOS :
 
-// + undo implementation
-// + save game state implementation
+// ++ undo implementation
+// ++ save game state implementation
 
 // ++ handle score
 // ++ pricing
@@ -28,6 +28,36 @@ import { MessagesService, IMessage } from './services/messages.service';
 // + add seasons (winter ,spring...)
 // + tutorial
 // + score count animation
+
+
+//ASSETS
+
+// + terrains :
+// road 
+// chest open + closed
+
+// + resources :
+// stones
+// trees
+// brick
+// lumber 
+// gold/silver coin
+// tomb
+
+// + buildings
+// houses (9 levels)
+// temple/church/chtedral (9 levels)
+// storage (3 levels)
+// sawmill (3 levels)
+// palace?
+
+// + people 
+// people
+// animals
+
+// UI
+// settings window
+
 
 // MAJOR ISSUES
 

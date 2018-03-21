@@ -25,7 +25,7 @@ export function generateWorld(totalRows: number, totalCols: number): Tile[] {
     let middleRow: number = Math.floor(totalRows / 2);
 
     //place blocked
-    //tiles.filter(a => a.ypos == 0 || a.xpos == 0 || a.xpos == totalCols - 1 || a.ypos == totalRows - 1).forEach(b => b.terrain = new Terrain(TerrainEnum.BLOCKED));
+    tiles.filter(a=>a.ypos == totalRows - 1).forEach(b => b.terrain.locked = true);
     //place water
     tiles.filter(a => a.xpos == middle).forEach(b => b.terrain = new Terrain(TerrainEnum.WATER));
 
@@ -52,7 +52,7 @@ export function populateWorldWithResources(tiles: Tile[]) {
     }
 
     for (let i = 0; i < 5; i++) {
-        let tile: Tile = getRandomTile(tiles.filter(a => a.terrain.type == TerrainEnum.RESOURCES && !a.card));
+        let tile: Tile = getRandomTile(tiles.filter(a =>!a.terrain.locked && a.terrain.type == TerrainEnum.RESOURCES && !a.card));
         let rand: number = Math.floor(Math.random() * options.length);
         tile.card = getCardByFamily(options[rand]);
         tile.card.autoPlaced = true;
@@ -78,7 +78,7 @@ export function mapLinkedTiles(tiles: Tile[]) {
         let tileUpLeft = tile.xpos % 2 == 0 ? tiles.find(a => a.ypos == tile.ypos + 1 && a.xpos == tile.xpos - 1) : tiles.find(a => a.ypos == tile.ypos - 1 && a.xpos == tile.xpos - 1)
         if (tileUpLeft) tile.linked.push(tileUpLeft);
 
-        let tileUpRight = tile.xpos % 2 == 0 ? tiles.find(a => a.ypos == tile.ypos + 1 && a.xpos == tile.xpos + 1) : tiles.find(a => a.ypos == tile.ypos- 1 && a.xpos == tile.xpos + 1);
+        let tileUpRight = tile.xpos % 2 == 0 ? tiles.find(a => a.ypos == tile.ypos + 1 && a.xpos == tile.xpos + 1) : tiles.find(a => a.ypos == tile.ypos - 1 && a.xpos == tile.xpos + 1);
         if (tileUpRight) tile.linked.push(tileUpRight);
 
     });

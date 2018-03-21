@@ -41,4 +41,28 @@ export class TileCardComponent implements OnInit {
   }
 
 
+  getheight() {
+    if (this.onTerrain==4) return 40
+    
+    switch (this.card.type) {
+      case CardTypeEnum.WALKER:
+        return 70;
+
+      default:
+        return 50;
+    }
+    
+  }
+
+  getMargin() {
+    switch (this.card.type) {
+      case CardTypeEnum.WALKER:
+      return "-28px 0 0 20px"
+      default:
+      return "-8px 0 0 15px"
+    }
+    
+  }
+
+
 }

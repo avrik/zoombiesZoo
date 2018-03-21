@@ -1,0 +1,28 @@
+
+
+.collect-box {
+    color: white;
+    background-color: red;
+    border-radius: 5px;
+    height: 16px;
+    /* width: 30px; */
+    font-size: 12px;
+    line-height: 16px;
+    margin-top: -12px;
+    border: 2px solid gold;
+    padding: 0 2px 0 2px;
+    position: absolute;
+}
+
+.count-frame {
+
+    /* display: flex; */
+    position: absolute;
+    /* border: 2px solid gold;
+    width: 58px;
+    height: 48px; */
+    /* border-radius: 5px; */
+    /* justify-content: center; */
+    /* margin: 18px 0 0 -20px; */
+    /* cursor: pointer; */
+}

@@ -6,6 +6,17 @@ export class Terrain {
     type: number;
     clickable: boolean = true;
     walkable: boolean = true;
+    _locked: boolean = false;
+
+    set locked(value: boolean) {
+        this._locked = value;
+        this.walkable = !value;
+    }
+
+    get locked() {
+        return this._locked;
+
+    }
 
     constructor(type: number = 0) {
         this.type = type;
