@@ -196,7 +196,7 @@ export const cardCollection: ICardData[] = [
     nextCard: graveCard,
   },
   {
-    level: 1, family: { name: CardFamilyTypeEnum.ANIMAL, value: 0 }, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 0, img: UrlConst.ANIMAL,
+    level: 1, family: { name: CardFamilyTypeEnum.ANIMAL, value: 0 }, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 0, imgs: [UrlConst.ANIMAL, UrlConst.ANIMAL2],
     //level: 1, family: { name: CardFamilyTypeEnum.ANIMAL, value: 0 }, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 15, img: UrlConst.ANIMAL,
     nextCard: graveCard,
   },

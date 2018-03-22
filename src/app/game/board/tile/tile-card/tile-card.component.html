@@ -12,8 +12,8 @@
         <div class="collect-box">{{card.collected | number : '1.0-0'}}/{{card.collect | number : '1.0-0'}}</div>
     </div> -->
 
-    <div style="position: absolute;" [style.padding.px]="onTerrain==4?5:0" [style.margin]="getMargin()">
+    <div style="position: absolute;" [style.margin]="getMargin()">
         <img *ngIf="!card && onTerrain==4" src="assets/resources/Chest Closed.png" alt="">
-        <img *ngIf="card.img" [src]="card.img" alt="" [height]="getheight()" [style.margin-top.px]="onTerrain==4?-10:0">
+        <img *ngIf="card.img" [src]="card.img" alt="" [height]="getheight()">
     </div>
 </div>
