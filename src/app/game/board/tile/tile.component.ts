@@ -1,5 +1,3 @@
-
-
 import { CardState } from './../../../enums/card-state.enum';
 import { TileCardComponent } from './tile-card/tile-card.component';
 import { UrlConst } from './../../../consts/url-const';
@@ -292,9 +290,21 @@ export class TileComponent implements OnInit {
 
 
   gettilemargin() {
-    if (this.tile.card && this.tile.card.type == CardTypeEnum.RESOURCE) {
-      return `${(this.tile.card.level+2) * 2}px 0 0 0`;
+
+
+    if (this.tile.terrain.type==TerrainEnum.CARD_HOLDER || this.tile.terrain.type==TerrainEnum.CARD_HOLDER_OPEN) {
+      return "-40px 0 0 0"
     }
+
+    if (this.tile.card) {
+
+      switch (this.tile.card.type) {
+        case CardTypeEnum.RESOURCE:
+          return `${(this.tile.card.level + 2) * 2}px 0 0 0`;
+      }
+    }
+
+    
 
     return "0"
   }
