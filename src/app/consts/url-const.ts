@@ -17,7 +17,7 @@ export const UrlConst = {
     //TERRAIN_ROAD:"assets/terrain/Stone Block.png",
     TERRAIN_EXPLOSION:"assets/resources/explosion.png",
 
-    ROAD:"assets/buildings/Stone Block.png",
+    ROAD:"assets/terrain/hex_road.png",
 
     CHURCH1:"assets/buildings/church1.png",
     CHURCH2:"assets/buildings/church2.png",
@@ -78,6 +78,9 @@ export const UrlConst = {
     PERSON3:"assets/people/Character Horn Girl.png",
     PERSON4:"assets/people/Character Pink Girl.png",
 
+    BONES:"assets/resources/bones.png",
+    OIL1:"assets/resources/oil.png",
+    OIL2:"assets/resources/oil2.png",
     ZOOMBIE:"assets/people/zombiePig.png",
     ANIMAL:"assets/people/pig.png",
     GRAVE:"assets/resources/grave.png",

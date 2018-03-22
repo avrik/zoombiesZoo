@@ -63,9 +63,11 @@ export const mainStoreItems: IBuyItem[] = [
 ]
 
 const initState: IState = {
+    energy: 1000,
     gameOver: false,
     tiles: [],
     turn: 0,
+    maxEnergy: 1000,
     score: 0,
     population: 0,
     resources: { bricks: 0, lumber: 0, coins: 0, silver: 0, maxStorage: 0 },
@@ -86,12 +88,23 @@ let prevGameState: IState;
 
 export function mainReducerFunc(state: IState = initState, action: IAction): IState {
 
+
+
     //localStorage.removeItem("lastState");
     if (action.type == Action.CLICK_TILE) {
         prevGameState = getCurState(state);
     }
 
     let newState: IState = Object.assign({}, state);
+
+
+    if (action.type != Action.INIT_GAME && newState.energy <= 0) {
+        console.log("no more energy!!!!")
+        newState.currentMessage = { title: "No more energy - wait for recharge", message: "wait for your energy to go back", type: MessageType.TOOLBAR }
+        return newState;
+    }
+
+
     let tile: Tile;
 
     if (action.payload && action.payload instanceof Tile) {
@@ -260,9 +273,11 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
 
 function getCurState(state: IState): IState {
     return {
+        energy: state.energy,
         gameOver: state.gameOver,
         tiles: state.tiles.map(a => a.toString()),
         turn: state.turn,
+        maxEnergy: state.maxEnergy,
         score: state.score,
         population: state.population,
         resources: state.resources ? Object.assign({}, state.resources) : null,
@@ -348,7 +363,10 @@ function buyBuilding(newState: IState, buyItem: IBuyItem): boolean {
 
 function nextTurn(newState: IState) {
     newState.currentMessage = null;
+
+
     newState.turn++;
+    newState.energy--;
     moveWalkers(newState.tiles);
     checkBombs(newState);
 
@@ -359,7 +377,7 @@ function nextTurn(newState: IState) {
     if (newState.tileClicked && newState.tileClicked.linked) {
         found = newState.tileClicked.linked.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
     }
-
+ 
     newState.floatTile = found ? found : newState.tiles.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES); */
     newState.floatTile = getFloatTile(newState);
 
@@ -372,6 +390,8 @@ function nextTurn(newState: IState) {
 
     checkIfLevelCompleted(newState);
     checkIfGameOver(newState);
+
+
 }
 
 

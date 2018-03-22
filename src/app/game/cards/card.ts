@@ -26,11 +26,13 @@ export interface ICardData {
 }
 
 
+
 const familyBrick: ICardFamily = { name: CardFamilyTypeEnum.BRICK, value: 5 };
 const familyLumber: ICardFamily = { name: CardFamilyTypeEnum.LUMBER, value: 10 };
 const familyCoin: ICardFamily = { name: CardFamilyTypeEnum.COIN, value: 50 };
 const familyCoinSilver: ICardFamily = { name: CardFamilyTypeEnum.COIN_SILVER, value: 1 };
 const familyPerson: ICardFamily = { name: CardFamilyTypeEnum.PERSON, value: 100 };
+const familyOil: ICardFamily = { name: CardFamilyTypeEnum.OIL, value: 500 };
 
 const familyRoad: ICardFamily = { label: 'road', name: CardFamilyTypeEnum.ROAD, value: 90 };
 const familyHouse: ICardFamily = { label: 'house', name: CardFamilyTypeEnum.HOUSE, value: 1200 };
@@ -85,6 +87,16 @@ const churchCard: ICardData = {
     }
   }
 }
+const bonesCard: ICardData = {
+  level: 3, family: familyOil, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, img: UrlConst.BONES,
+  nextCard: {
+    level: 4, family: familyOil, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, img: UrlConst.OIL1,
+    nextCard: {
+      level: 5, family: familyOil, mergeBy: MergeTypeEnum.MATCH, collect: 3, type: CardTypeEnum.RESOURCE, img: UrlConst.OIL2
+    }
+  }
+}
+
 
 const zoombieCard: ICardData = {
   level: 3, family: { name: CardFamilyTypeEnum.ZOOMBIE, value: 0 }, mergeBy: MergeTypeEnum.TRAP_IN_CITY, type: CardTypeEnum.WALKER, img: UrlConst.ZOOMBIE,
@@ -92,7 +104,8 @@ const zoombieCard: ICardData = {
 
 const graveCard: ICardData = {
   level: 2, family: { name: CardFamilyTypeEnum.GRAVE, value: 1 }, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, img: UrlConst.GRAVE,
-  nextCard: zoombieCard
+  nextCard: bonesCard
+  //nextCard: zoombieCard
 }
 
 const tntCard: ICardData = {
@@ -214,7 +227,7 @@ export class Card implements ICardData {
   collected: number;
   state: number = 0;
   autoPlaced: boolean = false;
- // preTile: Tile;
+  // preTile: Tile;
 
   constructor(data: ICardData) {
     if (!data) return;

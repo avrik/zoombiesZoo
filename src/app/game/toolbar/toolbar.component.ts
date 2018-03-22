@@ -18,6 +18,7 @@ export class ToolbarComponent implements OnInit {
   currentCityLevel: CityLevel;
   levelName:string;
   percent: number;
+  turnsLeft: number;
 
   constructor(public gameEngine: GameEngineService) {
 
@@ -26,6 +27,7 @@ export class ToolbarComponent implements OnInit {
       this.years = Math.round(newState.turn / 360) + 1;
       this.days = newState.turn;
       this.score = newState.score;
+      this.turnsLeft = newState.energy;
       this.currentLevel = newState.level;
       this.currentCityLevel = newState.cityLevel;
 

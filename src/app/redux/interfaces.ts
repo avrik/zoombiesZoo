@@ -11,11 +11,12 @@ export interface IAction {
 }
 
 export interface IState {
+    maxEnergy:number,
+    energy: number;
     pendingMoveCard: Card;
     tiles: Tile[];
     tileClicked?: Tile;
     nextCard: Card;
-   // cardHint: Card;
     level: GameLevel;
     cityLevel: CityLevel;
     resources: IResourceStorage;
@@ -27,8 +28,8 @@ export interface IState {
     showStoreItems: IBuyItem[];
     currentMessage: IMessage;
     gameOver: boolean;
-    boardState:string;
-    cardCollected?:Card;
+    boardState: string;
+    cardCollected?: Card;
 }
 
 export interface ICost {
@@ -39,14 +40,14 @@ export interface ICost {
 }
 
 export interface IBuyItem {
-    label?:string;
-    description?:string,
+    label?: string;
+    description?: string,
     cost: ICost;
     icon: string;
     type: number;
-    amount? :number;
-    store:number;
-    level?:number;
+    amount?: number;
+    store: number;
+    level?: number;
 }
 
 export interface IResourceStorage {
@@ -55,4 +56,4 @@ export interface IResourceStorage {
     coins?: number,
     silver?: number,
     maxStorage?: number,
-  }
+}
