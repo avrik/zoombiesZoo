@@ -26,7 +26,7 @@
             <h2 style="margin:0px">➡</h2>
             <span>
                 <!-- goal :  -->
-               <span i18n="@@goaltest">{{currentLevel?.goal.verb}}</span> 
+                <span i18n="@@goaltest">{{currentLevel?.goal.verb}}</span>
                 <b class="big-number">{{currentLevel?.goal.amount | number}}</b>
                 <img [src]="currentLevel?.goal.img" alt="" height="30" style="float: right;margin: -7px 0 0 5px;">
             </span>
@@ -34,8 +34,20 @@
     </div>
 
 
-    <div class="text-box"><ng-container i18n="@@score">score </ng-container> :
-        <b class="big-number" style="line-height:40px">{{score| number}}</b>
+    <div class="text-box">
+
+        <span style="display:flex;flex-direction:column">
+            <span>
+                <ng-container i18n="@@score">score </ng-container> :
+                <b class="big-number" style="line-height:20px">{{score| number}}</b>
+            </span>
+
+            <span>
+                <ng-container i18n="@@turnLeft">moves left </ng-container> :
+                <b  style="line-height:20px">{{turnsLeft| number}}</b>
+            </span>
+
+        </span>
     </div>
 
     <app-resource-table></app-resource-table>
@@ -44,9 +56,9 @@
 
         <span style="text-align:left">
             <!-- citzens : -->
-            <b class="big-number">{{population | number}}</b> 
-            <ng-container i18n="@@citzens">citzens in</ng-container> 
-            <ng-container i18n="levelName">{levelName, select, the wilderness {the wilderness} camp {camp} tribe {tribe}} </ng-container> 
+            <b class="big-number">{{population | number}}</b>
+            <ng-container i18n="@@citzens">citzens in</ng-container>
+            <ng-container i18n="levelName">{levelName, select, the wilderness {the wilderness} camp {camp} tribe {tribe}} </ng-container>
         </span>
 
         <div class="progress-bar">

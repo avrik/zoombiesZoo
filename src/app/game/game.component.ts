@@ -22,6 +22,10 @@ export class GameComponent implements OnInit {
     this.gameEngine.store.subscribe(() => {
       let newState: IState = this.gameEngine.store.getState();
 
+      /* if (newState.energy<0) {
+        this.messagesService.postMessage({ type: MessageType.POPUP, title: Messages.GAME_OVER_TITLE, butns: [{ label: Messages.GAME_OVER_BUTN1, action: a => { this.restart() } }] })
+      } */
+
       if (newState.gameOver) {
         this.messagesService.postMessage({ type: MessageType.POPUP, title: Messages.GAME_OVER_TITLE, butns: [{ label: Messages.GAME_OVER_BUTN1, action: a => { this.restart() } }] })
       }

@@ -10,6 +10,7 @@ export enum CardFamilyTypeEnum {
     PERSON = 100,
     ANIMAL = 110,
 
+    OIL = 250,
     ZOOMBIE = 200,
     ZOOMBIE_TRAP = 220,
     ROAD = 300,
