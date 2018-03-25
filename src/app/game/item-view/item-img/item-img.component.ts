@@ -17,16 +17,16 @@ export class ItemImgComponent implements OnInit {
   ngOnInit() {
     switch (this.type) {
       case 'coin':
-        this.url = UrlConst.COIN;
+        this.url = UrlConst.COIN_IMG;
         break;
       case 'coin_silver':
         this.url = UrlConst.COIN_SILVER;
         break;
       case 'brick':
-        this.url = UrlConst.BRICK2;
+        this.url = UrlConst.BRICK_IMG;
         break;
       case 'lumber':
-        this.url = UrlConst.LUMBER2;
+        this.url = UrlConst.LUMBER_IMG;
         break;
       case 'person':
         this.url = UrlConst.PERSON1;

@@ -56,7 +56,7 @@ export class TileCardComponent implements OnInit {
         return 90;
 
       default:
-        return 100;
+        return 140;
     }
 
   }
@@ -72,20 +72,22 @@ export class TileCardComponent implements OnInit {
     }
 
 
-    if (this.card.family.name==CardFamilyTypeEnum.LUMBER && this.card.level==0)
+    /* if (this.card.family.name==CardFamilyTypeEnum.LUMBER && this.card.level==0)
     {
       return "-60px 0 0 10px"
-    }
+    } */
 
     switch (this.card.type) {
       case CardTypeEnum.BUILDING:
         return "-28px 0 0 10px"
       case CardTypeEnum.WALKER:
         return "-50px 0 0 15px"
-      default:
-        return "-30px 0 0 -5px"
+      /* default:
+        return "-30px 0 0 -5px" */
     }
 
+
+      return "-85px 0 0 -5px";
   }
 
 
