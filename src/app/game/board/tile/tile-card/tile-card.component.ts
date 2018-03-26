@@ -105,17 +105,17 @@ export class TileCardComponent implements OnInit {
 
 
   getheight() {
-    if (this.onTerrain == 4) return 70
+    if (this.onTerrain == TerrainEnum.CARD_HOLDER) return 100
 
-    if (this.card.family.name == CardFamilyTypeEnum.COIN || this.card.family.name == CardFamilyTypeEnum.COIN_SILVER) {
+    /* if (this.card.family.name == CardFamilyTypeEnum.COIN || this.card.family.name == CardFamilyTypeEnum.COIN_SILVER) {
       return 50;
-    }
+    } */
 
     switch (this.card.type) {
       case CardTypeEnum.BUILDING:
         return 70;
-      case CardTypeEnum.WALKER:
-        return 90;
+      /* case CardTypeEnum.WALKER:
+        return 90; */
 
       default:
         return 140;
@@ -125,12 +125,12 @@ export class TileCardComponent implements OnInit {
 
   getMargin() {
     if (this.onTerrain == TerrainEnum.CARD_HOLDER) {
-      return "0px 0 0 10px"
+      return "-40px 0 0 15px"
     }
 
-    if (this.card.family.name == CardFamilyTypeEnum.COIN || this.card.family.name == CardFamilyTypeEnum.COIN_SILVER) {
+    /* if (this.card.family.name == CardFamilyTypeEnum.COIN || this.card.family.name == CardFamilyTypeEnum.COIN_SILVER) {
       return "-10px 0 0 20px"
-    }
+    } */
 
 
     /* if (this.card.family.name==CardFamilyTypeEnum.LUMBER && this.card.level==0)
@@ -140,15 +140,15 @@ export class TileCardComponent implements OnInit {
 
     switch (this.card.type) {
       case CardTypeEnum.BUILDING:
-        return "-28px 0 0 10px"
-      case CardTypeEnum.WALKER:
-        return "-50px 0 0 15px"
+        return "-50px 0 0 0px"
+      /* case CardTypeEnum.WALKER:
+        return "-100px 0 0 -20px" */
       /* default:
         return "-30px 0 0 -5px" */
     }
 
 
-      return "-85px 0 0 -5px";
+      return "-85px 0 0 0px";
   }
 
   getImg() {

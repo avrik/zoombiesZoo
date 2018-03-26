@@ -46,7 +46,8 @@ export function checkIfLevelCompleted(state: IState): IState {
     }
 
     if (newState.level.goal.roads) {
-        let foundGoal: any = newState.tiles.find(a => a.terrainTop && a.terrainTop.type == TerrainEnum.ROAD);
+        //let foundGoal: any = newState.tiles.find(a => a.terrainTop && a.terrainTop.type == TerrainEnum.ROAD);
+        let foundGoal: any = newState.tiles.find(a => a.terrain.type == TerrainEnum.ROAD);
         if (foundGoal) newGameLevel = new GameLevel(newState.level);
     }
 

@@ -24,10 +24,10 @@
         </div>
         
 
-        <div *ngIf="showThinkBubble" style="position:absolute;margin-top:-30px;margin-left:30px">
+        <!-- <div *ngIf="showThinkBubble" style="position:absolute;margin-top:-30px;margin-left:30px">
             <img src="assets/people/SpeechBubble.png" alt="" height="64">
             <img style="position:fixed;margin-top:-45px;margin-left:-15px" src="assets/buildings/house.png" alt="" height="35">
-        </div>
+        </div> -->
     </div>
 
 
@@ -37,7 +37,7 @@
         <div class="over" *ngIf="tile.terrain?.clickable && gotCard==false"></div>
 
         <div *ngIf="tile.terrain" class="terrain">
-            <img [style.opacity]="tile.terrain.locked?0.6:1" [src]="tile.terrainTop?tile.terrainTop.url:tile.terrain.url" alt="" width="90">
+            <img [style.opacity]="tile.terrain.locked?0.6:1" [src]="tile.terrainTop?tile.terrainTop.url:tile.terrain.url" alt="" width="100">
         </div>
     </div>
 </div>

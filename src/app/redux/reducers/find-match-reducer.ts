@@ -39,16 +39,17 @@ export function findMatch(tile: Tile) {
                 clearTile(linked);
             });
 
-    
-                 let imgIndex = totalCollected-tile.card.minForNextLevel;
-                
-       
+
+            let imgIndex = -1;
+
+            if (tile.card.level == 0) {
+                imgIndex = matchedTiles.length >= 6 ? 1 : 0;
+            } else {
+                imgIndex = totalCollected - tile.card.minForNextLevel;
+            }
 
 
-            console.log("1111 == "+imgIndex)
-            console.log("2222 == "+totalCollected)
-            console.log("3333 == "+tile.card.minForNextLevel)
-            tile.card = new Card(tile.card.nextCard,imgIndex);
+            tile.card = new Card(tile.card.nextCard, imgIndex);
 
             if (tile.card.reward) {
                 let emptyTile: Tile = tile.linked.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
@@ -59,7 +60,7 @@ export function findMatch(tile: Tile) {
             }
 
             tile.card.collected = totalCollected;
-                
+
             let extra: number = matchedTiles.length - (tile.card.minForNextLevel - 1);
             if (extra) {
                 let random: number = Math.floor(Math.random() * 100);
@@ -110,26 +111,30 @@ function getMatchesAround(tile: Tile): Tile[] {
 function handleWild(tile: Tile) {
 
     let optionsForWild: Tile[] = tile.linked.filter(a => a.card && a.card.mergeBy == MergeTypeEnum.MATCH);
+
     optionsForWild = optionsForWild.filter(a => {
         tile.card = a.card;
         return getLinkedGroup(a).length >= a.card.minForNextLevel;
     })
-    optionsForWild.sort((a, b) => {
-        if (a.card.family != b.card.family) {
-            if (a.card.value > b.card.value) return -1;
-            if (b.card.value > a.card.value) return 1;
-        }
-        else if (a.card.family == b.card.family) {
-            if (a.card.level == (b.card.level - 1)) return -1;
-            if (b.card.level == (a.card.level - 1)) return 1;
 
-            if (a.card.level > b.card.level) return -1;
-            if (b.card.level > a.card.level) return 1;
-        }
+    if (optionsForWild.length) {
+        optionsForWild.sort((a, b) => {
+            if (a.card.family == b.card.family) {
+                //if (a.card.level == (b.card.level - 1)) return -1;
+                //if (a.card.level == (b.card.level - 1)) return 1;
+                if (a.card.level > b.card.level) return 1;
+                if (a.card.level < b.card.level) return -1;
+            } else {
+                if (a.card.value > b.card.value) return -1;
+                if (a.card.value < b.card.value) return 1;
+            }
 
-        return 0;
-    });
+            return 0;
+        });
 
-    // tile.card = optionsForWild.length ? optionsForWild[0].card : this.getNewCard(CardFamilyTypeEnum.GRAVE);
-    tile.card = optionsForWild.length ? optionsForWild[0].card : getCardByFamily(CardFamilyTypeEnum.GRAVE);
+        // tile.card = optionsForWild.length ? optionsForWild[0].card : this.getNewCard(CardFamilyTypeEnum.GRAVE);
+        tile.card = optionsForWild[0].card
+    } else {
+        tile.card = getCardByFamily(CardFamilyTypeEnum.GRAVE);
+    }
 }

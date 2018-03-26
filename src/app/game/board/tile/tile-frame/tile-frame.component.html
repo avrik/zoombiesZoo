@@ -1,6 +1,6 @@
 
-<div class="count-frame">
+<div [@glow]="animState" (@glow.done)="animEnd($event)" class="count-frame">
     
 
-    <img [style.opacity]="0.3" *ngIf="card.type == 0" src="assets/terrain/tile_frame.png" alt="" height="60">
+    <img  *ngIf="card.type == 0" src="assets/terrain/tile_frame.png" alt="" width="100">
 </div>

@@ -2,7 +2,7 @@
     <div class="tile-grid" style="position: absolute;z-index:999;pointer-events: none" [style.grid-template-columns]="getCols()"
         [style.grid-template-rows]="getRows()">
         <!-- <app-tile-card *ngFor="let tile of tiles" [onTop]="true" [card]="tile.card"></app-tile-card> -->
-        <tile-top *ngFor="let tile of tiles"  [tile]="tile"></tile-top>
+        <tile-top *ngFor="let tile of tiles" [tile]="tile"></tile-top>
     </div>
 
     <div class="tile-grid" style="z-index:5" [style.grid-template-columns]="getCols()" [style.grid-template-rows]="getRows()">

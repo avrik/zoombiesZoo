@@ -9,7 +9,6 @@ import { getCardByFamily } from "./getCardByFamily-reducer";
 import { getMoveDir } from "./common-reducer";
 import { clearTile } from "./tile-reducer";
 
-
 export function moveWalkers(tiles: Tile[]): Tile[] {
     let newTiles = tiles;
     let actionTaken: boolean = false;
@@ -61,14 +60,21 @@ function testGroupTrapped(walkers: Tile[]) {
 
         let foundEmpty: boolean;
         walkersGroup.filter(walkers => {
-            if (walkers.linked.filter(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES).length > 0) {
+            //if (walkers.linked.filter(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES).length > 0) {
+            if (walkers.linked.filter(a => !a.card && a.terrain.walkable).length > 0) {
                 foundEmpty = true;
             }
         })
 
         if (!foundEmpty) {
             trapWalkersGroup(walkersGroup);
-            findMatch(walkersGroup[0]);
+            let youngest = walkersGroup.sort((a, b) => {
+                if (a.card.age > b.card.age) { return -1 }
+                if (a.card.age < b.card.age) { return 1 }
+                return 0;
+            })[0];
+
+            findMatch(youngest);
         }
 
         testGroupTrapped(walkers);
@@ -105,7 +111,7 @@ function moveZoombiesToRandomEmpty(tile: Tile): boolean {
     }
 }
 function moveAnimalToRandomEmpty(tile: Tile): boolean {
-    let empties: Tile[] = tile.linked.filter(a => !a.card && !a.terrain.locked && a.terrain.walkable && a.terrain.type == TerrainEnum.RESOURCES);
+    let empties: Tile[] = tile.linked.filter(a => !a.card && !a.terrain.locked && a.terrain.walkable);
 
     return moveToRandomSpot(tile, empties);
 }
@@ -124,24 +130,8 @@ function movePersonToRandomEmpty(tile: Tile): boolean {
         clearTile(tile);
         return true;
     } else {
-        //let empties: Tile[] = tile.linked.filter(a => !a.card && a.terrain.walkable);
-        let empties: Tile[] = tile.linked.filter(a => !a.card && !a.terrain.locked &&
-            ((a.terrainTop && a.terrainTop.type == TerrainEnum.ROAD && 
-                a.terrain.type == TerrainEnum.CITY) || (a.terrain.type == TerrainEnum.BRIDGE) || (a.terrain.type == TerrainEnum.RESOURCES)));
-        // let foundRoad: Tile = empties.find(a => a.terrainTop && a.terrainTop.type == TerrainEnum.ROAD && a != tile.card.preTile);
-        /* let foundRoads: Tile[] = empties.filter(a => a.terrainTop && a.terrainTop.type == TerrainEnum.ROAD);
-        if (foundRoads && foundRoads.length) {
-            empties = foundRoads;
-        } else {
-            switch (tile.terrain.type) {
-                case TerrainEnum.BRIDGE:
-                    empties = empties.filter(a => (a.terrain.type != TerrainEnum.RESOURCES));
-                    break;
-                case TerrainEnum.CITY:
-                    empties = empties.filter(a => (a.terrain.type != TerrainEnum.BRIDGE));
-                    break;
-            }
-        } */
+        let empties: Tile[] = tile.linked.filter(a => !a.card && !a.terrain.locked && a.terrain.walkable);
+           // (a.terrain.type == TerrainEnum.ROAD || a.terrain.type == TerrainEnum.BRIDGE || a.terrain.type == TerrainEnum.RESOURCES));
 
         return moveToRandomSpot(tile, empties);
     }

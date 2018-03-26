@@ -47,7 +47,7 @@ export class BoardComponent implements OnInit {
   getCols() {
     let str: string = ''
     for (var i = 0; i < this.gameEngine.totalCols; i++) {
-      str += "69px ";
+      str += "78px ";
     }
     return str;
   }
@@ -55,7 +55,7 @@ export class BoardComponent implements OnInit {
   getRows() {
     let str: string = ''
     for (var i = 0; i < this.gameEngine.totalRows; i++) {
-      str += "50px ";
+      str += "55px ";
     }
     return str;
   }

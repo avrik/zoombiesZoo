@@ -36,7 +36,6 @@ export const tileStoreItems: IBuyItem[] = [
     { store: StoreItemType.TILE_STORE, label: 'storage', cost: { block: 9, lumber: 0, coin: 0 }, icon: UrlConst.STORAGE1, type: CardFamilyTypeEnum.STORAGE, description: "our resources need storage" },
     { store: StoreItemType.TILE_STORE, label: 'swamill', cost: { block: 9, lumber: 0, coin: 0 }, icon: UrlConst.SAWMILL1, type: CardFamilyTypeEnum.SAWMILL, description: "use sawmills to store lumber" },
     { store: StoreItemType.TILE_STORE, label: 'house', cost: { block: 9, lumber: 6, coin: 0 }, icon: UrlConst.HOUSE1, type: CardFamilyTypeEnum.HOUSE, description: "our people need houses" },
-    //{ store: StoreItemType.TILE_STORE, label: 'laboratory', cost: { block: 12, lumber: 6, coin: 3 }, icon: UrlConst.LABORATORY, type: CardFamilyTypeEnum.LABORATORY, description: "produce TNT!" },
     { store: StoreItemType.TILE_STORE, label: 'church', cost: { block: 15, lumber: 9, coin: 3 }, icon: UrlConst.CHURCH1, type: CardFamilyTypeEnum.CHURCH, description: "for trapping the undead!" },
 ]
 
@@ -46,11 +45,11 @@ export const tileBuildingItems: IBuyItem[] = [
 ]
 
 export const tileResourceBlockedItems: IBuyItem[] = [
-    { store: StoreItemType.TILE_STORE, label: 'develop', cost: { block: 0, lumber: 0, coin: 0 }, icon: UrlConst.TERRAIN_RESOURCE, type: 101, description: "discover new territory" }
+    { store: StoreItemType.TILE_STORE, label: 'develop', cost: { block: 0, lumber: 0, coin: 9 }, icon: UrlConst.TERRAIN_RESOURCE, type: 101, description: "discover new territory" }
 ]
 
 export const tileCityBlockedItems: IBuyItem[] = [
-    { store: StoreItemType.TILE_STORE, label: 'develop', cost: { block: 0, lumber: 0, coin: 0 }, icon: UrlConst.TERRAIN_CITY, type: 101, description: "discover new territory" }
+    { store: StoreItemType.TILE_STORE, label: 'develop', cost: { block: 0, lumber: 0, coin: 12 }, icon: UrlConst.TERRAIN_CITY, type: 101, description: "discover new territory" }
 ]
 
 export const mainStoreItems: IBuyItem[] = [
@@ -127,6 +126,8 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
                     //parsedState.tileClicked = new Tile(parsedState.tileClicked);
 
                     return parsedState;
+                } else {
+                    console.log("NO state saved!!")
                 }
             }
 
@@ -159,8 +160,6 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
         case Action.CLICK_TILE:
             newState.tileClicked = tile;
             clickTile(newState);
-            newState.nextCard = getNextCard(newState);
-
             nextTurn(newState);
             saveState(newState);
 
@@ -197,7 +196,7 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
                 if (newState.tileClicked.card) {
                     newState.showStoreItems = tileBuildingItems;
                 } else {
-                    newState.showStoreItems = tileStoreItems;
+                    newState.showStoreItems = newState.tileClicked.terrain.type == TerrainEnum.ROAD ? tileStoreItems.filter(a => a.type != CardFamilyTypeEnum.ROAD) : tileStoreItems;
                 }
 
             } else {
@@ -329,57 +328,34 @@ function moveTileBuilding(newState: IState, tile: Tile) {
 function buyBuilding(newState: IState, buyItem: IBuyItem): boolean {
 
     if (buyItem.type == CardFamilyTypeEnum.ROAD) {
-        let roadNear = newState.tileClicked.linked.find(a => a.terrainTop && a.terrainTop.type == TerrainEnum.ROAD || a.terrain.type == TerrainEnum.BRIDGE)
+        let roadNear = newState.tileClicked.linked.find(a => a.terrain.type == TerrainEnum.ROAD || a.terrain.type == TerrainEnum.BRIDGE)
         if (!roadNear) {
             newState.currentMessage = { title: "connect road to bridge", type: MessageType.TOOLBAR }
             return false;
         }
 
-        newState.tileClicked.terrainTop = new Terrain(TerrainEnum.ROAD);
+        newState.tileClicked.terrain = new Terrain(TerrainEnum.ROAD);
     }
     else {
-        /* let roadNear = newState.tileClicked.linked.find(a => a.terrainTop && a.terrainTop.type == TerrainEnum.ROAD)
-        if (buyItem.type == CardFamilyTypeEnum.HOUSE && !roadNear) {
-            newState.currentMessage = { title: "houses needs roads!", type: MessageType.TOOLBAR }
-            return false;
-        } */
-
         newState.tileClicked.card = getCardByFamily(buyItem.type);
         newState.energy -= newState.tileClicked.card.energyCost;
         findMatch(newState.tileClicked);
-        //newState.score += newState.tileClicked.card.value;
     }
-
-    /* newState.resources.coins -= buyItem.cost.coin;
-    if (buyItem.cost.block) {
-        removeFromResourcesStorage(newState, buyItem.cost.block);
-    }
-
-    if (buyItem.cost.lumber) {
-        removeFromResourcesSawmill(newState, buyItem.cost.lumber);
-    } */
 
     return true;
 }
 
 function nextTurn(newState: IState) {
     newState.currentMessage = null;
-
-
     newState.turn++;
-    //newState.energy--;
+
     moveWalkers(newState.tiles);
     checkBombs(newState);
 
-    newState.tiles.filter(a => a.card && a.card.type == CardTypeEnum.WALKER).forEach(a => a.card.state = CardState.REGULAR)
-    //newState.nextCard = getNextCard();
-
-    /* let found: Tile;
-    if (newState.tileClicked && newState.tileClicked.linked) {
-        found = newState.tileClicked.linked.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
-    }
- 
-    newState.floatTile = found ? found : newState.tiles.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES); */
+    newState.tiles.filter(a => a.card).forEach(b => {
+       if (b.card.type == CardTypeEnum.WALKER) b.card.state = CardState.REGULAR;
+       b.card.age++;
+    })
     newState.floatTile = getFloatTile(newState);
 
     let houses: Tile[] = newState.tiles.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.HOUSE)
@@ -391,10 +367,7 @@ function nextTurn(newState: IState) {
 
     checkIfLevelCompleted(newState);
     checkIfGameOver(newState);
-
-
 }
-
 
 function checkIfGameOver(newState: IState) {
     let relevantTiles: Tile[] = newState.tiles.filter(a => !a.terrain.locked && !a.card);
@@ -403,8 +376,3 @@ function checkIfGameOver(newState: IState) {
 
     if (!emptyInCity || !emptyInResources) newState.gameOver = true;
 }
-
-
-
-
-

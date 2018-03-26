@@ -3,6 +3,7 @@ import { getCardByFamily } from "./../reducers/getCardByFamily-reducer";
 import { MergeTypeEnum } from "../../enums/merge-type-enum.enum";
 import { TerrainEnum } from "../../enums/terrain.enum";
 import { findMatch } from "./find-match-reducer";
+import { getNextCard } from "./getNextCard-reducre";
 
 export function clickTile(state: IState): IState {
     let newState: IState = state;
@@ -25,6 +26,7 @@ export function clickTile(state: IState): IState {
 
     }
     
+    newState.nextCard = getNextCard(newState);
 
     return newState;
 }

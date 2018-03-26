@@ -49,7 +49,7 @@ const cityLevelsData: ICityLevelData[] = [
 ]
 
 const gameLevelsData: IGameLevelData[] = [
-    { goal: { verb: "collect", img: UrlConst.BRICK2, collect:{ type: CardFamilyTypeEnum.BRICK, level:2 }, amount: 3 }, reward: { coins: 1 } },
+    { goal: { verb: "collect", img: UrlConst.BRICK_IMG, collect:{ type: CardFamilyTypeEnum.BRICK, level:2 }, amount: 3 }, reward: { coins: 1 } },
     // { goal: { verb:"build", img: UrlConst.ROAD, roads: 1, amount: 1 }, reward: { coins: 1 } },
     { goal: { verb: "build", img: UrlConst.SAWMILL1, building: { type: CardFamilyTypeEnum.SAWMILL, level: 1 }, amount: 1 }, reward: { coins: 1 } },
     { goal: { verb: "build", img: UrlConst.HOUSE1, building: { type: CardFamilyTypeEnum.HOUSE, level: 1 }, amount: 1 }, reward: { coins: 1 } },

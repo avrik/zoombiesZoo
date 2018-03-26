@@ -2,6 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Tile } from 'app/game/board/tile/tile';
 import { trigger, state, style, transition, animate, keyframes } from '@angular/animations';
 
+const percentX = '80%'
+const percentY = '50%'
 
 @Component({
   selector: 'tile-top',
@@ -19,26 +21,60 @@ import { trigger, state, style, transition, animate, keyframes } from '@angular/
       
       transition('* => up', [
         animate('500ms ease', keyframes([
-          style({ transform: 'translateY(0%)', offset: 0 }),
-          style({ transform: 'translateY(-50%)', offset: 0.8 }),
-          style({ opacity: 0, offset: 1.0 }),
+          style({ transform: 'translateX(0%) translateY(0%)', offset: 0 }),
+          style({ transform: `translateY(-${percentY})`, offset: 1 }),
+        ]))
+      ]),
+
+      transition('* => down', [
+        animate('500ms ease', keyframes([
+          style({ transform: 'translateX(0%) translateY(0%)', offset: 0 }),
+          style({ transform: `translateY(${percentY})`, offset: 1 }),
+        ]))
+      ]),
+
+      transition('* => upLeft', [
+        animate('500ms ease', keyframes([
+          style({ transform: 'translateX(0%) translateY(0%)', offset: 0 }),
+          style({ transform: `translateX(-${percentX}) translateY(-${percentY})`, offset: 1 }),
+        ]))
+      ]),
+
+      transition('* => upRight', [
+        animate('500ms ease', keyframes([
+          style({ transform: 'translateX(0%) translateY(0%)', offset: 0 }),
+          style({ transform: `translateX(${percentX}) translateY(-${percentY})`, offset: 1 }),
+        ]))
+      ]),
+
+      transition('* => downLeft', [
+        animate('500ms ease', keyframes([
+          style({ transform: 'translateX(0%) translateY(0%)', offset: 0 }),
+          style({ transform: `translateX(-${percentX}) translateY(${percentY})`, offset: 1 }),
+        ]))
+      ]),
+
+      transition('* => downRight', [
+        animate('500ms ease', keyframes([
+          style({ transform: 'translateX(0%) translateY(0%)', offset: 0 }),
+          style({ transform: `translateX(${percentX}) translateY(${percentY})`, offset: 1 }),
         ]))
       ]),
 
 
-      //state('up', style({ transform: 'translateY(-50%)' })),
-      state('down', style({ transform: 'translateY(50%)' })),
-      state('upLeft', style({ transform: 'translateY(-30%) translateX(-90%)' })),
-      state('upRight', style({ transform: 'translateY(-30%) translateX(90%)' })),
-      state('downLeft', style({ transform: 'translateY(30%) translateX(-90%)' })),
-      state('downRight', style({ transform: 'translateY(30%) translateX(90%)' })),
+      /* state('up', style({ transform: 'translateY(-100%)' })),
+      state('down', style({ transform: 'translateY(100%)' })),
+      state('upLeft', style({ transform: 'translateY(-40%) translateX(-100%)' })),
+      state('upRight', style({ transform: 'translateY(-40%) translateX(100%)' })),
+      state('downLeft', style({ transform: 'translateY(40%) translateX(-100%)' })),
+      state('downRight', style({ transform: 'translateY(40%) translateX(100%)' })), */
   
-      transition('* => up', animate('300ms ease-out')),
-      transition('* => down', animate('300ms ease-out')),
-      transition('* => upLeft', animate('300ms ease-out')),
-      transition('* => upRight', animate('300ms ease-out')),
-      transition('* => downLeft', animate('300ms ease-out')),
-      transition('* => downRight', animate('300ms ease-out')),
+      /* transition('* => up', animate('1300ms ease-out')),
+      transition('* => down', animate('1300ms ease-out')),
+      transition('* => upLeft', animate('1300ms ease-out')),
+      transition('* => upRight', animate('1300ms ease-out')),
+      transition('* => downLeft', animate('1300ms ease-out')),
+      transition('* => downRight', animate('1300ms ease-out')), */
   
       transition('* => collect', [
         animate('200ms ease', keyframes([
@@ -60,6 +96,7 @@ export class TileTopComponent implements OnInit {
 
   onMoveDone(event) {
     this.tile.movment = null;
+
   }
 
 }

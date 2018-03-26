@@ -122,12 +122,11 @@ export class TileComponent implements OnInit {
       //this.moveState = this.tile.movment ? this.tile.movment.dir : "";
     }
     )
-    if (this.tile.xpos==1 && this.tile.ypos==1)
-    {
-    //if (this.tile.card) {
+    if (this.tile.xpos == 1 && this.tile.ypos == 1) {
+      //if (this.tile.card) {
       setTimeout(() => {
         //this.moveState="up";
-    
+
         this.tile.movment = { img: UrlConst.BRICK1, dir: "up" }
       }, 1000);
 
@@ -179,6 +178,9 @@ export class TileComponent implements OnInit {
         this.gameEngine.clickStashTile(this.tile);
         break;
 
+      case TerrainEnum.ROAD:
+        this.gameEngine.openStore(this.tile);
+        break;
       case TerrainEnum.CITY:
         if (this.tile.state == TileState.WAIT_FOR_MOVE) {
           this.gameEngine.placeMovingBuilding(this.tile);
