@@ -2,9 +2,11 @@
     position: absolute;
     height: 64;
     pointer-events: none;
+    text-align: center;
 }
 
 .collect-box {
+    position: absolute;
     color: white;
     background-color: red;
     border-radius: 5px;
@@ -15,6 +17,7 @@
     margin-top: -12px;
     border: 2px solid gold;
     padding: 0 2px 0 2px;
+    z-index: 99;
 }
 
 .count-frame {

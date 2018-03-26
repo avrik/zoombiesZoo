@@ -39,7 +39,16 @@ export function findMatch(tile: Tile) {
                 clearTile(linked);
             });
 
-            tile.card = new Card(tile.card.nextCard);
+    
+                 let imgIndex = totalCollected-tile.card.minForNextLevel;
+                
+       
+
+
+            console.log("1111 == "+imgIndex)
+            console.log("2222 == "+totalCollected)
+            console.log("3333 == "+tile.card.minForNextLevel)
+            tile.card = new Card(tile.card.nextCard,imgIndex);
 
             if (tile.card.reward) {
                 let emptyTile: Tile = tile.linked.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
@@ -50,7 +59,7 @@ export function findMatch(tile: Tile) {
             }
 
             tile.card.collected = totalCollected;
-
+                
             let extra: number = matchedTiles.length - (tile.card.minForNextLevel - 1);
             if (extra) {
                 let random: number = Math.floor(Math.random() * 100);

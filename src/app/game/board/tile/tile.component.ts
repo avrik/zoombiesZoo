@@ -38,21 +38,21 @@ import { IState } from '../../../redux/interfaces';
     trigger('moveAnimation', [
       state('up', style({ transform: 'translateY(-100%)' })),
       state('down', style({ transform: 'translateY(100%)' })),
-      state('left', style({ transform: 'translateX(-100%) translateY(-50%)' })),
-      state('right', style({ transform: 'translateX(100%) translateY(-50%)' })),
+      //state('left', style({ transform: 'translateX(-100%) translateY(-50%)' })),
+      //state('right', style({ transform: 'translateX(100%) translateY(-50%)' })),
       state('upLeft', style({ transform: 'translateY(-50%) translateX(-100%)' })),
       state('upRight', style({ transform: 'translateY(-50%) translateX(100%)' })),
       state('downLeft', style({ transform: 'translateY(50%) translateX(-100%)' })),
       state('downRight', style({ transform: 'translateY(50%) translateX(100%)' })),
 
-      transition('* => up', animate('100ms ease-out')),
-      transition('* => down', animate('100ms ease-out')),
-      transition('* => left', animate('100ms ease-out')),
-      transition('* => right', animate('100ms ease-out')),
-      transition('* => upLeft', animate('100ms ease-out')),
-      transition('* => upRight', animate('100ms ease-out')),
-      transition('* => downLeft', animate('100ms ease-out')),
-      transition('* => downRight', animate('100ms ease-out')),
+      transition('* => up', animate('300ms ease-out')),
+      transition('* => down', animate('300ms ease-out')),
+      //transition('* => left', animate('100ms ease-out')),
+      //transition('* => right', animate('100ms ease-out')),
+      transition('* => upLeft', animate('300ms ease-out')),
+      transition('* => upRight', animate('300ms ease-out')),
+      transition('* => downLeft', animate('300ms ease-out')),
+      transition('* => downRight', animate('300ms ease-out')),
 
       transition('* => collect', [
         animate('200ms ease', keyframes([
@@ -122,6 +122,42 @@ export class TileComponent implements OnInit {
       //this.moveState = this.tile.movment ? this.tile.movment.dir : "";
     }
     )
+    if (this.tile.xpos==1 && this.tile.ypos==1)
+    {
+    //if (this.tile.card) {
+      setTimeout(() => {
+        //this.moveState="up";
+    
+        this.tile.movment = { img: UrlConst.BRICK1, dir: "up" }
+      }, 1000);
+
+      setTimeout(() => {
+        this.moveState = "upRight";
+        this.tile.movment = { img: UrlConst.BRICK1, dir: "upRight" }
+      }, 2000);
+
+      setTimeout(() => {
+        this.moveState = "downRight";
+        this.tile.movment = { img: UrlConst.BRICK1, dir: "downRight" }
+      }, 3000);
+
+
+      setTimeout(() => {
+        this.moveState = "down";
+        this.tile.movment = { img: UrlConst.BRICK1, dir: "down" }
+      }, 4000);
+
+      setTimeout(() => {
+        this.moveState = "downLeft";
+        this.tile.movment = { img: UrlConst.BRICK1, dir: "downLeft" }
+      }, 5000);
+
+      setTimeout(() => {
+        this.moveState = "upLeft";
+        this.tile.movment = { img: UrlConst.BRICK1, dir: "upLeft" }
+      }, 6000);
+    }
+
   }
 
 
@@ -189,7 +225,7 @@ export class TileComponent implements OnInit {
   }
 
   onMouseOut() {
-    if (this.onMe) {
+    if (this.onMe && !this.tile.terrain.locked) {
       // this.tile.linked.forEach(a => a.opacity = 1)
       this.onMe = false;
 
@@ -212,7 +248,7 @@ export class TileComponent implements OnInit {
   }
 
   onMouseOver() {
-    if (!this.onMe) {
+    if (!this.onMe && !this.tile.terrain.locked) {
       this.onMe = true;
 
       if (this.tile.terrain && this.tile.terrain.type == TerrainEnum.CARD_HOLDER) {
@@ -292,7 +328,7 @@ export class TileComponent implements OnInit {
   gettilemargin() {
 
 
-    if (this.tile.terrain.type==TerrainEnum.CARD_HOLDER || this.tile.terrain.type==TerrainEnum.CARD_HOLDER_OPEN) {
+    if (this.tile.terrain.type == TerrainEnum.CARD_HOLDER || this.tile.terrain.type == TerrainEnum.CARD_HOLDER_OPEN) {
       return "-40px 0 0 0"
     }
 
@@ -304,7 +340,7 @@ export class TileComponent implements OnInit {
       }
     }
 
-    
+
 
     return "0"
   }

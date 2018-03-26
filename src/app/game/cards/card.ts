@@ -157,7 +157,7 @@ export const cardCollection: ICardData[] = [
     nextCard: {
       level: 1, family: familyBrick, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, chance: 5, img: UrlConst.BRICK2,
       nextCard: {
-        level: 2, family: familyBrick, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 3, img: UrlConst.BRICK3,
+        level: 2, family: familyBrick, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 3, img: UrlConst.BRICK3, imgs: [UrlConst.BRICK3, UrlConst.BRICK3_4, UrlConst.BRICK3_5, UrlConst.BRICK3_6],
         nextCard: {
           level: 3, family: familyBrick, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, collect: 9, reward: 1, img: UrlConst.BRICK4,
           nextCard: {
@@ -227,20 +227,32 @@ export class Card implements ICardData {
   collected: number;
   state: number = 0;
   autoPlaced: boolean = false;
+  energyCost: number = 1;
   // preTile: Tile;
 
-  constructor(data: ICardData) {
+  constructor(data: ICardData, imgIndex: number = -1) {
     if (!data) return;
 
     this.mergeBy = data.mergeBy;
     this.level = data.level ? data.level : 0;
     this.family = data.family;
     this.type = data.type;
+
+    if (this.type == CardTypeEnum.BUILDING) {
+      this.energyCost = 5;
+    }
+
     this.age = 0;
     this.minForNextLevel = data.minForNextLevel ? data.minForNextLevel : 3;
     this.nextCard = data.nextCard;
     this.chance = data.chance;
-    this.img = data.imgs ? data.imgs[Math.floor(Math.random() * data.imgs.length)] : data.img;
+
+    if (data.imgs) {
+      this.img = imgIndex >= 0 ? data.imgs[imgIndex] : data.imgs[Math.floor(Math.random() * data.imgs.length)];
+    } else {
+      this.img = data.img;
+    }
+    //this.img = data.imgs ? data.imgs[Math.floor(Math.random() * data.imgs.length)] : data.img;
     this.collect = data.collect ? data.collect : 0;
     this.reward = data.reward ? data.reward : 0;
     this.value = (Math.max((this.level * this.level * 10), 1) * this.family.value);

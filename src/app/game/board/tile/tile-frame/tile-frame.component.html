@@ -1,9 +1,6 @@
 
 <div class="count-frame">
-    <div class="collect-box">
-      <span *ngIf="(card.type == 0 || card.type == 4)">x{{card.collected}}</span>
-      <span *ngIf="card.type == 1"> {{card.collected | number : '1.0-0'}}/{{card.collect | number : '1.0-0'}}</span>
-    </div>
+    
 
     <img [style.opacity]="0.3" *ngIf="card.type == 0" src="assets/terrain/tile_frame.png" alt="" height="60">
 </div>

@@ -18,12 +18,13 @@ export function clickTile(state: IState): IState {
         }
     } else {
         newState.tileClicked.card = newState.nextCard;
-
+        newState.energy -= newState.tileClicked.card.energyCost;
         if (newState.tileClicked.card.mergeBy == MergeTypeEnum.MATCH) {
             findMatch(newState.tileClicked);
         }
 
     }
+    
 
     return newState;
 }

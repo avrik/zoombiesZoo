@@ -345,6 +345,7 @@ function buyBuilding(newState: IState, buyItem: IBuyItem): boolean {
         } */
 
         newState.tileClicked.card = getCardByFamily(buyItem.type);
+        newState.energy -= newState.tileClicked.card.energyCost;
         findMatch(newState.tileClicked);
         //newState.score += newState.tileClicked.card.value;
     }
@@ -366,7 +367,7 @@ function nextTurn(newState: IState) {
 
 
     newState.turn++;
-    newState.energy--;
+    //newState.energy--;
     moveWalkers(newState.tiles);
     checkBombs(newState);
 
@@ -396,8 +397,9 @@ function nextTurn(newState: IState) {
 
 
 function checkIfGameOver(newState: IState) {
-    let emptyInCity: number = newState.tiles.filter(a => a.terrain.type == TerrainEnum.CITY && !a.card).length;
-    let emptyInResources: number = newState.tiles.filter(a => a.terrain.type == TerrainEnum.RESOURCES && !a.card).length;
+    let relevantTiles: Tile[] = newState.tiles.filter(a => !a.terrain.locked && !a.card);
+    let emptyInCity: number = relevantTiles.filter(a => a.terrain.type == TerrainEnum.CITY).length;
+    let emptyInResources: number = relevantTiles.filter(a => a.terrain.type == TerrainEnum.RESOURCES).length;
 
     if (!emptyInCity || !emptyInResources) newState.gameOver = true;
 }

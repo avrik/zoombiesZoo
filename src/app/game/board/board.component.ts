@@ -70,5 +70,6 @@ export class BoardComponent implements OnInit {
 
   getMargin(tile: Tile) {
     return tile.xpos % 2 == 0 ? "0" : "-35% 0 0 0";
+    
   }
 }

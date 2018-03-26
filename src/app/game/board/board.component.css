@@ -1,4 +1,9 @@
 .container {
-    display: inline-grid;
+    
     margin-top: 20px;
+}
+
+.tile-grid {
+    display: inline-grid;
+    
 }

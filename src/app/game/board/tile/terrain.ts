@@ -6,9 +6,9 @@ export class Terrain {
     type: number;
     clickable: boolean = true;
     walkable: boolean = true;
-    _locked: boolean = false;
+    locked: boolean = false;
 
-    set locked(value: boolean) {
+    /* set locked(value: boolean) {
         this._locked = value;
         this.walkable = !value;
     }
@@ -16,7 +16,7 @@ export class Terrain {
     get locked() {
         return this._locked;
 
-    }
+    } */
 
     constructor(type: number = 0) {
         this.type = type;

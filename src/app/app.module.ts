@@ -27,6 +27,8 @@ import { MessageWindowComponent } from './game/toolbar/message-window/message-wi
 import { LumberComponent } from './game/item-view/lumber/lumber.component';
 import { ItemImgComponent } from './game/item-view/item-img/item-img.component';
 import { TileFrameComponent } from './game/board/tile/tile-frame/tile-frame.component';
+import { BatteryViewComponent } from './game/toolbar/battery-view/battery-view.component';
+import { TileTopComponent } from './game/board/tile/tile-top/tile-top.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +51,8 @@ import { TileFrameComponent } from './game/board/tile/tile-frame/tile-frame.comp
     LumberComponent,
     ItemImgComponent,
     TileFrameComponent,
+    BatteryViewComponent,
+    TileTopComponent,
 
   ],
   imports: [

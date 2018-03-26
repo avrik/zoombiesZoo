@@ -36,18 +36,17 @@
 
     <div class="text-box">
 
-        <span style="display:flex;flex-direction:column">
+        <!-- <span style="display:flex;flex-direction:column"> -->
+        <span style="display:flex;justify-content:space-around">
             <span>
                 <ng-container i18n="@@score">score </ng-container> :
-                <b class="big-number" style="line-height:20px">{{score| number}}</b>
+                <b class="big-number" style="line-height:40px">{{score| number}}</b>
             </span>
 
-            <span>
-                <ng-container i18n="@@turnLeft">moves left </ng-container> :
-                <b  style="line-height:20px">{{turnsLeft| number}}</b>
-            </span>
-
+            <battery-view></battery-view>
+            
         </span>
+       
     </div>
 
     <app-resource-table></app-resource-table>
