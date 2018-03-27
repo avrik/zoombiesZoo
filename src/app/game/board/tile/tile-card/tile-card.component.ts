@@ -7,6 +7,7 @@ import { MessagesService } from '../../../../services/messages.service';
 import { trigger, state, style, transition, animate, keyframes } from '@angular/animations';
 import { CardTypeEnum } from 'app/enums/card-type-enum.enum';
 import { TerrainEnum } from '../../../../enums/terrain.enum';
+import { UrlConst } from '../../../../consts/url-const';
 
 @Component({
   selector: 'app-tile-card',
@@ -60,6 +61,7 @@ export class TileCardComponent implements OnInit {
   @Input() onTerrain: number;
   @Input() card: Card;
   @Input() onTop:boolean;
+  @Input() onMe:boolean;
   animState: string;
 
   constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
@@ -125,7 +127,7 @@ export class TileCardComponent implements OnInit {
 
   getMargin() {
     if (this.onTerrain == TerrainEnum.CARD_HOLDER) {
-      return "-40px 0 0 15px"
+      return "-40px 0 0 0px"
     }
 
     /* if (this.card.family.name == CardFamilyTypeEnum.COIN || this.card.family.name == CardFamilyTypeEnum.COIN_SILVER) {
@@ -154,6 +156,14 @@ export class TileCardComponent implements OnInit {
   getImg() {
 
     return this.card.img;
+  }
+
+  get isShowBubble() {
+    return this.card && this.onMe && this.card.type == CardTypeEnum.WALKER;
+  }
+
+  get getBubbleImg() {
+    return UrlConst.HOUSE1;
   }
 
 

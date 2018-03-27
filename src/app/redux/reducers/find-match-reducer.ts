@@ -44,8 +44,10 @@ export function findMatch(tile: Tile) {
 
             if (tile.card.level == 0) {
                 imgIndex = matchedTiles.length >= 6 ? 1 : 0;
+                if (matchedTiles.length >= 6) totalCollected = 2;
             } else {
                 imgIndex = totalCollected - tile.card.minForNextLevel;
+
             }
 
 
@@ -61,10 +63,12 @@ export function findMatch(tile: Tile) {
 
             tile.card.collected = totalCollected;
 
+            console.info("- merge to = " , totalCollected);
+
             let extra: number = matchedTiles.length - (tile.card.minForNextLevel - 1);
             if (extra) {
                 let random: number = Math.floor(Math.random() * 100);
-                console.log(random)
+                //console.log(random)
                 if (extra >= random) {
                     //const arr = [1, 10, 50, 100, 200, 500, 1000, 2000, 5000];
                     //this.addToStorage(CardFamilyTypeEnum.COIN, (extra / 100) * (arr[(tile.card.level - 1)]));

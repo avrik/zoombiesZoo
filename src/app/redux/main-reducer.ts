@@ -1,4 +1,3 @@
-
 import { CardTypeEnum } from 'app/enums/card-type-enum.enum';
 import { GameLevel } from './../game/levels/game-level';
 import { TerrainEnum } from './../enums/terrain.enum';
@@ -24,12 +23,13 @@ import { generateWorld, populateWorldWithResources, mapLinkedTiles } from './red
 import { clickTile } from './reducers/tile-click-reducer';
 import { findMatch } from './reducers/find-match-reducer';
 import { checkBombs } from './reducers/check-bombs-reducer';
-import { clearTile } from './reducers/tile-reducer';
+import { clearTile, getFloatTile } from './reducers/tile-reducer';
 import { moveWalkers } from './reducers/move-walkers-reducer';
+import { restoreGameState } from './reducers/restore-gamestate-reducer';
+import { buyItem } from './reducers/buy-item-reducer';
+import { nextTurn } from './reducers/next-turn-reducer';
 
-export class MainReducer {
-
-}
+export class MainReducer { }
 
 export const tileStoreItems: IBuyItem[] = [
     { store: StoreItemType.TILE_STORE, label: 'road', cost: { block: 3, lumber: 0, coin: 0 }, icon: UrlConst.ROAD, type: CardFamilyTypeEnum.ROAD, description: "connect people to houses" },
@@ -62,6 +62,7 @@ export const mainStoreItems: IBuyItem[] = [
 ]
 
 const initState: IState = {
+    lastActionDate: new Date(),
     energy: 1000,
     gameOver: false,
     tiles: [],
@@ -70,7 +71,6 @@ const initState: IState = {
     score: 0,
     population: 0,
     resources: { bricks: 0, lumber: 0, coins: 0, silver: 0, maxStorage: 0 },
-
     tileClicked: null,
     floatTile: null,
     pendingMoveCard: null,
@@ -87,8 +87,6 @@ let prevGameState: IState;
 
 export function mainReducerFunc(state: IState = initState, action: IAction): IState {
 
-
-
     //localStorage.removeItem("lastState");
     if (action.type == Action.CLICK_TILE) {
         prevGameState = getCurState(state);
@@ -96,13 +94,11 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
 
     let newState: IState = Object.assign({}, state);
 
-
     if (action.type != Action.INIT_GAME && newState.energy <= 0) {
         console.log("no more energy!!!!")
         newState.currentMessage = { title: "No more energy - wait for recharge", message: "wait for your energy to go back", type: MessageType.TOOLBAR }
         return newState;
     }
-
 
     let tile: Tile;
 
@@ -110,31 +106,16 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
         tile = action.payload;
     }
 
-    console.info('new action ' + action.type);
+    console.info('Dispatch action :', action.type);
 
     switch (action.type) {
         case Action.RESTORE_GAMESTATE:
-            let lastState: string = localStorage.getItem('lastState');
-            if (lastState) {
-                let parsedState: IState = JSON.parse(lastState);
-                if (parsedState && parsedState.tiles && parsedState.tiles.length) {
-                    parsedState.tiles = parsedState.tiles.map(a => new Tile(a));
-                    mapLinkedTiles(parsedState.tiles);
 
-                    // parsedState.floatTile = new Tile(parsedState.floatTile);
-                    //parsedState.floatTile = new Tile(parsedState.floatTile);
-                    //parsedState.tileClicked = new Tile(parsedState.tileClicked);
-
-                    return parsedState;
-                } else {
-                    console.log("NO state saved!!")
-                }
-            }
-
-            return newState;
+            return restoreGameState(newState);
 
         case Action.INIT_GAME:
             newState = Object.assign({}, initState);
+            newState.resources = { bricks: 0, lumber: 0, coins: 0 };
             newState.tiles = generateWorld(action.payload.rows, action.payload.cols);
             return newState;
 
@@ -206,7 +187,7 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             return newState;
 
         case Action.BUY_ITEM:
-            let buyItem: IBuyItem = action.payload;
+            /* let buyItem: IBuyItem = action.payload;
             let purchased: boolean
 
             switch (buyItem.store) {
@@ -246,8 +227,8 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
                 }
             }
 
-            return newState;
-
+            return newState; */
+            return buyItem(newState, action.payload);
 
         case Action.DEVELOP_TILE:
             if (newState.tileClicked) newState.tileClicked.terrain.locked = false;
@@ -265,6 +246,13 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             }
             return newState;
 
+        case Action.ADD_ENERGY: {
+            newState.energy += action.payload;
+            if (newState.energy > newState.maxEnergy) {
+                newState.energy = newState.maxEnergy;
+            }
+            return newState;
+        }
         default:
             return newState;
     }
@@ -272,6 +260,7 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
 
 function getCurState(state: IState): IState {
     return {
+        lastActionDate: new Date(),
         energy: state.energy,
         gameOver: state.gameOver,
         tiles: state.tiles.map(a => a.toString()),
@@ -280,7 +269,6 @@ function getCurState(state: IState): IState {
         score: state.score,
         population: state.population,
         resources: state.resources ? Object.assign({}, state.resources) : null,
-
         tileClicked: state.tileClicked ? state.tileClicked.toString() : null,
         floatTile: state.floatTile ? state.floatTile.toString() : null,
         pendingMoveCard: state.pendingMoveCard ? Object.assign({}, state.pendingMoveCard) : null,
@@ -296,83 +284,11 @@ function getCurState(state: IState): IState {
 
 function saveState(state: IState) {
     let savedata = getCurState(state);
-    //debugger;
     localStorage.setItem('lastState', JSON.stringify(savedata));
-}
-
-function getFloatTile(newState: IState): Tile {
-    let found: Tile;
-    if (newState.tileClicked && newState.tileClicked.linked) {
-        found = newState.tileClicked.linked.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
-    }
-
-    return found ? found : newState.tiles.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
-    //return newState.tiles.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
 }
 
 function stashCard(newState: IState, tile: Tile) {
     let temp: Card = tile.card;
     tile.card = newState.nextCard;
     newState.nextCard = temp ? temp : getNextCard(newState);
-}
-
-function moveTileBuilding(newState: IState, tile: Tile) {
-    newState.tiles.forEach(a => a.state = TileState.DISABLED);
-
-    let moveOptions: Tile[] = newState.tiles.filter(a => a.terrain.type == TerrainEnum.CITY && !a.card);
-    moveOptions.forEach(a => { a.state = TileState.WAIT_FOR_MOVE });
-    newState.pendingMoveCard = Object.assign({}, tile.card);
-    clearTile(tile);
-}
-
-function buyBuilding(newState: IState, buyItem: IBuyItem): boolean {
-
-    if (buyItem.type == CardFamilyTypeEnum.ROAD) {
-        let roadNear = newState.tileClicked.linked.find(a => a.terrain.type == TerrainEnum.ROAD || a.terrain.type == TerrainEnum.BRIDGE)
-        if (!roadNear) {
-            newState.currentMessage = { title: "connect road to bridge", type: MessageType.TOOLBAR }
-            return false;
-        }
-
-        newState.tileClicked.terrain = new Terrain(TerrainEnum.ROAD);
-    }
-    else {
-        newState.tileClicked.card = getCardByFamily(buyItem.type);
-        newState.energy -= newState.tileClicked.card.energyCost;
-        findMatch(newState.tileClicked);
-    }
-
-    return true;
-}
-
-function nextTurn(newState: IState) {
-    newState.currentMessage = null;
-    newState.turn++;
-
-    moveWalkers(newState.tiles);
-    checkBombs(newState);
-
-    newState.tiles.filter(a => a.card).forEach(b => {
-       if (b.card.type == CardTypeEnum.WALKER) b.card.state = CardState.REGULAR;
-       b.card.age++;
-    })
-    newState.floatTile = getFloatTile(newState);
-
-    let houses: Tile[] = newState.tiles.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.HOUSE)
-    if (houses.length) {
-        newState.population = houses.map(a => a.card.collected).reduce((prev, cur) => prev + cur);
-    }
-
-    newState.score += newState.tileClicked.card ? newState.tileClicked.card.value : 0;
-
-    checkIfLevelCompleted(newState);
-    checkIfGameOver(newState);
-}
-
-function checkIfGameOver(newState: IState) {
-    let relevantTiles: Tile[] = newState.tiles.filter(a => !a.terrain.locked && !a.card);
-    let emptyInCity: number = relevantTiles.filter(a => a.terrain.type == TerrainEnum.CITY).length;
-    let emptyInResources: number = relevantTiles.filter(a => a.terrain.type == TerrainEnum.RESOURCES).length;
-
-    if (!emptyInCity || !emptyInResources) newState.gameOver = true;
 }

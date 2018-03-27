@@ -346,4 +346,9 @@ export class TileComponent implements OnInit {
 
     return "0"
   }
+
+
+  get isShowOver():boolean {
+    return this.onMe && !this.tile.card && (this.tile.terrain.type==TerrainEnum.RESOURCES || this.tile.terrain.type==TerrainEnum.CARD_HOLDER)
+  }
 }

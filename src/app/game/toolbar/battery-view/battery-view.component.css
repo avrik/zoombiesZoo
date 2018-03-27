@@ -1,21 +1,37 @@
 .container {
-    margin:5px 0 0 10px;
-    border:3px solid gold;
-    border-radius: 30px;
-    width:30px;
-    height: 30px;
-    background-color: orange;
-    line-height: 30px;
+    margin: 5px 0 0 10px;
+    border-radius: 5px;
+    width: 80px;
+    height: 15px;
+    background-color: rgb(124, 92, 32);
+    line-height: 15px;
     color: white;
+    transition: all 200ms;
+    border: 1px solid #160729;
+    width: 90%;
+    box-shadow: inset 2px 5px 5px 0px #0000004a;
 }
 
 .battery {
-    /* position: absolute; */
-    position: relative;
-    border: 1px solid white;
-    width: 80%;
-    height: 10px;
-    left: 10%;
-    top:5px;
-    background-color: orangered;
+   
+    border:none;
+    border-radius:5px;
+    background-color: rgb(221, 151, 20);
+    /* padding: 0 10px 0 10px; */
+    float: left;
+    box-shadow: inset -1px 0 1px #f5c475;
+
+}
+
+.timer {
+
+    /* background-color: white; */
+    opacity: 1;
+    width:100%;
+    border-top: 2px solid #8767b1;
+    transition: width 900ms;
+    transition-timing-function: linear;
+    margin-top:-3px; 
+    border-radius: 5px;
+    /* height: 15px; */
 }

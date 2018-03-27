@@ -42,7 +42,9 @@ export class GameEngineService {
     }
   } */
 
-
+  addEnergy(amount: number) {
+    this.store.dispatch({ type: Action.ADD_ENERGY, payload: amount });
+  }
   setNextCard(card: ICardData) {
     this.store.dispatch({ type: Action.SET_NEXT_CARD, payload: { type: card.family.name } });
   }

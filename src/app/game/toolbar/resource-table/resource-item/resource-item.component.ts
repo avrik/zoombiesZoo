@@ -31,7 +31,7 @@ export class ResourceItemComponent implements OnInit {
   state: string = "out";
   resourceStorage: IResourceStorage;
   currentState: IState;
-  totalStorage: number;
+ // totalStorage: number;
 
   constructor(private gameEngine: GameEngineService) {
 
@@ -43,26 +43,23 @@ export class ResourceItemComponent implements OnInit {
       let newState: IState = this.gameEngine.store.getState();
       let storages: Tile[];
 
+      if (newState.tiles) {
       switch (this.type) {
-        case 0:
-          if (newState.tiles) {
+        case 0:          
             storages = newState.tiles.filter(a => a.card && a.card.family &&  a.card.family.name == CardFamilyTypeEnum.STORAGE);
-            this.totalStorage = storages.length ? storages.map(a => a.card.collect).reduce((prev, cur) => prev + cur) : 0;
-          }
-
+            //this.totalStorage = storages.length ? storages.map(a => a.card.collect).reduce((prev, cur) => prev + cur) : 0;
           break;
         case 1:
-          if (newState.tiles) {
+     
             storages = newState.tiles.filter(a => a.card && a.card.family && a.card.family.name == CardFamilyTypeEnum.SAWMILL);
-            this.totalStorage = storages.length ? storages.map(a => a.card.collect).reduce((prev, cur) => prev + cur) : 0;
-          }
+            //this.totalStorage = storages.length ? storages.map(a => a.card.collect).reduce((prev, cur) => prev + cur) : 0;
+     
           break;
-        case 2:
+       /*  case 2:
           this.totalStorage = 0
-          break;
-        default:
-          break;
+          break; */
       }
+    }
 
     })
   }

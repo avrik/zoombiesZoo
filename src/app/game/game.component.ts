@@ -6,6 +6,7 @@ import { MessagesService } from '../services/messages.service';
 import { MessageType } from '../enums/message-type.enum';
 import { IBuyItem, IState } from 'app/redux/interfaces';
 import { Messages } from '../enums/messages.enum';
+import { DigitCounterService } from '../services/digit-counter.service';
 
 @Component({
   selector: 'app-game',
@@ -17,8 +18,11 @@ export class GameComponent implements OnInit {
   debug: boolean;
   showStoreItems: IBuyItem[];
 
-  constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
-
+  constructor(private gameEngine: GameEngineService,
+    private messagesService: MessagesService,
+    private counterService: DigitCounterService) 
+    {
+    //this.counterService.setCounter(0, 3000);
     this.gameEngine.store.subscribe(() => {
       let newState: IState = this.gameEngine.store.getState();
 

@@ -7,10 +7,11 @@ import { IMessage } from 'app/services/messages.service';
 
 export interface IAction {
     payload: any;
-    type: number;
+    type: any;
 }
 
 export interface IState {
+    lastActionDate:Date,
     maxEnergy:number,
     energy: number;
     pendingMoveCard: Card;

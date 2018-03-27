@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { GameEngineService } from 'app/services/game-engine.service';
 import { GameLevel, CityLevel } from '../levels/game-level';
 import { IState } from 'app/redux/interfaces';
+import { DigitCounterService } from '../../services/digit-counter.service';
 
 @Component({
   selector: 'game-toolbar',
@@ -16,17 +17,28 @@ export class ToolbarComponent implements OnInit {
   population: number;
   currentLevel: GameLevel;
   currentCityLevel: CityLevel;
-  levelName:string;
+  levelName: string;
   percent: number;
   turnsLeft: number;
 
-  constructor(public gameEngine: GameEngineService) {
+  constructor(public gameEngine: GameEngineService, private counter: DigitCounterService) {
+
+    
 
     this.gameEngine.store.subscribe(() => {
       let newState: IState = this.gameEngine.store.getState()
       this.years = Math.round(newState.turn / 360) + 1;
       this.days = newState.turn;
-      this.score = newState.score;
+      //this.score = newState.score;
+
+      if (this.score != newState.score) {
+        this.counter.setCounter(this.score, newState.score);
+
+        this.counter.time.subscribe(num => {
+          this.score = num;
+        })
+      }
+
       this.turnsLeft = newState.energy;
       this.currentLevel = newState.level;
       this.currentCityLevel = newState.cityLevel;
@@ -34,7 +46,7 @@ export class ToolbarComponent implements OnInit {
       this.levelName = this.currentCityLevel.name
       if (this.population != newState.population) {
         this.population = newState.population;
-   
+
         let prevGoal: number = newState.cityLevel.prevLevel ? newState.cityLevel.prevLevel.goal : 0;
         let curGoal: number = newState.cityLevel.goal - prevGoal;
 

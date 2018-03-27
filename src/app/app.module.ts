@@ -29,6 +29,7 @@ import { ItemImgComponent } from './game/item-view/item-img/item-img.component';
 import { TileFrameComponent } from './game/board/tile/tile-frame/tile-frame.component';
 import { BatteryViewComponent } from './game/toolbar/battery-view/battery-view.component';
 import { TileTopComponent } from './game/board/tile/tile-top/tile-top.component';
+import { DigitCounterService } from './services/digit-counter.service';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { TileTopComponent } from './game/board/tile/tile-top/tile-top.component'
   providers: [
     GameEngineService, 
     MessagesService,
+    DigitCounterService
    // { provide: LOCALE_ID, useValue: "he" },
   ],
   bootstrap: [AppComponent]

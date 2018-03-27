@@ -2,12 +2,14 @@
     position: absolute;
     width: 300px;
     height: 150px;
-    background-color: gainsboro;
+    background-color: white;
     text-align: center;
     top: 20%;
     left: 40%;
     z-index: 1000;
-    box-shadow: 2px 2px black;
+    box-shadow: -1px 1px 13px 3px #000000a3;
+    border-radius: 20px;
+    border:2px solid #160729;
 }
 
 .title {
@@ -17,6 +19,41 @@
 .content {
     padding: 10px;
     font-size: 12px;
-    background-color: antiquewhite;
+    background-color: white;
     height: 50%;
+}
+
+button {
+    border: 1px solid #160729;
+    background-color: #2D9AE2;
+    color: white;
+    cursor: pointer;
+    border: 1px solid rgba(0, 0, 0, 0);
+    transition: all 200ms;
+    height: 40px;
+}
+
+button:hover {
+    background-color: rgb(255, 255, 255);
+    color: #160729;
+    border:1px solid #160729;
+}
+
+.butn {
+    padding: 5px 20px;
+}
+
+.butn:hover { 
+    padding: 5px 30px;
+}
+
+.close-butn {
+    width:30px;
+    height:30px;
+    border-radius: 30px;
+    float:left;
+    margin:-10px 0 0 -10px;
+    font-size: 20px;
+    line-height: 20px;
+    font-weight: 500;
 }

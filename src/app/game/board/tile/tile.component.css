@@ -4,6 +4,7 @@
     cursor: pointer;
     /* position: absolute; */
     border: 1px solid rgba(0, 0, 0, 0);
+    
 }
 
 .card-float {
@@ -20,6 +21,9 @@
 
 }
 
+.locked {
+    filter: brightness(80%);
+}
 .over {
     height: 54px;
     width: 64px;

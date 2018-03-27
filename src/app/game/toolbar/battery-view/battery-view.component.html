@@ -1,6 +1,13 @@
 <div class="container">
-  {{energy | number}}
-  <!-- <div class="battery">
+  <div class="timer" [style.width]="countdownPercent"></div>
+ <span style="position: absolute;margin-left:-30px;font-size:10px">energy ({{percent}})</span> 
+  <div class="battery" [style.width]="percent">
 
-  </div> -->
+    <span style="display:flex;float: right;margin-right:5px">
+    <!-- <span style="color:black;float:left"> {{energy | number}}</span>  -->
+   <!-- <span>  {{percent}}</span>  -->
+   
+   <img style="color:red" src="assets/energy_icon.png" alt="" height="15">
+  </span>
+  </div>
 </div>

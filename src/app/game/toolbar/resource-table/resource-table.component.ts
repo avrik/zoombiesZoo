@@ -28,7 +28,7 @@ export class ResourceTableComponent implements OnInit {
       let newState: IState = this.gameEngine.store.getState();
 
       if (this.resourceStorage != newState.resources) {
-
+        this.resourceStorage = newState.resources;
         if (this.resourceStorage) {
           if (this.brickRef && newState.resources.bricks > this.resourceStorage.bricks) this.brickRef.animate();
           if (this.lumberRef && newState.resources.lumber > this.resourceStorage.lumber) this.lumberRef.animate();
@@ -36,7 +36,7 @@ export class ResourceTableComponent implements OnInit {
           //if (newState.resources.silver > this.resourceStorage.silver) this.silverRef.animate();
         }
 
-        this.resourceStorage = Object.assign({}, newState.resources);
+        
       }
     });
   }
