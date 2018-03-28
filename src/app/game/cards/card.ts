@@ -20,6 +20,7 @@ export interface ICardData {
   chance?: number;
   img?: string;
   imgs?: string[];
+  imgOptions?: string[];
   collect?: number;
   collected?: number;
   reward?: number;
@@ -151,7 +152,7 @@ export const cardCollection: ICardData[] = [
   },
   churchCard,
   {
-    level: 0, family: familyBrick, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, chance: 100, imgs: [UrlConst.BRICK1, UrlConst.BRICK1_2],
+    level: 0, family: familyBrick, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, chance: 100, imgOptions: [UrlConst.BRICK1, UrlConst.BRICK1_2],
     nextCard: {
       level: 1, family: familyBrick, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, chance: 5, img: UrlConst.BRICK2, imgs: [UrlConst.BRICK2, UrlConst.BRICK2_2],
       nextCard: {
@@ -170,7 +171,7 @@ export const cardCollection: ICardData[] = [
   },
   {
     //level: 0, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, img: UrlConst.LUMBER1,
-    level: 0, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, chance: 70, imgs: [UrlConst.LUMBER1, UrlConst.LUMBER1_2],
+    level: 0, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, chance: 70, imgOptions: [UrlConst.LUMBER1, UrlConst.LUMBER1_2],
     nextCard: {
       //level: 1, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE,img: UrlConst.LUMBER2,
       level: 1, family: familyLumber, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, chance: 5, img: UrlConst.LUMBER2, imgs: [UrlConst.LUMBER2, UrlConst.LUMBER2_2],
@@ -188,13 +189,13 @@ export const cardCollection: ICardData[] = [
       }
     }
   },
-  { level: 0, family: familyPerson, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 5, imgs: [UrlConst.PERSON1, UrlConst.PERSON2, UrlConst.PERSON3, UrlConst.PERSON4] },
+  { level: 0, family: familyPerson, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 5, imgOptions: [UrlConst.PERSON1, UrlConst.PERSON2, UrlConst.PERSON3, UrlConst.PERSON4] },
   {
     level: 0, family: { name: CardFamilyTypeEnum.WILD, value: -1 }, mergeBy: MergeTypeEnum.MATCH, type: CardTypeEnum.RESOURCE, chance: 10, img: UrlConst.WILD,
     nextCard: graveCard,
   },
   {
-    level: 1, family: { name: CardFamilyTypeEnum.ANIMAL, value: 0 }, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 0, imgs: [UrlConst.ANIMAL, UrlConst.ANIMAL2],
+    level: 1, family: { name: CardFamilyTypeEnum.ANIMAL, value: 0 }, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 0, imgOptions: [UrlConst.ANIMAL, UrlConst.ANIMAL2],
     //level: 1, family: { name: CardFamilyTypeEnum.ANIMAL, value: 0 }, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 15, img: UrlConst.ANIMAL,
     nextCard: graveCard,
   },
@@ -245,8 +246,11 @@ export class Card implements ICardData {
     this.nextCard = data.nextCard;
     this.chance = data.chance;
 
-    if (data.imgs) {
-      this.img = imgIndex >= 0 ? data.imgs[imgIndex] : data.imgs[Math.floor(Math.random() * data.imgs.length)];
+    if (data.imgOptions) {
+      this.img = data.imgOptions[Math.floor(Math.random() * data.imgOptions.length)];
+    } else
+    if (data.imgs && imgIndex >= 0) {
+      this.img = data.imgs[imgIndex];
     } else {
       this.img = data.img;
     }
