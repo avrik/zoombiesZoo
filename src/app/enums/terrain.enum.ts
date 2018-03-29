@@ -7,9 +7,9 @@ export enum TerrainEnum {
     CARD_HOLDER_OPEN = 4.5,
     CARD_HOLDER = 4,
     ROAD = 5,
-    WALL = 6,
-    ZOOMBIE_TRAP = 10,
+    // WALL = 6,
+    //ZOOMBIE_TRAP = 10,
     EXPLOSION = 11,
-    BLOCKED=100
+    BLOCKED = 100
 
 }

@@ -1,8 +1,9 @@
 <div class="container" [@animationState]="state" (@animationState.done)="onAnimationDone()">
-    <div class="tile-grid" style="position: absolute;z-index:999;pointer-events: none" [style.grid-template-columns]="getCols()"
+    <div class="tile-grid" style="position: absolute;z-index:999;pointer-events: none;margin-top:-85px" [style.grid-template-columns]="getCols()"
         [style.grid-template-rows]="getRows()">
         <!-- <app-tile-card *ngFor="let tile of tiles" [onTop]="true" [card]="tile.card"></app-tile-card> -->
-        <tile-top *ngFor="let tile of tiles" [tile]="tile"></tile-top>
+        <tile-top *ngFor="let tile of tiles" [tile]="tile" [style.margin]="getMargin(tile)"></tile-top>
+        
     </div>
 
     <div class="tile-grid" style="z-index:5" [style.grid-template-columns]="getCols()" [style.grid-template-rows]="getRows()">

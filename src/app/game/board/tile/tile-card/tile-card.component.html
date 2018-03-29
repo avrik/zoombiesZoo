@@ -2,7 +2,7 @@
     <!-- <p style="margin:1px" >title</p> -->
     <img [src]="getBubbleImg" height="40" alt="">
 </div>
-<div  *ngIf="card" class="container">
+<div  *ngIf="card && show" class="container">
 
     <tile-frame *ngIf="card.collect" [card]="card"></tile-frame>
 
@@ -13,7 +13,7 @@
 
     
     <!-- <div [@animState]="animState" style="position: absolute;" [style.margin]="getMargin()"> -->
-    <div style="position: absolute;" [style.margin]="getMargin()">
+    <div [@animState]="animState" (@animState.done)="onAnimDone($event)" style="position: absolute;" [style.margin]="getMargin()">
         <!-- <img *ngIf="card.img" [src]="getImg()" alt="" [height]="getheight()"> -->
         
         <img *ngIf="card.img" [src]="getImg()" alt="" width="100">

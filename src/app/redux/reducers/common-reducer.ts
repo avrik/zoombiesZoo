@@ -13,18 +13,27 @@ export function getMoveDir(from: Tile, to: Tile): string {
 
     if (to.xpos < from.xpos && to.ypos == from.ypos) { return "left" } */
 
+    if (from.ypos > to.ypos && from.xpos == to.xpos) { return "up" };
+    if (from.ypos < to.ypos && from.xpos == to.xpos) { return "down" };
+    
+    /* if (from.ypos > to.ypos && from.xpos > to.xpos) { return "upLeft" }
+        if (from.ypos > to.ypos && from.xpos < to.xpos) { return "upRight" }
+        if (from.ypos < to.ypos && from.xpos < to.xpos) { return "downRight" }
+        if (from.ypos < to.ypos && from.xpos > to.xpos) { return "downLeft" } */
 
-    if (from.ypos > to.ypos && from.xpos > to.xpos) { return "upLeft" }
-    if (from.ypos > to.ypos && from.xpos == to.xpos) { return "up" }
-    if (from.ypos > to.ypos && from.xpos < to.xpos) { return "upRight" }
 
-    if (from.ypos < to.ypos && from.ypos < to.ypos) { return "downRight" }
+    if (from.xpos % 2 == 0) {
+        if (from.ypos >= to.ypos && from.xpos > to.xpos) { return "upLeft" }
+        if (from.ypos >= to.ypos && from.xpos < to.xpos) { return "upRight" }
+        if (from.ypos < to.ypos && from.xpos < to.xpos) { return "downRight" }
+        if (from.ypos < to.ypos && from.xpos > to.xpos) { return "downLeft" }
+    } else {
+        if (from.ypos > (to.ypos) && from.xpos > to.xpos) { return "upLeft" }
+        if (from.ypos > (to.ypos) && from.xpos < to.xpos) { return "upRight" }
+        if (from.ypos <= (to.ypos) && from.xpos < to.xpos) { return "downRight" }
+        if (from.ypos <= (to.ypos) && from.xpos > to.xpos) { return "downLeft" }
+    }
 
-   // if (to.ypos > from.ypos && to.xpos > from.xpos) { return "downRight" }
-    if (from.ypos < to.ypos && from.xpos == to.xpos) { return "down" }
-   // if (to.ypos > from.ypos && to.xpos < from.xpos) { return "downLeft" }
-
-    if (from.xpos > to.xpos && from.ypos < to.ypos) { return "downLeft" }
 }
 
 export function getLinkedGroup(firstOne: Tile): Tile[] {
@@ -44,3 +53,4 @@ export function getLinkedGroup(firstOne: Tile): Tile[] {
 
     return group;
 }
+

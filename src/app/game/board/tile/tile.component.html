@@ -17,15 +17,9 @@
 
 
         <!-- <div #cardRef *ngIf="gotCard==true" [@visibilityChanged]="tile.showDelay"> -->
-        <div #cardRef *ngIf="gotCard==true" >
+        <div #cardRef *ngIf="isShowCardOnTile">
             <app-tile-card [card]="tile.card" [onTerrain]="tile.terrain.type" [onMe]="onMe"></app-tile-card>
         </div>
-        
-
-        <!-- <div *ngIf="showThinkBubble" style="position:absolute;margin-top:-30px;margin-left:30px">
-            <img src="assets/people/SpeechBubble.png" alt="" height="64">
-            <img style="position:fixed;margin-top:-45px;margin-left:-15px" src="assets/buildings/house.png" alt="" height="35">
-        </div> -->
     </div>
 
 

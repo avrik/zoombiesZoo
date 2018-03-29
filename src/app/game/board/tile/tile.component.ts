@@ -1,4 +1,4 @@
-import { CardState } from './../../../enums/card-state.enum';
+
 import { TileCardComponent } from './tile-card/tile-card.component';
 import { UrlConst } from './../../../consts/url-const';
 import { CardTypeEnum } from './../../../enums/card-type-enum.enum';
@@ -31,15 +31,11 @@ import { IState } from '../../../redux/interfaces';
       })),
       transition('* => up', animate('300ms ease-out')),
       transition('up => down', animate('300ms ease-out')),
-      //transition('up => down', animate('300ms ease-out')),
-      //transition('down => up', animate('300ms ease-out'))
     ]),
 
-    trigger('moveAnimation', [
+    /* trigger('moveAnimation', [
       state('up', style({ transform: 'translateY(-100%)' })),
       state('down', style({ transform: 'translateY(100%)' })),
-      //state('left', style({ transform: 'translateX(-100%) translateY(-50%)' })),
-      //state('right', style({ transform: 'translateX(100%) translateY(-50%)' })),
       state('upLeft', style({ transform: 'translateY(-50%) translateX(-100%)' })),
       state('upRight', style({ transform: 'translateY(-50%) translateX(100%)' })),
       state('downLeft', style({ transform: 'translateY(50%) translateX(-100%)' })),
@@ -47,8 +43,6 @@ import { IState } from '../../../redux/interfaces';
 
       transition('* => up', animate('300ms ease-out')),
       transition('* => down', animate('300ms ease-out')),
-      //transition('* => left', animate('100ms ease-out')),
-      //transition('* => right', animate('100ms ease-out')),
       transition('* => upLeft', animate('300ms ease-out')),
       transition('* => upRight', animate('300ms ease-out')),
       transition('* => downLeft', animate('300ms ease-out')),
@@ -61,9 +55,9 @@ import { IState } from '../../../redux/interfaces';
           style({ transform: 'scale(0) translateY(0%)', opacity: 1, offset: 1.0 }),
         ]))
       ]),
-    ]),
+    ]), */
 
-    trigger('visibilityChanged', [
+    /* trigger('visibilityChanged', [
       transition('* => merge', [
         animate('300ms ease', keyframes([
           style({ transform: 'scale(0)', opacity: 0, offset: 0 }),
@@ -77,13 +71,13 @@ import { IState } from '../../../redux/interfaces';
           style({ opacity: 1, offset: 1.0 }),
         ]))
       ]),
-    ]),
-    trigger('scaleAnimation', [
+    ]), */
+    /* trigger('scaleAnimation', [
       state('up', style({ transform: 'scale(1)' })),
       state('down', style({ transform: 'scale(.5)' })),
       transition('* => up', animate('50ms ease-out')),
       transition('* => down', animate('50ms ease-out'))
-    ]),
+    ]), */
     trigger('terrainAnimation', [
       state('up', style({ transform: 'translateY(-15%)' })),
       state('down', style({ transform: 'translateY(0%)' })),
@@ -101,10 +95,9 @@ export class TileComponent implements OnInit {
   floatState: string = "";
   moveState: string = "";
   currentCard: Card;
-  showThinkBubble: boolean;
+  //showThinkBubble: boolean;
   isCardFloating: boolean;
   onMe: boolean;
-
 
   constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
 
@@ -116,50 +109,40 @@ export class TileComponent implements OnInit {
     this.gameEngine.store.subscribe(() => {
       this.currentState = this.gameEngine.store.getState();
       this.currentCard = this.currentState.nextCard;
-      this.isCardFloating = (this.currentState.floatTile && this.currentState.floatTile.id == this.tile.id) ? true : false;
+      //this.isCardFloating = (this.currentState.floatTile && this.currentState.floatTile.id == this.tile.id) ? true : false;
 
       this.floatState = this.isCardFloating ? 'up' : ""
       //this.moveState = this.tile.movment ? this.tile.movment.dir : "";
     }
     )
-    if (this.tile.xpos == 1 && this.tile.ypos == 1) {
-      //if (this.tile.card) {
-      setTimeout(() => {
-        //this.moveState="up";
 
+    /* if (this.tile.xpos == 1 && this.tile.ypos == 1) {
+      setTimeout(() => {
         this.tile.movment = { img: UrlConst.BRICK1, dir: "up" }
       }, 1000);
 
       setTimeout(() => {
-        this.moveState = "upRight";
         this.tile.movment = { img: UrlConst.BRICK1, dir: "upRight" }
       }, 2000);
 
       setTimeout(() => {
-        this.moveState = "downRight";
         this.tile.movment = { img: UrlConst.BRICK1, dir: "downRight" }
       }, 3000);
 
-
       setTimeout(() => {
-        this.moveState = "down";
         this.tile.movment = { img: UrlConst.BRICK1, dir: "down" }
       }, 4000);
 
       setTimeout(() => {
-        this.moveState = "downLeft";
         this.tile.movment = { img: UrlConst.BRICK1, dir: "downLeft" }
       }, 5000);
 
       setTimeout(() => {
-        this.moveState = "upLeft";
         this.tile.movment = { img: UrlConst.BRICK1, dir: "upLeft" }
       }, 6000);
-    }
+    } */
 
   }
-
-
 
   clickTile() {
     if (!this.tile.terrain) return;
@@ -200,35 +183,10 @@ export class TileComponent implements OnInit {
         }
         break;
     }
-
-    /* if (this.tile.terrain.type == TerrainEnum.BLOCKED) {
-      this.gameEngine.handleBlockedTile(this.tile);
-    }
-
-    if (this.tile.terrain.type == TerrainEnum.CITY) {
-      if (this.tile.state == TileState.WAIT_FOR_MOVE) {
-        this.gameEngine.placeMovingBuilding(this.tile);
-      } else {
-        this.gameEngine.openStore(this.tile);
-      }
-    } else {
-      if (this.tile.terrain.type == TerrainEnum.CARD_HOLDER) {
-        this.gameEngine.clickStashTile(this.tile);
-      } else
-        if (this.tile.card) {
-          if (this.tile.card.collect && this.tile.card.type == CardTypeEnum.RESOURCE) {
-            this.gameEngine.collectResources(this.tile);
-          }
-        } else
-          if (this.tile.terrain.type == TerrainEnum.RESOURCES) {
-            this.gameEngine.clickTile(this.tile);
-          }
-    } */
   }
 
   onMouseOut() {
     if (this.onMe && !this.tile.terrain.locked) {
-      // this.tile.linked.forEach(a => a.opacity = 1)
       this.onMe = false;
 
       if (this.tile.terrainTop && this.tile.terrainTop.type == TerrainEnum.CARD_HOLDER_OPEN && !this.tile.card) {
@@ -237,19 +195,20 @@ export class TileComponent implements OnInit {
 
       if (!this.isCardFloating) {
         this.floatState = '';
-
-        if (this.tile.card) {
-          this.showThinkBubble = false;
-        }
       }
 
       if (this.terrainAnimation != "down") {
         this.terrainAnimation = "down";
       }
+
+      //if (this.tile.card) {
+        this.gameEngine.clearMatchHint(this.tile);
+      //}
     }
   }
 
   onMouseOver() {
+    
     if (!this.onMe && !this.tile.terrain.locked) {
       this.onMe = true;
 
@@ -258,36 +217,17 @@ export class TileComponent implements OnInit {
       }
 
       if (!this.tile.card && this.tile.terrain.clickable) {
+
+        this.gameEngine.showMatchHint(this.tile);
+
         if (this.terrainAnimation != "up") {
           this.terrainAnimation = "up";
         }
-
-        /* if (!this.tile.terrain.locked) {
-          this.tile.linked.filter(a => !a.card && a.terrain.clickable).forEach(a => a.opacity = 0.6);
-        } */
       }
 
       if (this.gameEngine.rollOverTile != this.tile) {
         this.gameEngine.rollOverTile = this.tile;
-
-
-
       }
-
-      /* if (this.isCardFloating) {
-        this.floatState = 'up';
-      } */
-      else
-        if (this.tile.card) {
-          if (this.tile.card.family.name == CardFamilyTypeEnum.PERSON) {
-            this.showThinkBubble = true;
-          }
-          /* } else {
-            if (this.tile.terrain.type == TerrainEnum.RESOURCES || this.tile.terrain.type == TerrainEnum.CARD_HOLDER) {
-              this.floatState = 'up';
-            }
-          } */
-        }
     }
   }
 
@@ -316,39 +256,30 @@ export class TileComponent implements OnInit {
   onMoveDone(event) {
     this.tile.state = TileState.REGULAR;
     this.tile.movment = null;
-
-
   }
-
 
   getimgFilter() {
     return this.tile.terrain.locked ? "grayscale(1)" : "none";
   }
 
-
-
   gettilemargin() {
-
-
     if (this.tile.terrain.type == TerrainEnum.CARD_HOLDER || this.tile.terrain.type == TerrainEnum.CARD_HOLDER_OPEN) {
       return "-40px 0 0 0"
-    }
-
-    if (this.tile.card) {
-
-      switch (this.tile.card.type) {
-        case CardTypeEnum.RESOURCE:
-          return `${(this.tile.card.level + 2) * 2}px 0 0 0`;
+    } else {
+      if (this.tile.card) {
+        return `${(this.tile.card.level + 2) * 2}px 0 0 0`;
       }
     }
-
-
 
     return "0"
   }
 
+  get isShowOver(): boolean {
+    return this.onMe && !this.tile.card && (this.tile.terrain.type == TerrainEnum.RESOURCES || this.tile.terrain.type == TerrainEnum.CARD_HOLDER)
+  }
 
-  get isShowOver():boolean {
-    return this.onMe && !this.tile.card && (this.tile.terrain.type==TerrainEnum.RESOURCES || this.tile.terrain.type==TerrainEnum.CARD_HOLDER)
+  get isShowCardOnTile(): boolean {
+
+    return this.tile.card ? true : false;
   }
 }

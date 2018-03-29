@@ -18,5 +18,7 @@ export enum Action {
     OPEN_BLOCKED_TILE_OPTION = "open blocked tile",
     DEVELOP_TILE = "develop tile",
 
-    ADD_ENERGY="add energy"
+    ADD_ENERGY = "add energy",
+    SHOW_MATCH_HINT = "show match hint",
+    CLEAR_MATCH_HINT = "clear match hint",
 }

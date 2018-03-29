@@ -7,6 +7,7 @@ import { Card, ICardData } from 'app/game/cards/card';
 import { IBuyItem } from '../redux/interfaces';
 
 export class GameEngineService {
+
   store: Store<any>;
   totalRows: number = 6;
   totalCols: number = 11;
@@ -86,8 +87,14 @@ export class GameEngineService {
       default:
         this.store.dispatch({ type: Action.BUY_ITEM, payload: buyItem })
     }
+  }
 
+  showMatchHint(tile: Tile): any {
+    this.store.dispatch({ type: Action.SHOW_MATCH_HINT, payload: tile, notrace: true })
+  }
 
+  clearMatchHint(tile: Tile): any {
+    this.store.dispatch({ type: Action.CLEAR_MATCH_HINT, payload: tile, notrace: true })
   }
 
   closeStore() {

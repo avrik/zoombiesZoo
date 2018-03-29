@@ -16,3 +16,11 @@ export function getFloatTile(newState: IState): Tile {
 
     return found ? found : newState.tiles.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
 }
+
+export function getRandomEmptyTile(tiles: Tile[]): Tile {
+    let rand: Tile;
+
+    let options: Tile[] = tiles.filter(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
+    rand = options[Math.floor(Math.random() * options.length)];
+    return rand;
+}

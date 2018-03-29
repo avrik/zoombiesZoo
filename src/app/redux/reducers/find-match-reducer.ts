@@ -1,96 +1,132 @@
 import { CardFamilyTypeEnum } from "../../enums/card-family-type-enum.enum";
 import { Tile } from "../../game/board/tile/tile";
 import { CardTypeEnum } from "../../enums/card-type-enum.enum";
-import { clearTile } from "./tile-reducer";
+import { clearTile, getRandomEmptyTile } from './tile-reducer';
 import { Card } from "../../game/cards/card";
 import { getCardByFamily } from "./../reducers/getCardByFamily-reducer";
 import { TerrainEnum } from "../../enums/terrain.enum";
 import { MergeTypeEnum } from "../../enums/merge-type-enum.enum";
 import { getMoveDir, getLinkedGroup } from "./common-reducer";
+import { IState } from 'app/redux/interfaces';
 
-export function findMatch(tile: Tile) {
+export function findMatch(newState: IState, tile: Tile) {
     if (!tile.card || !tile.card.family) return;
 
-    if (tile.card.family.name == CardFamilyTypeEnum.WILD) {
+    /* if (tile.card.family.name == CardFamilyTypeEnum.WILD) {
         handleWild(tile);
-    }
+    } */
 
-    //let matchedTiles: Tile[] = tile.getMatchesAround();
+    //let matchedTiles: Tile[] = getMatchesAround(tile);
     let matchedTiles: Tile[] = getMatchesAround(tile);
-    if (matchedTiles.length > 1) {
+    //if (matchedTiles.length > (tile.card.minForNextLevel - 1)) {
+    if (matchedTiles.length && tile.card.nextCard) {
 
-        if (tile.card.nextCard) {
-            let totalCollected: number = tile.card.type == CardTypeEnum.RESOURCE ? Math.max(tile.card.collect, 1) : 0;
+        //if (tile.card.nextCard) {
+        let totalCollected: number = tile.card.type == CardTypeEnum.RESOURCE ? Math.max(tile.card.collect, 1) : 0;
 
-            matchedTiles.filter(a => a.card).forEach(linked => {
-                if (!linked.card) return;
-                if (tile.card.type == CardTypeEnum.BUILDING) {
-                    if (linked.card.collected) totalCollected += linked.card.collected;
-                } else {
-                    if (linked.card && linked.card.nextCard && linked.card.nextCard.collect) {
-                        totalCollected += Math.max(linked.card.collected, 1);
-                    }
-                }
-
-                //move(linked, tile)
-                linked.movment = { dir: getMoveDir(linked, tile), img: linked.card.img };
-                tile.showDelay = "merge";
-                //linked.clear();
-                clearTile(linked);
-            });
-
-
-            let imgIndex = -1;
-
-            if (tile.card.level == 0) {
-                imgIndex = matchedTiles.length >= 6 ? 1 : 0;
-                if (matchedTiles.length >= 6) totalCollected = 2;
+        matchedTiles.filter(a => a.card).forEach(linked => {
+            if (!linked.card) return;
+            if (tile.card.type == CardTypeEnum.BUILDING) {
+                if (linked.card.collected) totalCollected += linked.card.collected;
             } else {
-                imgIndex = totalCollected - tile.card.minForNextLevel;
-
-            }
-
-
-            tile.card = new Card(tile.card.nextCard, imgIndex);
-
-            if (tile.card.reward) {
-                let emptyTile: Tile = tile.linked.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
-                if (emptyTile) {
-                    emptyTile.card = getCardByFamily(CardFamilyTypeEnum.COIN);
-                    emptyTile.card.collected = tile.card.reward;
+                if (linked.card && linked.card.nextCard && linked.card.nextCard.collect) {
+                    totalCollected += Math.max(linked.card.collected, 1);
                 }
             }
 
-            tile.card.collected = totalCollected;
+            //move(linked, tile)
+            linked.movment = { dir: getMoveDir(linked, tile), img: linked.card.img };
+            tile.showDelay = "merge";
+            //linked.clear();
+            clearTile(linked);
+        });
 
-            console.info("- merge to = " , totalCollected);
+        let imgIndex = -1;
 
-            let extra: number = matchedTiles.length - (tile.card.minForNextLevel - 1);
-            if (extra) {
-                let random: number = Math.floor(Math.random() * 100);
-                //console.log(random)
-                if (extra >= random) {
-                    //const arr = [1, 10, 50, 100, 200, 500, 1000, 2000, 5000];
-                    //this.addToStorage(CardFamilyTypeEnum.COIN, (extra / 100) * (arr[(tile.card.level - 1)]));
-                    let emptyTile: Tile = tile.linked.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
-                    if (emptyTile) {
-                        emptyTile.card = getCardByFamily(CardFamilyTypeEnum.COIN_SILVER);
-                        // emptyTile.card.collected = extra;
-                        emptyTile.card.collected = 1;
-                    }
-                }
-            }
+        if (tile.card.level == 0) {
+            imgIndex = matchedTiles.length >= 6 ? 1 : 0;
+            if (matchedTiles.length >= 6) totalCollected = 2;
+        } else {
+            imgIndex = totalCollected - tile.card.minForNextLevel;
 
-            findMatch(tile);
         }
+
+        tile.card = new Card(tile.card.nextCard, imgIndex);
+
+        if (tile.card.reward) {
+            let emptyTile: Tile = tile.linked.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
+            if (emptyTile) {
+                emptyTile.card = getCardByFamily(CardFamilyTypeEnum.COIN);
+                emptyTile.card.collected = tile.card.reward;
+            }
+        }
+
+        tile.card.collected = totalCollected;
+
+        console.info("- merge to = ", totalCollected);
+
+        let extra: number = matchedTiles.length - (tile.card.minForNextLevel - 1);
+        if (extra) {
+            let random: number = Math.floor(Math.random() * 100);
+            //console.log(random)
+            if (extra >= random) {
+                //const arr = [1, 10, 50, 100, 200, 500, 1000, 2000, 5000];
+                //this.addToStorage(CardFamilyTypeEnum.COIN, (extra / 100) * (arr[(tile.card.level - 1)]));
+                //let emptyTile: Tile = tile.linked.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
+                let emptyTile: Tile = getRandomEmptyTile(newState.tiles);
+                if (emptyTile) {
+                    emptyTile.card = getCardByFamily(CardFamilyTypeEnum.COIN_SILVER);
+                    // emptyTile.card.collected = extra;
+                    emptyTile.card.collected = 1;
+                }
+            }
+        }
+
+        findMatch(newState, tile);
+        // }
     }
 }
 
+export function getMatchesAround(tile: Tile, card: Card = null): Tile[] {
 
+    if (card && card.family.name == CardFamilyTypeEnum.WILD) {
+        card = getCardFromWild(tile);
+    } else {
+        card = tile.card || card;
+    }
 
-function getMatchesAround(tile: Tile): Tile[] {
+    if (card) {
+        let collector: Tile[] = [];
+        if (tile.linked) {
+            let func: Function = (arr: Tile[]) => {
+                arr.filter(item =>
+                    tile != item &&
+                    card && item.card &&
+                    ((card.mergeBy == MergeTypeEnum.MATCH && item.card.mergeBy == MergeTypeEnum.MATCH) ||
+                        (card.mergeBy == MergeTypeEnum.MATCH_COLLECTED && item.card.mergeBy == MergeTypeEnum.MATCH_COLLECTED
+                            && card.collect == card.collected && item.card.collect == item.card.collected)) &&
+                    collector.indexOf(item) == -1 &&
+                    (item.card.value === card.value))
+                    .forEach(item2 => {
+                        collector.push(item2);
+                        func(item2.linked);
+                    });
+            }
+
+            func(tile.linked);
+        }
+
+        if (collector.length >= (card.minForNextLevel - 1)) {
+            return collector;
+        }
+    }
+    return [];
+}
+
+/* export function getMatchesAround(tile: Tile): Tile[] {
     let collector: Tile[] = [];
 
+    
     if (tile.linked) {
         let func: Function = (arr: Tile[]) => {
             arr.filter(item =>
@@ -110,17 +146,17 @@ function getMatchesAround(tile: Tile): Tile[] {
         func(tile.linked);
     }
     return collector;
-}
+} */
 
-function handleWild(tile: Tile) {
-
+export function getCardFromWild(tile: Tile): Card {
+    let card: Card;
     let optionsForWild: Tile[] = tile.linked.filter(a => a.card && a.card.mergeBy == MergeTypeEnum.MATCH);
 
     optionsForWild = optionsForWild.filter(a => {
         tile.card = a.card;
-        return getLinkedGroup(a).length >= a.card.minForNextLevel;
+        return getLinkedGroup(a).length >= (a.card.minForNextLevel);
     })
-
+    tile.card = null;
     if (optionsForWild.length) {
         optionsForWild.sort((a, b) => {
             if (a.card.family == b.card.family) {
@@ -136,9 +172,13 @@ function handleWild(tile: Tile) {
             return 0;
         });
 
-        // tile.card = optionsForWild.length ? optionsForWild[0].card : this.getNewCard(CardFamilyTypeEnum.GRAVE);
-        tile.card = optionsForWild[0].card
-    } else {
+        // tile.card = optionsForWild[0].card
+        card = optionsForWild[0].card
+    } /* else {
         tile.card = getCardByFamily(CardFamilyTypeEnum.GRAVE);
-    }
+    } */
+
+    console.log("WILD TO CARD ", card);
+
+    return card;
 }

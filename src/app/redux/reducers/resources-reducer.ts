@@ -5,14 +5,19 @@ import { MessageType } from "../../enums/message-type.enum";
 
 
 export function addResources(state: IState, tile: Tile): number {
-    let amount: number = tile.card.collected;
+    let leftover: number = tile.card.collected;
+    
     switch (tile.card.family.name) {
+        case CardFamilyTypeEnum.OIL:
+            state.energy += tile.card.collected;
+            return 0;
+
         case CardFamilyTypeEnum.COIN_SILVER:
-            state.resources.silver += amount;
-            state.resources.coins += amount/100;
+            state.resources.silver += leftover;
+            state.resources.coins += leftover / 100;
             return 0;
         case CardFamilyTypeEnum.COIN:
-            state.resources.coins += amount;
+            state.resources.coins += leftover;
             return 0;
 
         case CardFamilyTypeEnum.LUMBER:
@@ -21,35 +26,35 @@ export function addResources(state: IState, tile: Tile): number {
             for (let i = 0; i < sawmills.length; i++) {
                 const sawmill = sawmills[i];
 
-                let add: number = Math.min(amount, sawmill.card.collect - sawmill.card.collected);
+                let add: number = Math.min(leftover, sawmill.card.collect - sawmill.card.collected);
                 sawmill.card.collected += add;
-                amount -= add;
+                leftover -= add;
                 state.resources.lumber += add;
-                if (amount == 0) return 0;
+                if (leftover == 0) return 0;
             }
 
-            if (amount) {
+            if (leftover) {
                 let txt: string = state.tiles.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.SAWMILL).length ? "no place in sawmill" : "build a sawmill to store your lumber"
                 state.currentMessage = { type: MessageType.TOOLBAR, title: txt };
             }
-            return amount;
+            return leftover;
 
         case CardFamilyTypeEnum.BRICK:
             let storages: Tile[] = state.tiles.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.STORAGE);
             for (let i = 0; i < storages.length; i++) {
                 const storage = storages[i];
 
-                let add: number = Math.min(amount, storage.card.collect - storage.card.collected);
+                let add: number = Math.min(leftover, storage.card.collect - storage.card.collected);
                 storage.card.collected += add;
-                amount -= add;
+                leftover -= add;
                 state.resources.bricks += add;
-                if (amount == 0) return 0;
+                if (leftover == 0) return 0;
             }
 
-            if (amount) {
+            if (leftover) {
                 state.currentMessage = { type: MessageType.TOOLBAR, title: "no place in storage" };
             }
-            return amount;
+            return leftover;
     }
 
     return 0;

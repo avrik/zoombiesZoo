@@ -3,8 +3,14 @@ import { MessagesService, IMessage } from './services/messages.service';
 
 //BUGS :
 
+//+ on level 3 match house population reduce
+//+ animals near bridge wont die
+//+ oil to energy
+//+ coins reward not good
 //+ wild bugs - match near wood..
 //+ person/animal movment glitch
+
+// resources images too small (on toolbar)
 
 
 //TODOS :

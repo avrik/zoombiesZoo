@@ -2,8 +2,9 @@ import { IState } from "./../interfaces";
 import { getCardByFamily } from "./../reducers/getCardByFamily-reducer";
 import { MergeTypeEnum } from "../../enums/merge-type-enum.enum";
 import { TerrainEnum } from "../../enums/terrain.enum";
-import { findMatch } from "./find-match-reducer";
+import { findMatch, getCardFromWild } from './find-match-reducer';
 import { getNextCard } from "./getNextCard-reducre";
+import { CardFamilyTypeEnum } from '../../enums/card-family-type-enum.enum';
 
 export function clickTile(state: IState): IState {
     let newState: IState = state;
@@ -18,10 +19,18 @@ export function clickTile(state: IState): IState {
             newState.tileClicked.card = getCardByFamily(newState.nextCard.family.name);
         }
     } else {
-        newState.tileClicked.card = newState.nextCard;
+        
+
+        if (newState.nextCard.family.name == CardFamilyTypeEnum.WILD) {
+            newState.tileClicked.card = getCardFromWild(newState.tileClicked) || getCardByFamily(CardFamilyTypeEnum.GRAVE);
+        } else {
+            newState.tileClicked.card = newState.nextCard;
+        }
+
         newState.energy -= newState.tileClicked.card.energyCost;
+
         if (newState.tileClicked.card.mergeBy == MergeTypeEnum.MATCH) {
-            findMatch(newState.tileClicked);
+            findMatch(newState,newState.tileClicked);
         }
 
     }

@@ -8,17 +8,21 @@ import { findMatch } from "./find-match-reducer";
 import { getCardByFamily } from "./getCardByFamily-reducer";
 import { getMoveDir } from "./common-reducer";
 import { clearTile } from "./tile-reducer";
+import { TileState } from '../../enums/tile-state.enum';
+import { IState } from "../interfaces";
 
-export function moveWalkers(tiles: Tile[]): Tile[] {
-    let newTiles = tiles;
+export function moveWalkers(newState: IState): IState {
+
     let actionTaken: boolean = false;
-    let walkers: Tile[] = newTiles.filter(tile =>
+
+    let walkers: Tile[] = newState.tiles.filter(tile =>
         tile.card &&
         tile.card.type === CardTypeEnum.WALKER &&
         tile.card.state == CardState.REGULAR &&
         tile.terrain.type != TerrainEnum.CARD_HOLDER
     );
-    if (!walkers.length) return newTiles;
+    if (!walkers.length) return;
+
     let people: Tile[] = walkers.filter(a => a.card.family.name == CardFamilyTypeEnum.PERSON);
     let animals: Tile[] = walkers.filter(a => a.card.family.name == CardFamilyTypeEnum.ANIMAL);
     let zoombies: Tile[] = walkers.filter(a => a.card.family.name == CardFamilyTypeEnum.ZOOMBIE);
@@ -28,22 +32,24 @@ export function moveWalkers(tiles: Tile[]): Tile[] {
     zoombies.forEach(zoombie => { if (moveZoombiesToRandomEmpty(zoombie) == true) actionTaken = true })
 
     if (actionTaken) {
-        newTiles = moveWalkers(newTiles);
+        newState = moveWalkers(newState);
     } else {
-        let walkers: Tile[] = newTiles.filter(tile => (tile.card && tile.card.mergeBy === MergeTypeEnum.TRAP && tile.terrain.type == TerrainEnum.RESOURCES));
-        tiles.filter(a => a.card && a.card.type == CardTypeEnum.WALKER).forEach(a => a.card.state = CardState.REGULAR);
-        testGroupTrapped(walkers);
+        let walkers: Tile[] = newState.tiles.filter(tile => (tile.card && tile.card.mergeBy === MergeTypeEnum.TRAP && tile.terrain.type == TerrainEnum.RESOURCES));
+        newState.tiles.filter(a => a.card && a.card.type == CardTypeEnum.WALKER).forEach(a => a.card.state = CardState.REGULAR);
+
+        testGroupTrapped(newState, walkers);
     }
 
-    return newTiles;
+    return newState;
 }
 
 
-function testGroupTrapped(walkers: Tile[]) {
+function testGroupTrapped(newState: IState, walkers: Tile[]): IState {
+
+
     if (walkers.length) {
         let walkersGroup: Tile[] = [];
         let firstOne: Tile = walkers.pop();
-        //let isZoombieGroup: boolean;
         walkersGroup.push(firstOne);
 
         let addToQue: Function = (tile: Tile) => {
@@ -59,10 +65,15 @@ function testGroupTrapped(walkers: Tile[]) {
         addToQue(firstOne);
 
         let foundEmpty: boolean;
-        walkersGroup.filter(walkers => {
-            //if (walkers.linked.filter(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES).length > 0) {
-            if (walkers.linked.filter(a => !a.card && a.terrain.walkable && !a.terrain.locked).length > 0) {
-                foundEmpty = true;
+        walkersGroup.filter(walker => {
+            if (walker.card.family.name == CardFamilyTypeEnum.ANIMAL) {
+                if (walker.linked.filter(a => !a.card && a.terrain.walkableForAnimal && !a.terrain.locked).length > 0) {
+                    foundEmpty = true;
+                }
+            } else {
+                if (walker.linked.filter(a => !a.card && a.terrain.walkable && !a.terrain.locked).length > 0) {
+                    foundEmpty = true;
+                }
             }
         })
 
@@ -74,11 +85,13 @@ function testGroupTrapped(walkers: Tile[]) {
                 return 0;
             })[0];
 
-            findMatch(youngest);
+            findMatch(newState, youngest);
         }
 
-        testGroupTrapped(walkers);
+        testGroupTrapped(newState, walkers);
     }
+
+    return newState;
 }
 
 function trapWalkersGroup(walkerGroup: Tile[]) {
@@ -127,6 +140,7 @@ function movePersonToRandomEmpty(tile: Tile): boolean {
         moveToTile.card.state = CardState.MOVING;
 
         tile.movment = { dir: getMoveDir(tile, moveToTile), img: tile.card.img };
+
         clearTile(tile);
         return true;
     } else {
@@ -144,9 +158,12 @@ function moveToRandomSpot(tile: Tile, empties: Tile[]): boolean {
 
         moveToTile.card = tile.card;
         moveToTile.card.state = CardState.MOVING;
+        //moveToTile.state == TileState.WAIT_FOR_MOVE;
         //moveToTile.card.preTile = tile;
-        moveToTile.showDelay = "show";
+        //moveToTile.showDelay = "show";
+        moveToTile.card.showDelay = 150;
         tile.movment = { dir: getMoveDir(tile, moveToTile), img: tile.card.img };
+
         clearTile(tile);
 
         return true;

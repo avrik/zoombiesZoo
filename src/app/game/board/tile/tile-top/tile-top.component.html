@@ -1,3 +1,4 @@
-<!-- <div *ngIf="tile && tile.movment && tile.movment.dir" [@animState]="tile.movment.dir" (@animState.done)="onMoveDone($event)">
-  <img [src]="tile.movment.img" alt="" width="100">
-</div> -->
+<div class="container" *ngIf="tile" >
+  <img *ngIf="tile.movment" [@animState]="tile.movment.dir" (@animState.done)="onMoveDone($event)" [src]="tile.movment.img" alt="" width="100">
+</div>
+

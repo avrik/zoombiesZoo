@@ -6,4 +6,6 @@ export enum CardState {
     MOVED = 3,
     DONE = 4,
     CANT_MOVE = 5,
+
+    MATCH_HINT=6,
 }

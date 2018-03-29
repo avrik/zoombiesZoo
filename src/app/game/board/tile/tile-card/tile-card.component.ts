@@ -8,6 +8,8 @@ import { trigger, state, style, transition, animate, keyframes } from '@angular/
 import { CardTypeEnum } from 'app/enums/card-type-enum.enum';
 import { TerrainEnum } from '../../../../enums/terrain.enum';
 import { UrlConst } from '../../../../consts/url-const';
+import { IState } from '../../../../redux/interfaces';
+import { CardState } from '../../../../enums/card-state.enum';
 
 @Component({
   selector: 'app-tile-card',
@@ -15,6 +17,16 @@ import { UrlConst } from '../../../../consts/url-const';
   styleUrls: ['./tile-card.component.css'],
   animations: [
     trigger('animState', [
+      transition('* => matchHint', [
+        animate('300ms linear', keyframes([
+          style({ opacity: 1, offset: 0 }),
+          style({ opacity: 0.2, offset: 0.5 }),
+          style({ opacity: 0.8, offset: 1.0 }),
+        ]))
+      ]),
+      transition('* <=> matchHint', animate('300ms ease-out')),
+    ])
+    /* trigger('animState', [
       transition('* => init', [
         animate('500ms ease', keyframes([
           style({ transform: 'scale(0) translateY(0%)', offset: 0 }),
@@ -22,30 +34,21 @@ import { UrlConst } from '../../../../consts/url-const';
           style({ transform: 'scale(1) translateY(0%)', offset: 1.0 }),
         ]))
       ]),
-      
-      transition('* => up', [
-        animate('500ms ease', keyframes([
-          style({ transform: 'translateY(0%)', offset: 0 }),
-          style({ transform: 'translateY(-50%)', offset: 0.8 }),
-          style({ opacity: 0, offset: 1.0 }),
-        ]))
-      ]),
 
-
-      //state('up', style({ transform: 'translateY(-50%)' })),
+      state('up', style({ transform: 'translateY(-50%)' })),
       state('down', style({ transform: 'translateY(50%)' })),
       state('upLeft', style({ transform: 'translateY(-30%) translateX(-90%)' })),
       state('upRight', style({ transform: 'translateY(-30%) translateX(90%)' })),
       state('downLeft', style({ transform: 'translateY(30%) translateX(-90%)' })),
       state('downRight', style({ transform: 'translateY(30%) translateX(90%)' })),
-  
+
       transition('* => up', animate('300ms ease-out')),
       transition('* => down', animate('300ms ease-out')),
       transition('* => upLeft', animate('300ms ease-out')),
       transition('* => upRight', animate('300ms ease-out')),
       transition('* => downLeft', animate('300ms ease-out')),
       transition('* => downRight', animate('300ms ease-out')),
-  
+
       transition('* => collect', [
         animate('200ms ease', keyframes([
           style({ transform: 'scale(1) translateY(0%)', opacity: 1, offset: 0 }),
@@ -53,22 +56,39 @@ import { UrlConst } from '../../../../consts/url-const';
           style({ transform: 'scale(0) translateY(0%)', opacity: 1, offset: 1.0 }),
         ]))
       ])]
-    
-    )]
+
+    ) */]
 })
 export class TileCardComponent implements OnInit {
 
   @Input() onTerrain: number;
   @Input() card: Card;
-  @Input() onTop:boolean;
-  @Input() onMe:boolean;
+  @Input() onTop: boolean;
+  @Input() onMe: boolean;
   animState: string;
+  show: boolean;
 
   constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
+    this.gameEngine.store.subscribe(() => {
+      let newState: IState = this.gameEngine.store.getState();
 
+      //if (newState.tiles) {
+      //let myCard:Card = newState.tiles.find(a=>a.card==this.card).card;
+
+      this.animState = (this.card && this.card.state == CardState.MATCH_HINT) ? "matchHint" : "";
+      //}
+
+    })
   }
 
   ngOnInit() {
+    if (this.card.showDelay) {
+      setTimeout(() => {
+        this.show = true;
+      }, this.card.showDelay);
+    } else {
+      this.show = true;
+    }
 
     /* if (this.card && this.card.type != CardTypeEnum.WALKER) {
       this.animState = "init ";
@@ -105,19 +125,30 @@ export class TileCardComponent implements OnInit {
     } */
   }
 
+  /* get getAnimState():string {
+    if (this.card.state == CardState.MATCH_HINT) {
+      this.animState = "matchHint"
+    }
+    this.animState = "";
+    return this.animState;
+  } */
+
+  onAnimDone(event) {
+    this.animState = "";
+    if (this.card.state == CardState.MATCH_HINT) {
+      if (event.toState != "matchHint") {
+        this.animState = "matchHint";
+      }
+
+    }
+  }
 
   getheight() {
     if (this.onTerrain == TerrainEnum.CARD_HOLDER) return 100
 
-    /* if (this.card.family.name == CardFamilyTypeEnum.COIN || this.card.family.name == CardFamilyTypeEnum.COIN_SILVER) {
-      return 50;
-    } */
-
     switch (this.card.type) {
       case CardTypeEnum.BUILDING:
         return 70;
-      /* case CardTypeEnum.WALKER:
-        return 90; */
 
       default:
         return 140;
@@ -130,27 +161,12 @@ export class TileCardComponent implements OnInit {
       return "-40px 0 0 0px"
     }
 
-    /* if (this.card.family.name == CardFamilyTypeEnum.COIN || this.card.family.name == CardFamilyTypeEnum.COIN_SILVER) {
-      return "-10px 0 0 20px"
-    } */
-
-
-    /* if (this.card.family.name==CardFamilyTypeEnum.LUMBER && this.card.level==0)
-    {
-      return "-60px 0 0 10px"
-    } */
-
     switch (this.card.type) {
       case CardTypeEnum.BUILDING:
         return "-50px 0 0 0px"
-      /* case CardTypeEnum.WALKER:
-        return "-100px 0 0 -20px" */
-      /* default:
-        return "-30px 0 0 -5px" */
     }
 
-
-      return "-85px 0 0 0px";
+    return "-85px 0 0 0px";
   }
 
   getImg() {

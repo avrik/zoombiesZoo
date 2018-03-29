@@ -23,8 +23,6 @@ export class ToolbarComponent implements OnInit {
 
   constructor(public gameEngine: GameEngineService, private counter: DigitCounterService) {
 
-    
-
     this.gameEngine.store.subscribe(() => {
       let newState: IState = this.gameEngine.store.getState()
       this.years = Math.round(newState.turn / 360) + 1;

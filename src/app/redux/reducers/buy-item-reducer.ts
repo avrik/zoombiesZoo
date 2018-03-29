@@ -71,7 +71,7 @@ function buyBuilding(newState: IState, buyItem: IBuyItem): boolean {
     else {
         newState.tileClicked.card = getCardByFamily(buyItem.type);
         newState.energy -= newState.tileClicked.card.energyCost;
-        findMatch(newState.tileClicked);
+        findMatch(newState,newState.tileClicked);
     }
 
     return true;

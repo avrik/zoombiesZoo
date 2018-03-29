@@ -13,7 +13,7 @@ export function nextTurn(newState: IState) {
     newState.currentMessage = null;
     newState.turn++;
 
-    moveWalkers(newState.tiles);
+    moveWalkers(newState);
     checkBombs(newState);
 
     newState.tiles.filter(a => a.card).forEach(b => {

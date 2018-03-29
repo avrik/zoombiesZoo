@@ -1,0 +1,7 @@
+.container {
+    /* position: absolute; */
+    /* height: 64; */
+    pointer-events: none;
+    /* text-align: center; */
+    /* margin-top:-100px; */
+}

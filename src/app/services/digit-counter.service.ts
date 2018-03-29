@@ -7,42 +7,46 @@ export class DigitCounterService {
 
   time: Observable<number>
   counter: number = 0;
+  interval
 
   constructor() { }
 
   setCounter(startAmount: number, endAmount: number) {
+
+    let totalToCount = Math.abs(endAmount - startAmount);
+    if (totalToCount == 0) return;
+    let countUp: boolean = endAmount - startAmount > 0 ? true : false;
+    clearInterval(this.interval);
+    //console.log("count : ", startAmount, endAmount);
+
     this.counter = startAmount;
-    let totalToCount = endAmount - startAmount;
     let step: number = 1;
 
-    /* if (totalToCount > 1000) {
-      step = Math.round(totalToCount / (totalToCount/10));
-    } else
-    if (totalToCount > 100) {
-      step = Math.round(totalToCount / 100);
-    } else
-      if (totalToCount > 10) {
-        step = Math.round(totalToCount / 10);
-      } else
-        step = 1; */
     if (totalToCount > 10) {
       step = Math.floor(totalToCount / 10);
     }
 
+    console.log("count step = ", step);
 
-    console.log("count step = ",step);
     this.time = new Observable<number>((observer: Subscriber<number>) => {
-      setInterval(() => {
-        if (this.counter < endAmount) {
-          this.counter += step;
 
-          if (this.counter > endAmount) this.counter = endAmount
+      if (!countUp) {
+        observer.next(endAmount);
+        observer.complete();
+      }
+
+      this.interval = setInterval(() => {
+        this.counter += step;
+        if (this.counter >= endAmount) {
+          this.counter = endAmount;
+          observer.next(this.counter);
+          observer.complete();
+          clearInterval(this.interval);
+        } else {
           observer.next(this.counter);
         }
       }, 10);
     });
-
-    // this.time.subscribe(a => console.log("aaa = " + a));
   }
 
 }
