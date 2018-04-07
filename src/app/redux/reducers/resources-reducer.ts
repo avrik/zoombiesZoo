@@ -22,7 +22,7 @@ export function addResources(state: IState, tile: Tile): number {
 
         case CardFamilyTypeEnum.LUMBER:
             let sawmills: Tile[] = state.tiles.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.SAWMILL);
-
+            //if (!sawmills.length) return 0;
             for (let i = 0; i < sawmills.length; i++) {
                 const sawmill = sawmills[i];
 
@@ -41,6 +41,7 @@ export function addResources(state: IState, tile: Tile): number {
 
         case CardFamilyTypeEnum.BRICK:
             let storages: Tile[] = state.tiles.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.STORAGE);
+            //if (!storages.length) return 0;
             for (let i = 0; i < storages.length; i++) {
                 const storage = storages[i];
 

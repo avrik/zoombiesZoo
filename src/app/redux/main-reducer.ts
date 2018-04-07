@@ -29,14 +29,14 @@ export class MainReducer { }
 
 const initState: IState = {
     lastActionDate: new Date(),
-    energy: 1000,
+    energy: 300,
     gameOver: false,
     tiles: [],
     turn: 0,
-    maxEnergy: 1000,
+    maxEnergy: 300,
     score: 0,
     population: 0,
-    resources: { bricks: 0, lumber: 0, coins: 0, silver: 0, maxStorage: 0 },
+    resources: { bricks: 0, lumber: 0, coins: 10, silver: 0, maxStorage: 0 },
     tileClicked: null,
     floatTile: null,
     pendingMoveCard: null,
@@ -82,8 +82,8 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             return newState;
 
         case Action.INIT_GAME:
-            newState = Object.assign({}, initState);
-            newState.resources = { bricks: 0, lumber: 0, coins: 0 };
+            newState = Object.assign({},initState);
+            newState.resources = { bricks: 0, lumber: 0, coins: 10 };
             newState.tiles = generateWorld(action.payload.rows, action.payload.cols);
             return newState;
 
@@ -172,6 +172,7 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
         }
 
         case Action.CLEAR_MATCH_HINT: {
+            newState.currentMessage = null;
             newState.tiles.filter(a => a.card && a.card.state == CardState.MATCH_HINT).forEach(b => b.card.state = CardState.REGULAR);
             return newState;
         }
