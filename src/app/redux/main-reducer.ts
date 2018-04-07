@@ -78,7 +78,7 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
 
     switch (action.type) {
         case Action.RESTORE_GAMESTATE:
-            newState = restoreGameState(newState);
+            newState = restoreGameState();
             return newState;
 
         case Action.INIT_GAME:
@@ -154,11 +154,14 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             return newState;
 
         case Action.UNDO:
+
             if (prevGameState) {
-                prevGameState.tiles = prevGameState.tiles.map(a => new Tile(a));
+                prevGameState = restoreGameState(prevGameState)
                 mapLinkedTiles(prevGameState.tiles);
+                prevGameState.resources.coins--;
                 return prevGameState
             }
+            
             saveState(newState);
             return newState;
 

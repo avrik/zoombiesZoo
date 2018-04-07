@@ -2,10 +2,11 @@ import { Tile } from '../../game/board/tile/tile';
 import { mapLinkedTiles } from './new-world-reducer';
 import { IState } from '../interfaces';
 
-export function restoreGameState(state: IState): IState {
+export function restoreGameState(takeState:IState=null): IState {
     let lastState: string = localStorage.getItem('lastState');
-    if (lastState) {
-        let parsedState: IState = JSON.parse(lastState);
+    let parsedState: IState = takeState || JSON.parse(lastState);
+   // if (lastState) {
+       // let parsedState: IState = JSON.parse(lastState);
         if (parsedState && parsedState.tiles && parsedState.tiles.length) {
             parsedState.tiles = parsedState.tiles.map(a => new Tile(a));
             mapLinkedTiles(parsedState.tiles);
@@ -25,7 +26,7 @@ export function restoreGameState(state: IState): IState {
         } else {
             console.log("NO state saved!!")
         }
-    }
+   // }
 
     return state;
 }

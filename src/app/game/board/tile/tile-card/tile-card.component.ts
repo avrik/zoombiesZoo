@@ -18,13 +18,13 @@ import { CardState } from '../../../../enums/card-state.enum';
   animations: [
     trigger('animState', [
       transition('* => matchHint', [
-        animate('300ms linear', keyframes([
+        animate('600ms linear', keyframes([
           style({ opacity: 1, offset: 0 }),
-          style({ opacity: 0.2, offset: 0.5 }),
+          style({ opacity: 0.2, offset: 0.6 }),
           style({ opacity: 0.8, offset: 1.0 }),
         ]))
       ]),
-      transition('* <=> matchHint', animate('300ms ease-out')),
+      //transition('* <=> matchHint', animate('300ms ease-out')),
     ])
     /* trigger('animState', [
       transition('* => init', [
