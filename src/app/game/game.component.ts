@@ -31,7 +31,11 @@ export class GameComponent implements OnInit {
       } */
 
       if (newState.gameOver) {
-        this.messagesService.postMessage({ type: MessageType.POPUP, title: Messages.GAME_OVER_TITLE, butns: [{ label: Messages.GAME_OVER_BUTN1, action: a => { this.restart() } }] })
+        let years = Math.round(newState.turn / 360) + 1;
+        let days = newState.turn;
+
+        let message:string = `Nice JOB! \n your kingdom lasted for ${days} days. you reached the population of ${newState.population}, and got ${newState.score} score`
+        this.messagesService.postMessage({ type: MessageType.POPUP, title: Messages.GAME_OVER_TITLE,message:message, butns: [{ label: Messages.GAME_OVER_BUTN1, action: a => { this.restart() } }] })
       }
 
       this.showStoreItems = newState.showStoreItems;

@@ -44,6 +44,7 @@ export class BuyItemComponent implements OnInit {
 
   onBuy() {
     this.buy.emit(this.buyItem);
+    this.buyItem.amount--;
     this.gameEngine.buyItem(this.buyItem);
   }
 }

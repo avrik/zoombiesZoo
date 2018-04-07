@@ -3,14 +3,17 @@ import { MessagesService, IMessage } from './services/messages.service';
 
 //BUGS :
 
+//+ message stay 
 //+ on level 3 match house population reduce
-//+ animals near bridge wont die
 //+ oil to energy
 //+ coins reward not good
-//+ wild bugs - match near wood..
-//+ person/animal movment glitch
+//+ wild bugs - match near wood.. (maybe fixed)
+//+ merge animation for 2nd level tile not good
+// + collect 6 stones/trees to 2 items not good
 
 // resources images too small (on toolbar)
+// replace tomb image
+// redo tile road 
 
 
 //TODOS :
