@@ -57,6 +57,7 @@ export class BoardComponent implements OnInit {
     for (var i = 0; i < this.gameEngine.totalRows; i++) {
       str += "55px ";
     }
+
     return str;
   }
 
@@ -65,11 +66,10 @@ export class BoardComponent implements OnInit {
   }
 
   getIndex(tile: Tile) {
-    return tile.xpos % 2 == 1 ? 10 + (tile.ypos * 10) : 20 + (tile.ypos * 10);
+    return tile.oddTile ? 10 + (tile.ypos * 10) : 20 + (tile.ypos * 10);
   }
 
   getMargin(tile: Tile) {
-    return tile.xpos % 2 == 0 ? "0" : "-35% 0 0 0";
-    
+    return tile.oddTile ? "-35% 0 0 0" : "0";
   }
 }

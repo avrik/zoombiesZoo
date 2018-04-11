@@ -72,7 +72,13 @@
 
 }
 
+.holder {
+    clip-path: inset(0px 0px 55px 0px);
+}
 
+.imgCard {
+    position: absolute;
+}
 
   
 

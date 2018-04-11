@@ -14,16 +14,12 @@ export class Tile {
     showDelay: string;
     ypos: number = -1;
     xpos: number = -1;
-    //opacity: number = 1;
-    
+
     constructor(data: any = null) {
         this.state = TileState.REGULAR;
         this.linked = [];
-        if (data) {
-            /* if (data.linked) {
-                this.linked = data.linked.foreach(a => a = new Tile(a));
-            } */
 
+        if (data) {
             this.xpos = data.xpos;
             this.ypos = data.ypos;
             this.card = data.card;
@@ -33,6 +29,10 @@ export class Tile {
             this.state = data.state;
             this.showDelay = data.showDelay;
         }
+    }
+
+    get oddTile(): boolean {
+        return this.xpos % 2 == 1 ? true : false;
     }
 
     get id(): string {

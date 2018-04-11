@@ -26,7 +26,6 @@ export class PopupComponent implements OnInit {
   butnClicked(butnItem: IMessageButton) {
     if (butnItem.action) butnItem.action();
     this.messagesService.postMessage(null);
-
   }
 
 }

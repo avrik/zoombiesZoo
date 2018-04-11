@@ -2,10 +2,10 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Tile } from 'app/game/board/tile/tile';
 import { trigger, state, style, transition, animate, keyframes } from '@angular/animations';
 
-const percentX = '75%'
-const percentY = '40%'
-const percentXY = '20%'
-const selay = '150ms linear';
+const percentX = 75;
+const percentY = 40;
+const percentXY = 20;
+const delay = '120ms ease';
 
 @Component({
   selector: 'tile-top',
@@ -14,7 +14,7 @@ const selay = '150ms linear';
   animations: [
     trigger('animState', [
       transition('* => init', [
-        animate(selay, keyframes([
+        animate(delay, keyframes([
           style({ transform: 'scale(0) translateY(0%)', offset: 0 }),
           style({ transform: 'scale(1.2) translateY(-10%)', offset: 0.6 }),
           style({ transform: 'scale(1) translateY(0%)', offset: 1.0 }),
@@ -22,44 +22,44 @@ const selay = '150ms linear';
       ]),
       
       transition('* => up', [
-        animate(selay, keyframes([
+        animate(delay, keyframes([
           style({ transform: 'translateX(0%) translateY(0%)', offset: 0 }),
-          style({ transform: `translateY(-${percentY})`, offset: 1 }),
+          style({ transform: `translateY(-${percentY}%)`, offset: 1 }),
         ]))
       ]),
 
       transition('* => down', [
-        animate(selay, keyframes([
+        animate(delay, keyframes([
           style({ transform: 'translateX(0%) translateY(0%)', offset: 0 }),
-          style({ transform: `translateY(${percentY})`, offset: 1 }),
+          style({ transform: `translateY(${percentY}%)`, offset: 1 }),
         ]))
       ]),
 
       transition('* => upLeft', [
-        animate(selay, keyframes([
+        animate(delay, keyframes([
           style({ transform: 'translateX(0%) translateY(0%)', offset: 0 }),
-          style({ transform: `translateX(-${percentX}) translateY(-${percentXY})`, offset: 1 }),
+          style({ transform: `translateX(-${percentX}%) translateY(-${percentXY}%)`, offset: 1 }),
         ]))
       ]),
 
       transition('* => upRight', [
-        animate(selay, keyframes([
+        animate(delay, keyframes([
           style({ transform: 'translateX(0%) translateY(0%)', offset: 0 }),
-          style({ transform: `translateX(${percentX}) translateY(-${percentXY})`, offset: 1 }),
+          style({ transform: `translateX(${percentX}%) translateY(-${percentXY}%)`, offset: 1 }),
         ]))
       ]),
 
       transition('* => downLeft', [
-        animate(selay, keyframes([
+        animate(delay, keyframes([
           style({ transform: 'translateX(0%) translateY(0%)', offset: 0 }),
-          style({ transform: `translateX(-${percentX}) translateY(${percentXY})`, offset: 1 }),
+          style({ transform: `translateX(-${percentX}%) translateY(${percentXY}%)`, offset: 1 }),
         ]))
       ]),
 
       transition('* => downRight', [
-        animate(selay, keyframes([
+        animate(delay, keyframes([
           style({ transform: 'translateX(0%) translateY(0%)', offset: 0 }),
-          style({ transform: `translateX(${percentX}) translateY(${percentXY})`, offset: 1 }),
+          style({ transform: `translateX(${percentX}%) translateY(${percentXY}%)`, offset: 1 }),
         ]))
       ]),
 

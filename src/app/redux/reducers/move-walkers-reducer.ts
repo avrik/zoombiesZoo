@@ -25,11 +25,11 @@ export function moveWalkers(newState: IState): IState {
 
     let people: Tile[] = walkers.filter(a => a.card.family.name == CardFamilyTypeEnum.PERSON);
     let animals: Tile[] = walkers.filter(a => a.card.family.name == CardFamilyTypeEnum.ANIMAL);
-    let zoombies: Tile[] = walkers.filter(a => a.card.family.name == CardFamilyTypeEnum.ZOOMBIE);
+    //let zoombies: Tile[] = walkers.filter(a => a.card.family.name == CardFamilyTypeEnum.ZOOMBIE);
 
-    people.forEach(person => { if (movePersonToRandomEmpty(person) == true) actionTaken = true })
-    animals.forEach(animal => { if (moveAnimalToRandomEmpty(animal) == true) actionTaken = true })
-    zoombies.forEach(zoombie => { if (moveZoombiesToRandomEmpty(zoombie) == true) actionTaken = true })
+    people.forEach(person => { if (movePersonToRandomEmpty(person) == true) { actionTaken = true } })
+    animals.forEach(animal => { if (moveAnimalToRandomEmpty(animal) == true) { actionTaken = true } })
+    //zoombies.forEach(zoombie => { if (moveZoombiesToRandomEmpty(zoombie) == true) actionTaken = true })
 
     if (actionTaken) {
         newState = moveWalkers(newState);
@@ -45,7 +45,6 @@ export function moveWalkers(newState: IState): IState {
 
 
 function testGroupTrapped(newState: IState, walkers: Tile[]): IState {
-
 
     if (walkers.length) {
         let walkersGroup: Tile[] = [];
@@ -130,7 +129,14 @@ function moveAnimalToRandomEmpty(tile: Tile): boolean {
 }
 
 function movePersonToRandomEmpty(tile: Tile): boolean {
-    let housesAround: Tile[] = tile.linked.filter(a => a.card && a.card.family.name == CardFamilyTypeEnum.HOUSE && a.card.collected < a.card.collect)
+    let housesAround: Tile[] = tile.linked.filter(a =>
+        a.card && a.card.collected < a.card.collect &&
+        (
+            (a.card.family.name == CardFamilyTypeEnum.HOUSE && tile.card.level == 0) ||
+            (a.card.family.name == CardFamilyTypeEnum.CHURCH && tile.card.level == 1) ||
+            (a.card.family.name == CardFamilyTypeEnum.PALACE && tile.card.level == 2)
+        )
+    )
 
     if (housesAround.length) {
         let rand: number = Math.floor(Math.random() * (housesAround.length));
@@ -145,8 +151,6 @@ function movePersonToRandomEmpty(tile: Tile): boolean {
         return true;
     } else {
         let empties: Tile[] = tile.linked.filter(a => !a.card && !a.terrain.locked && a.terrain.walkable);
-        // (a.terrain.type == TerrainEnum.ROAD || a.terrain.type == TerrainEnum.BRIDGE || a.terrain.type == TerrainEnum.RESOURCES));
-
         return moveToRandomSpot(tile, empties);
     }
 }
@@ -158,10 +162,7 @@ function moveToRandomSpot(tile: Tile, empties: Tile[]): boolean {
 
         moveToTile.card = tile.card;
         moveToTile.card.state = CardState.MOVING;
-        //moveToTile.state == TileState.WAIT_FOR_MOVE;
-        //moveToTile.card.preTile = tile;
-        //moveToTile.showDelay = "show";
-        moveToTile.card.showDelay = 150;
+        moveToTile.card.showDelay = 130;
         tile.movment = { dir: getMoveDir(tile, moveToTile), img: tile.card.img };
 
         clearTile(tile);

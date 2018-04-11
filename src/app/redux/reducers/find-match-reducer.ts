@@ -17,7 +17,7 @@ export function findMatch(newState: IState, tile: Tile) {
     } */
 
     //let matchedTiles: Tile[] = getMatchesAround(tile);
-    let matchedTiles: Tile[] = getMatchesAround(tile);
+    let matchedTiles: Tile[] = getMatchesAround(tile, tile.linked);
     //if (matchedTiles.length > (tile.card.minForNextLevel - 1)) {
     if (matchedTiles.length && tile.card.nextCard) {
 
@@ -73,11 +73,11 @@ export function findMatch(newState: IState, tile: Tile) {
                 //const arr = [1, 10, 50, 100, 200, 500, 1000, 2000, 5000];
                 //this.addToStorage(CardFamilyTypeEnum.COIN, (extra / 100) * (arr[(tile.card.level - 1)]));
                 //let emptyTile: Tile = tile.linked.find(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
-                let emptyTile: Tile = getRandomEmptyTile(newState.tiles);
+                let aroundOptions: Tile[] = tile.linked.filter(a => !a.card)
+                let emptyTile: Tile = getRandomEmptyTile(aroundOptions.length ? aroundOptions : newState.tiles);
                 if (emptyTile) {
                     emptyTile.card = getCardByFamily(CardFamilyTypeEnum.COIN_SILVER);
-                    // emptyTile.card.collected = extra;
-                    emptyTile.card.collected = 1;
+                    emptyTile.card.collected = Math.max(10 * ((tile.card.level - 1)), 1);
                 }
             }
         }
@@ -87,66 +87,51 @@ export function findMatch(newState: IState, tile: Tile) {
     }
 }
 
-export function getMatchesAround(tile: Tile, card: Card = null): Tile[] {
-
+export function getMatchesAround(tile: Tile, checkWithTiles: Tile[], card: Card = null): Tile[] {
+    let collector: Tile[] = [];
     if (card && card.family.name == CardFamilyTypeEnum.WILD) {
         card = getCardFromWild(tile);
     } else {
         card = tile.card || card;
     }
 
-    if (card) {
-        let collector: Tile[] = [];
-        if (tile.linked) {
-            let func: Function = (arr: Tile[]) => {
-                arr.filter(item =>
-                    tile != item &&
-                    card && item.card &&
-                    ((card.mergeBy == MergeTypeEnum.MATCH && item.card.mergeBy == MergeTypeEnum.MATCH) ||
-                        (card.mergeBy == MergeTypeEnum.MATCH_COLLECTED && item.card.mergeBy == MergeTypeEnum.MATCH_COLLECTED
-                            && card.collect == card.collected && item.card.collect == item.card.collected)) &&
-                    collector.indexOf(item) == -1 &&
-                    (item.card.value === card.value))
-                    .forEach(item2 => {
-                        collector.push(item2);
-                        func(item2.linked);
-                    });
-            }
+    let arounds: Tile[] = [...checkWithTiles];
 
-            func(tile.linked);
+    if (card && arounds) {
+
+        let addItemsToCollection: Function = (arr: Tile[]) => {
+            arr.filter(item =>
+                tile != item &&
+                tile.terrain.mergable &&
+                card && item.card &&
+                card.mergeBy == MergeTypeEnum.MATCH &&
+                item.terrain.mergable &&
+                item.card.mergeBy == MergeTypeEnum.MATCH &&
+                !collector.includes(item) &&
+                item.card.family.name == card.family.name &&
+                item.card.level == card.level)
+                .forEach(item2 => {
+                    collector.push(item2);
+                    addItemsToCollection(item2.linked);
+                });
         }
 
+        addItemsToCollection(arounds);
+
         if (collector.length >= (card.minForNextLevel - 1)) {
+            if (card.nextCard) {
+                let newLinked: Tile[] = [...checkWithTiles];
+                collector.forEach(a => { newLinked.splice(newLinked.indexOf(a), 1) })
+
+                let arr = getMatchesAround(tile, newLinked, new Card(card.nextCard));
+                 if (arr && arr.length) collector = collector.concat(arr);
+            }
+
             return collector;
         }
     }
     return [];
 }
-
-/* export function getMatchesAround(tile: Tile): Tile[] {
-    let collector: Tile[] = [];
-
-    
-    if (tile.linked) {
-        let func: Function = (arr: Tile[]) => {
-            arr.filter(item =>
-                tile != item &&
-                tile.card && item.card &&
-                ((tile.card.mergeBy == MergeTypeEnum.MATCH && item.card.mergeBy == MergeTypeEnum.MATCH) ||
-                    (tile.card.mergeBy == MergeTypeEnum.MATCH_COLLECTED && item.card.mergeBy == MergeTypeEnum.MATCH_COLLECTED
-                        && tile.card.collect == tile.card.collected && item.card.collect == item.card.collected)) &&
-                collector.indexOf(item) == -1 &&
-                (item.card.value === tile.card.value))
-                .forEach(item => {
-                    collector.push(item);
-                    func(item.linked);
-                });
-        }
-
-        func(tile.linked);
-    }
-    return collector;
-} */
 
 export function getCardFromWild(tile: Tile): Card {
     let card: Card;
@@ -160,8 +145,6 @@ export function getCardFromWild(tile: Tile): Card {
     if (optionsForWild.length) {
         optionsForWild.sort((a, b) => {
             if (a.card.family == b.card.family) {
-                //if (a.card.level == (b.card.level - 1)) return -1;
-                //if (a.card.level == (b.card.level - 1)) return 1;
                 if (a.card.level > b.card.level) return 1;
                 if (a.card.level < b.card.level) return -1;
             } else {
@@ -174,9 +157,9 @@ export function getCardFromWild(tile: Tile): Card {
 
         // tile.card = optionsForWild[0].card
         card = optionsForWild[0].card
-    } /* else {
-        tile.card = getCardByFamily(CardFamilyTypeEnum.GRAVE);
-    } */
+    } else {
+        card = getCardByFamily(CardFamilyTypeEnum.GRAVE);
+    }
 
     console.log("WILD TO CARD ", card);
 
