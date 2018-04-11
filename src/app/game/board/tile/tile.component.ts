@@ -33,51 +33,6 @@ import { IState } from '../../../redux/interfaces';
       transition('up => down', animate('300ms ease-out')),
     ]),
 
-    /* trigger('moveAnimation', [
-      state('up', style({ transform: 'translateY(-100%)' })),
-      state('down', style({ transform: 'translateY(100%)' })),
-      state('upLeft', style({ transform: 'translateY(-50%) translateX(-100%)' })),
-      state('upRight', style({ transform: 'translateY(-50%) translateX(100%)' })),
-      state('downLeft', style({ transform: 'translateY(50%) translateX(-100%)' })),
-      state('downRight', style({ transform: 'translateY(50%) translateX(100%)' })),
-
-      transition('* => up', animate('300ms ease-out')),
-      transition('* => down', animate('300ms ease-out')),
-      transition('* => upLeft', animate('300ms ease-out')),
-      transition('* => upRight', animate('300ms ease-out')),
-      transition('* => downLeft', animate('300ms ease-out')),
-      transition('* => downRight', animate('300ms ease-out')),
-
-      transition('* => collect', [
-        animate('200ms ease', keyframes([
-          style({ transform: 'scale(1) translateY(0%)', opacity: 1, offset: 0 }),
-          style({ transform: 'scale(1.5) translateY(-20%)', opacity: 1, offset: 0.8 }),
-          style({ transform: 'scale(0) translateY(0%)', opacity: 1, offset: 1.0 }),
-        ]))
-      ]),
-    ]), */
-
-    /* trigger('visibilityChanged', [
-      transition('* => merge', [
-        animate('300ms ease', keyframes([
-          style({ transform: 'scale(0)', opacity: 0, offset: 0 }),
-          style({ transform: 'scale(1.4)', opacity: 1, offset: 0.6 }),
-          style({ transform: 'scale(1)', opacity: 1, offset: 1.0 })
-        ]))
-      ]),
-      transition('* => show', [
-        animate('100ms', keyframes([
-          style({ opacity: 0, offset: 0 }),
-          style({ opacity: 1, offset: 1.0 }),
-        ]))
-      ]),
-    ]), */
-    /* trigger('scaleAnimation', [
-      state('up', style({ transform: 'scale(1)' })),
-      state('down', style({ transform: 'scale(.5)' })),
-      transition('* => up', animate('50ms ease-out')),
-      transition('* => down', animate('50ms ease-out'))
-    ]), */
     trigger('terrainAnimation', [
       state('up', style({ transform: 'translateY(-15%)' })),
       state('down', style({ transform: 'translateY(0%)' })),
@@ -90,17 +45,25 @@ import { IState } from '../../../redux/interfaces';
 export class TileComponent implements OnInit {
   @Input() tile: Tile;
   terrainAnimation: string;
-
   currentState: IState;
   floatState: string = "";
   moveState: string = "";
   currentCard: Card;
-  //showThinkBubble: boolean;
   isCardFloating: boolean;
   onMe: boolean;
 
   constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
 
+  }
+
+  get terrainImg():string {
+    if (this.tile.terrain.type == TerrainEnum.CARD_HOLDER) {
+      if (this.tile.card || this.onMe) {
+        return this.tile.terrain.url2;
+      }
+    } 
+
+    return this.tile.terrain.url;
   }
 
   ngOnInit(): void {
@@ -116,32 +79,6 @@ export class TileComponent implements OnInit {
     }
     )
 
-    /* if (this.tile.xpos == 1 && this.tile.ypos == 1) {
-      setTimeout(() => {
-        this.tile.movment = { img: UrlConst.BRICK1, dir: "up" }
-      }, 1000);
-
-      setTimeout(() => {
-        this.tile.movment = { img: UrlConst.BRICK1, dir: "upRight" }
-      }, 2000);
-
-      setTimeout(() => {
-        this.tile.movment = { img: UrlConst.BRICK1, dir: "downRight" }
-      }, 3000);
-
-      setTimeout(() => {
-        this.tile.movment = { img: UrlConst.BRICK1, dir: "down" }
-      }, 4000);
-
-      setTimeout(() => {
-        this.tile.movment = { img: UrlConst.BRICK1, dir: "downLeft" }
-      }, 5000);
-
-      setTimeout(() => {
-        this.tile.movment = { img: UrlConst.BRICK1, dir: "upLeft" }
-      }, 6000);
-    } */
-
   }
 
   clickTile() {
@@ -153,9 +90,9 @@ export class TileComponent implements OnInit {
     }
 
     switch (this.tile.terrain.type) {
-      case TerrainEnum.BLOCKED:
+      /* case TerrainEnum.BLOCKED:
         this.gameEngine.handleBlockedTile(this.tile);
-        break;
+        break; */
 
       case TerrainEnum.CARD_HOLDER:
         this.gameEngine.clickStashTile(this.tile);
@@ -189,10 +126,6 @@ export class TileComponent implements OnInit {
     if (this.onMe && !this.tile.terrain.locked) {
       this.onMe = false;
 
-      if (this.tile.terrainTop && this.tile.terrainTop.type == TerrainEnum.CARD_HOLDER_OPEN && !this.tile.card) {
-        this.tile.terrainTop = null;
-      }
-
       if (!this.isCardFloating) {
         this.floatState = '';
       }
@@ -202,22 +135,17 @@ export class TileComponent implements OnInit {
       }
 
       //if (this.tile.card) {
-        this.gameEngine.clearMatchHint(this.tile);
+      this.gameEngine.clearMatchHint(this.tile);
       //}
     }
   }
 
   onMouseOver() {
-    
+
     if (!this.onMe && !this.tile.terrain.locked) {
       this.onMe = true;
 
-      if (this.tile.terrain && this.tile.terrain.type == TerrainEnum.CARD_HOLDER) {
-        this.tile.terrainTop = new Terrain(TerrainEnum.CARD_HOLDER_OPEN)
-      }
-
       if (!this.tile.card && this.tile.terrain.clickable) {
-
         this.gameEngine.showMatchHint(this.tile);
 
         if (this.terrainAnimation != "up") {

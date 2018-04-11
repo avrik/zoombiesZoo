@@ -3,30 +3,29 @@ import { UrlConst } from 'app/consts/url-const';
 
 export class Terrain {
     url: string;
+    url2: string;
     type: number;
     clickable: boolean = true;
     walkable: boolean = false;
     walkableForAnimal: boolean = false;
     locked: boolean = false;
+    mergable:boolean = false;
 
     constructor(type: number = 0) {
         this.type = type;
 
         switch (type) {
-            case TerrainEnum.BLOCKED:
+            /* case TerrainEnum.BLOCKED:
                 this.url = UrlConst.TERRAIN_BLOCKED;
-                break;
+                break; */
 
             case TerrainEnum.EXPLOSION:
                 this.url = UrlConst.TERRAIN_EXPLOSION;
                 break;
 
-            case TerrainEnum.CARD_HOLDER_OPEN:
-                this.url = UrlConst.TERRAIN_CARD_HOLDER_OPEN;
-                break;
-
             case TerrainEnum.CARD_HOLDER:
                 this.url = UrlConst.TERRAIN_CARD_HOLDER;
+                this.url2 = UrlConst.TERRAIN_CARD_HOLDER_OPEN;
                 break;
 
             case TerrainEnum.BRIDGE:
@@ -37,6 +36,7 @@ export class Terrain {
 
             case TerrainEnum.ROAD:
                 this.walkable = true;
+                this.mergable = true;
                 this.url = UrlConst.TERRAIN_ROAD;
                 break;
 
@@ -46,10 +46,12 @@ export class Terrain {
                 break;
 
             case TerrainEnum.CITY:
+                this.mergable = true;
                 this.url = UrlConst.TERRAIN_CITY;
                 break;
 
             default:
+                this.mergable = true;
                 this.walkable = true;
                 this.walkableForAnimal = true;
                 this.url = UrlConst.TERRAIN_RESOURCE;

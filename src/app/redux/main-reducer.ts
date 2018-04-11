@@ -16,18 +16,50 @@ import { generateWorld, populateWorldWithResources, mapLinkedTiles } from './red
 import { clickTile } from './reducers/tile-click-reducer';
 import { getMatchesAround } from './reducers/find-match-reducer';
 import { getFloatTile } from './reducers/tile-reducer';
-
 import { restoreGameState } from './reducers/restore-gamestate-reducer';
-import { buyItem } from './reducers/buy-item-reducer';
+import { buyItem, tradeItemForResources } from './reducers/buy-item-reducer';
 import { nextTurn } from './reducers/next-turn-reducer';
 import { state } from '@angular/core';
 import { openStore, openBlockedItemStore } from './reducers/open-store-reducer';
 import { collectResources } from './reducers/collect-resources-reducer';
 import { Card } from '../game/cards/card';
+import { IMessage } from '../services/messages.service';
 
 export class MainReducer { }
 
+export interface ITutorialLevel {
+    text: string;
+    activeTiles: number[];
+    cards: any[];
+    completeBy?: any;
+}
+
+const message_no_energy:IMessage = { title: "No more energy - wait for recharge", message: "wait for your energy to go back", type: MessageType.TOOLBAR };
+const message_welcome:IMessage = { title: "Welcome to your new kingdom sir", message: "let'a start!", butns: [{ label: "GO!" }], type: MessageType.POPUP };
+
+const tutorialLevels: ITutorialLevel[] = [
+    {
+        text: "Welcome sir,\b let us show you how to build your kingdom \b place your first stone",
+        activeTiles: [62, 72, 82, 73],
+        cards: [
+            { family: CardFamilyTypeEnum.BRICK, level: 0 },
+            { family: CardFamilyTypeEnum.BRICK, level: 0 },
+            { family: CardFamilyTypeEnum.BRICK, level: 0 },
+        ]
+    },
+    {
+        text: "Great job,\b we need some more brick",
+        activeTiles: [62, 72, 82, 73],
+        cards: [
+            { family: CardFamilyTypeEnum.BRICK, level: 0 },
+            { family: CardFamilyTypeEnum.BRICK, level: 0 },
+            { family: CardFamilyTypeEnum.BRICK, level: 1 },
+        ]
+    }
+]
+
 const initState: IState = {
+    tutorialLevel: 0,
     lastActionDate: new Date(),
     energy: 300,
     gameOver: false,
@@ -60,11 +92,11 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
 
     let newState: IState = Object.assign({}, state);
 
-    if (action.type != Action.INIT_GAME && newState.energy <= 0) {
+    /* if (action.type != Action.INIT_GAME && newState.energy <= 0) {
         console.log("no more energy!!!!")
         newState.currentMessage = { title: "No more energy - wait for recharge", message: "wait for your energy to go back", type: MessageType.TOOLBAR }
         return newState;
-    }
+    } */
 
     let tile: Tile;
 
@@ -78,11 +110,11 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
 
     switch (action.type) {
         case Action.RESTORE_GAMESTATE:
-            newState = restoreGameState(newState);
+            newState = restoreGameState();
             return newState;
 
         case Action.INIT_GAME:
-            newState = Object.assign({},initState);
+            newState = Object.assign({}, initState);
             newState.resources = { bricks: 0, lumber: 0, coins: 10 };
             newState.tiles = generateWorld(action.payload.rows, action.payload.cols);
             return newState;
@@ -90,6 +122,7 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
         case Action.NEW_GAME:
             populateWorldWithResources(newState.tiles);
             newState.nextCard = getNextCard(newState);
+            newState.currentMessage = message_welcome;
             saveState(newState);
             return newState;
 
@@ -109,10 +142,15 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             return newState;
 
         case Action.CLICK_TILE:
-            newState.tileClicked = tile;
-            clickTile(newState);
-            nextTurn(newState);
-            saveState(newState);
+            if (newState.energy <= 0) {
+                console.log("no more energy!!!!")
+                newState.currentMessage = message_no_energy;
+            } else {
+                newState.tileClicked = tile;
+                clickTile(newState);
+                nextTurn(newState);
+                saveState(newState);
+            }
 
             return newState;
 
@@ -140,12 +178,18 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             return newState;
 
         case Action.BUY_ITEM:
-            newState = buyItem(newState, action.payload);
-            saveState(newState);
+            if (newState.energy <= 0) {
+                console.log("no more energy!!!!")
+                newState.currentMessage = message_no_energy;
+            } else {
+                newState = buyItem(newState, action.payload);
+                saveState(newState);
+            }
             return newState;
 
         case Action.DEVELOP_TILE:
             if (newState.tileClicked) newState.tileClicked.terrain.locked = false;
+            tradeItemForResources(newState, action.payload);
             saveState(newState);
             return newState;
 
@@ -155,11 +199,13 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
 
         case Action.UNDO:
             if (prevGameState) {
-                prevGameState.tiles = prevGameState.tiles.map(a => new Tile(a));
-                mapLinkedTiles(prevGameState.tiles);
-                return prevGameState
+                newState = restoreGameState(prevGameState)
+                //mapLinkedTiles(newState.tiles);
+                //tradeItemForResources(newState, action.payload.cost);
+                newState.resources.coins--;
+                saveState(newState);
             }
-            saveState(newState);
+
             return newState;
 
         case Action.ADD_ENERGY: {
@@ -178,7 +224,7 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
         }
 
         case Action.SHOW_MATCH_HINT: {
-            let matches: Tile[] = getMatchesAround(tile, newState.nextCard);
+            let matches: Tile[] = getMatchesAround(tile,tile.linked, newState.nextCard);
             if (matches.length) {
                 //console.log("SHOW_MATCH_HINT", matches.length);
                 matches.forEach(a => a.card.state = CardState.MATCH_HINT);
@@ -196,6 +242,7 @@ function getCurState(state: IState): IState {
     return {
         lastActionDate: new Date(),
         energy: state.energy,
+        tutorialLevel: state.tutorialLevel,
         gameOver: state.gameOver,
         tiles: state.tiles.map(a => a.toString()),
         turn: state.turn,

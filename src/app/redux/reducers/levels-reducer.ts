@@ -5,6 +5,8 @@ import { Card } from "../../game/cards/card";
 import { MessageType } from "../../enums/message-type.enum";
 import { CardFamilyTypeEnum } from "../../enums/card-family-type-enum.enum";
 import { TerrainEnum } from "../../enums/terrain.enum";
+import { getRandomEmptyTile } from "./tile-reducer";
+import { Tile } from "../../game/board/tile/tile";
 
 export function checkIfLevelCompleted(state: IState): IState {
     let newState = state;
@@ -77,7 +79,10 @@ export function checkIfLevelCompleted(state: IState): IState {
             if (newGameLevel.reward.coins) {
                 let coinCard: Card = getCardByFamily(CardFamilyTypeEnum.COIN_SILVER);
                 coinCard.collected = newGameLevel.reward.coins;
-                newState.tiles.find(a => a.terrain.type == TerrainEnum.RESOURCES && !a.card).card = coinCard
+
+                let randTile:Tile = getRandomEmptyTile(newState.tileClicked?newState.tileClicked.linked:newState.tiles);
+                randTile.card = coinCard;
+                //newState.tiles.find(a => a.terrain.type == TerrainEnum.RESOURCES && !a.card).card = coinCard
             }
         }
     }

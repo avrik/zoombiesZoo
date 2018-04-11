@@ -1,4 +1,3 @@
-
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Card } from '../../../cards/card';
 import { GameEngineService } from 'app/services/game-engine.service';
@@ -18,13 +17,13 @@ import { CardState } from '../../../../enums/card-state.enum';
   animations: [
     trigger('animState', [
       transition('* => matchHint', [
-        animate('300ms linear', keyframes([
-          style({ opacity: 1, offset: 0 }),
-          style({ opacity: 0.2, offset: 0.5 }),
-          style({ opacity: 0.8, offset: 1.0 }),
+        animate('600ms linear', keyframes([
+          style({ opacity: 0.9, transform: 'translateY(0%)', offset: 0 }),
+          style({ opacity: 0.2, transform: 'translateY(-1%)', offset: 0.4 }),
+          style({ opacity: 0.9, transform: 'translateY(0%)', offset: 1.0 }),
         ]))
       ]),
-      transition('* <=> matchHint', animate('300ms ease-out')),
+      //transition('* <=> matchHint', animate('300ms ease-out')),
     ])
     /* trigger('animState', [
       transition('* => init', [
@@ -63,7 +62,7 @@ export class TileCardComponent implements OnInit {
 
   @Input() onTerrain: number;
   @Input() card: Card;
-  @Input() onTop: boolean;
+  // @Input() onTop: boolean;
   @Input() onMe: boolean;
   animState: string;
   show: boolean;
@@ -72,12 +71,7 @@ export class TileCardComponent implements OnInit {
     this.gameEngine.store.subscribe(() => {
       let newState: IState = this.gameEngine.store.getState();
 
-      //if (newState.tiles) {
-      //let myCard:Card = newState.tiles.find(a=>a.card==this.card).card;
-
       this.animState = (this.card && this.card.state == CardState.MATCH_HINT) ? "matchHint" : "";
-      //}
-
     })
   }
 
@@ -89,40 +83,6 @@ export class TileCardComponent implements OnInit {
     } else {
       this.show = true;
     }
-
-    /* if (this.card && this.card.type != CardTypeEnum.WALKER) {
-      this.animState = "init ";
-    }
-
-    if (this.onTop && this.card) {
-      setTimeout(() => {
-        this.animState = "init";
-      }, 1000);
-
-      setTimeout(() => {
-        this.animState = "up";
-      }, 2000);
-
-      setTimeout(() => {
-        this.animState = "upRight";
-      }, 3000);
-
-      setTimeout(() => {
-        this.animState = "downRight";
-      }, 4000);
-
-      setTimeout(() => {
-        this.animState = "down";
-      }, 5000);
-
-      setTimeout(() => {
-        this.animState = "downLeft";
-      }, 6000);
-
-      setTimeout(() => {
-        this.animState = "upLeft";
-      }, 7000);
-    } */
   }
 
   /* get getAnimState():string {
@@ -141,6 +101,10 @@ export class TileCardComponent implements OnInit {
       }
 
     }
+  }
+
+  get isCardHolder(): boolean {
+    return this.onTerrain == TerrainEnum.CARD_HOLDER ? true : false;
   }
 
   getheight() {
@@ -175,11 +139,19 @@ export class TileCardComponent implements OnInit {
   }
 
   get isShowBubble() {
-    return this.card && this.onMe && this.card.type == CardTypeEnum.WALKER;
+    return this.card && this.onMe && this.card.family.name == CardFamilyTypeEnum.PERSON
   }
 
   get getBubbleImg() {
-    return UrlConst.HOUSE1;
+    switch (this.card.level) {
+      case 1:
+        return UrlConst.CHURCH1;
+      case 2:
+        return UrlConst.PALACE;
+      default:
+        return UrlConst.HOUSE1;
+    }
+
   }
 
 

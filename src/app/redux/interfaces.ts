@@ -12,6 +12,7 @@ export interface IAction {
 }
 
 export interface IState {
+    tutorialLevel:number,
     lastActionDate:Date,
     maxEnergy:number,
     energy: number;

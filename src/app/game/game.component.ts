@@ -6,7 +6,6 @@ import { MessagesService } from '../services/messages.service';
 import { MessageType } from '../enums/message-type.enum';
 import { IBuyItem, IState } from 'app/redux/interfaces';
 import { Messages } from '../enums/messages.enum';
-import { DigitCounterService } from '../services/digit-counter.service';
 
 @Component({
   selector: 'app-game',
@@ -18,11 +17,8 @@ export class GameComponent implements OnInit {
   debug: boolean;
   showStoreItems: IBuyItem[];
 
-  constructor(private gameEngine: GameEngineService,
-    private messagesService: MessagesService,
-    private counterService: DigitCounterService) 
-    {
-    //this.counterService.setCounter(0, 3000);
+  constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
+
     this.gameEngine.store.subscribe(() => {
       let newState: IState = this.gameEngine.store.getState();
 
@@ -30,13 +26,18 @@ export class GameComponent implements OnInit {
         this.messagesService.postMessage({ type: MessageType.POPUP, title: Messages.GAME_OVER_TITLE, butns: [{ label: Messages.GAME_OVER_BUTN1, action: a => { this.restart() } }] })
       } */
 
+
       if (newState.gameOver) {
         let years = Math.round(newState.turn / 360) + 1;
         let days = newState.turn;
 
-        let message:string = `Nice JOB! \n your kingdom lasted for ${days} days. you reached the population of ${newState.population}, and got ${newState.score} score`
-        this.messagesService.postMessage({ type: MessageType.POPUP, title: Messages.GAME_OVER_TITLE,message:message, butns: [{ label: Messages.GAME_OVER_BUTN1, action: a => { this.restart() } }] })
-      }
+        let message: string = `Nice JOB! \n your kingdom lasted for ${days} days. you reached the population of ${newState.population}, and got ${newState.score} score`
+        this.messagesService.postMessage({ type: MessageType.POPUP, title: Messages.GAME_OVER_TITLE, message: message, butns: [{ label: Messages.GAME_OVER_BUTN1, action: a => { this.restart() } }] })
+      } /* else {
+        if (newState.currentMessage && newState.currentMessage.type == MessageType.POPUP) {
+          this.messagesService.postMessage({ type: MessageType.POPUP, title: "test!!!!!!1" });
+        }
+      } */
 
       this.showStoreItems = newState.showStoreItems;
     })
@@ -49,6 +50,7 @@ export class GameComponent implements OnInit {
 
   restart(restoreState: boolean = false) {
     this.gameEngine.restart(restoreState);
+
   }
 
   onBuyItem(buyItem: IBuyItem) {

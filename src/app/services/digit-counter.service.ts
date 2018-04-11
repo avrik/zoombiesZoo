@@ -26,7 +26,7 @@ export class DigitCounterService {
       step = Math.floor(totalToCount / 10);
     }
 
-    console.log("count step = ", step);
+    //console.log("count step = ", step);
 
     this.time = new Observable<number>((observer: Subscriber<number>) => {
 

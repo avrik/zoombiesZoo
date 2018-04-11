@@ -5,6 +5,8 @@ import { mainReducerFunc } from 'app/redux/main-reducer';
 import { Action } from '../redux/actions/action.enum';
 import { Card, ICardData } from 'app/game/cards/card';
 import { IBuyItem } from '../redux/interfaces';
+import { MessagesService } from './messages.service';
+import { MessageType } from '../enums/message-type.enum';
 
 export class GameEngineService {
 
@@ -47,7 +49,7 @@ export class GameEngineService {
     this.store.dispatch({ type: Action.ADD_ENERGY, payload: amount });
   }
   setNextCard(card: ICardData) {
-    this.store.dispatch({ type: Action.SET_NEXT_CARD, payload: { type: card.family.name } });
+    this.store.dispatch({ type: Action.SET_NEXT_CARD, payload: { type: card.family.name, level: card.level } });
   }
 
   clickTile(tile: Tile) {
@@ -79,6 +81,8 @@ export class GameEngineService {
     switch (buyItem.type) {
       case 101:
         this.store.dispatch({ type: Action.DEVELOP_TILE, payload: buyItem });
+
+        break;
       case 99:
         this.store.dispatch({ type: Action.UNDO, payload: buyItem });
         setTimeout(() => { this.store.dispatch({ type: Action.NEW_FLOATTILE }) }, 50);

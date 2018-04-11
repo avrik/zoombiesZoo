@@ -39,21 +39,27 @@ export function buyItem(newState: IState, buyItem: IBuyItem): IState {
             }
             break;
         default:
+            purchased = true;
             break;
     }
 
     if (purchased) {
-        newState.resources.coins -= buyItem.cost.coin;
-        if (buyItem.cost.block) {
-            removeFromResourcesStorage(newState, buyItem.cost.block);
-        }
-
-        if (buyItem.cost.lumber) {
-            removeFromResourcesSawmill(newState, buyItem.cost.lumber);
-        }
+        tradeItemForResources(newState, buyItem);
     }
 
     return newState;
+}
+
+
+export function tradeItemForResources(newState: IState, buyItem: IBuyItem) {
+    newState.resources.coins -= buyItem.cost.coin;
+    if (buyItem.cost.block) {
+        removeFromResourcesStorage(newState, buyItem.cost.block);
+    }
+
+    if (buyItem.cost.lumber) {
+        removeFromResourcesSawmill(newState, buyItem.cost.lumber);
+    }
 }
 
 
@@ -71,7 +77,7 @@ function buyBuilding(newState: IState, buyItem: IBuyItem): boolean {
     else {
         newState.tileClicked.card = getCardByFamily(buyItem.type);
         newState.energy -= newState.tileClicked.card.energyCost;
-        findMatch(newState,newState.tileClicked);
+        findMatch(newState, newState.tileClicked);
     }
 
     return true;

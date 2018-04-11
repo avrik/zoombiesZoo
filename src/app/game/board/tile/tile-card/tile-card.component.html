@@ -2,7 +2,7 @@
     <!-- <p style="margin:1px" >title</p> -->
     <img [src]="getBubbleImg" height="40" alt="">
 </div>
-<div  *ngIf="card && show" class="container">
+<div *ngIf="card && show" class="container">
 
     <tile-frame *ngIf="card.collect" [card]="card"></tile-frame>
 
@@ -11,11 +11,10 @@
         <span *ngIf="card.type == 1"> {{card.collected | number : '1.0-0'}}/{{card.collect | number : '1.0-0'}}</span>
     </div>
 
-    
     <!-- <div [@animState]="animState" style="position: absolute;" [style.margin]="getMargin()"> -->
-    <div [@animState]="animState" (@animState.done)="onAnimDone($event)" style="position: absolute;" [style.margin]="getMargin()">
+    <div [class]="isCardHolder?'imgCard holder':'imgCard'" [@animState]="animState" (@animState.done)="onAnimDone($event)"  [style.margin]="getMargin()">
         <!-- <img *ngIf="card.img" [src]="getImg()" alt="" [height]="getheight()"> -->
         
-        <img *ngIf="card.img" [src]="getImg()" alt="" width="100">
+        <img *ngIf="card.img" [src]="getImg()" alt="" width="100" >
     </div>
 </div>

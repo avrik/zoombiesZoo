@@ -86,11 +86,18 @@ export const UrlConst = {
     WILD:"assets/resources/hex_wild.png",
 
     //PERSON1:"assets/people/Character Boy.png",
-    PERSON1:"assets/people/hex_person1.png",
    // PERSON2:"assets/people/Character Cat Girl.png",
+    PERSON1:"assets/people/hex_person1.png",
     PERSON2:"assets/people/hex_person2.png",
     PERSON3:"assets/people/hex_person3.png",
     PERSON4:"assets/people/hex_person2.png",
+
+    PERSON_ROYAL1:"assets/people/person3.png",
+    PERSON_ROYAL2:"assets/people/hex_person2.png",
+
+    PERSON_HOLY1:"assets/people/person3.png",
+    PERSON_HOLY2:"assets/people/hex_person2.png",
+
 
     BONES:"assets/resources/hex_bones.png",
     OIL1:"assets/resources/hex_oil.png",

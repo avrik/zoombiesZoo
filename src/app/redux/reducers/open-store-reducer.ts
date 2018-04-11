@@ -8,8 +8,9 @@ export const tileStoreItems: IBuyItem[] = [
     { store: StoreItemType.TILE_STORE, label: 'road', cost: { block: 3, lumber: 0, coin: 0 }, icon: UrlConst.ROAD, type: CardFamilyTypeEnum.ROAD, description: "connect people to houses" },
     { store: StoreItemType.TILE_STORE, label: 'storage', cost: { block: 9, lumber: 0, coin: 0 }, icon: UrlConst.STORAGE1, type: CardFamilyTypeEnum.STORAGE, description: "our resources need storage" },
     { store: StoreItemType.TILE_STORE, label: 'swamill', cost: { block: 9, lumber: 0, coin: 0 }, icon: UrlConst.SAWMILL1, type: CardFamilyTypeEnum.SAWMILL, description: "use sawmills to store lumber" },
-    { store: StoreItemType.TILE_STORE, label: 'house', cost: { block: 9, lumber: 6, coin: 0 }, icon: UrlConst.HOUSE1, type: CardFamilyTypeEnum.HOUSE, description: "our people need houses" },
-    { store: StoreItemType.TILE_STORE, label: 'church', cost: { block: 15, lumber: 9, coin: 3 }, icon: UrlConst.CHURCH1, type: CardFamilyTypeEnum.CHURCH, description: "for trapping the undead!" },
+    { store: StoreItemType.TILE_STORE, label: 'house', cost: { block: 9, lumber: 6, coin: 0 }, icon: UrlConst.HOUSE1, type: CardFamilyTypeEnum.HOUSE, description: "people need houses" },
+    { store: StoreItemType.TILE_STORE, label: 'church', cost: { block: 18, lumber: 9, coin: 1 }, icon: UrlConst.CHURCH1, type: CardFamilyTypeEnum.CHURCH, description: "holy place for holy people" },
+    { store: StoreItemType.TILE_STORE, label: 'palace', cost: { block: 27, lumber: 18, coin: 3 }, icon: UrlConst.PALACE, type: CardFamilyTypeEnum.PALACE, description: "the place for a royal blood" },
 ]
 
 export const tileBuildingItems: IBuyItem[] = [
