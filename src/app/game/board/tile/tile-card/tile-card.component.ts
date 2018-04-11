@@ -163,7 +163,7 @@ export class TileCardComponent implements OnInit {
 
     switch (this.card.type) {
       case CardTypeEnum.BUILDING:
-        return "-50px 0 0 0px"
+        return "-85px 0 0 0px"
     }
 
     return "-85px 0 0 0px";

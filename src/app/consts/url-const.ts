@@ -89,7 +89,7 @@ export const UrlConst = {
     PERSON1:"assets/people/hex_person1.png",
    // PERSON2:"assets/people/Character Cat Girl.png",
     PERSON2:"assets/people/hex_person2.png",
-    PERSON3:"assets/people/hex_person1.png",
+    PERSON3:"assets/people/hex_person3.png",
     PERSON4:"assets/people/hex_person2.png",
 
     BONES:"assets/resources/hex_bones.png",
