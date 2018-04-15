@@ -56,12 +56,12 @@ export class TileComponent implements OnInit {
 
   }
 
-  get terrainImg():string {
+  get terrainImg(): string {
     if (this.tile.terrain.type == TerrainEnum.CARD_HOLDER) {
       if (this.tile.card || this.onMe) {
         return this.tile.terrain.url2;
       }
-    } 
+    }
 
     return this.tile.terrain.url;
   }
@@ -209,5 +209,14 @@ export class TileComponent implements OnInit {
   get isShowCardOnTile(): boolean {
 
     return this.tile.card ? true : false;
+  }
+
+
+  getTileOpacity() {
+    return (this.tile.state === TileState.DISABLED || this.tile.disabled) ? 0.2 : 1
+  }
+
+  getTilePointer() {
+    return (this.tile.state === TileState.DISABLED || this.tile.disabled) ? 'none' : 'auto';
   }
 }

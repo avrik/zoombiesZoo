@@ -21,6 +21,6 @@ export function getRandomEmptyTile(tiles: Tile[]): Tile {
     let rand: Tile;
 
     let options: Tile[] = tiles.filter(a => !a.card && a.terrain.type == TerrainEnum.RESOURCES);
-    rand = options[Math.floor(Math.random() * options.length)];
+    rand = options[Math.floor(Math.random() * (options.length-1))];
     return rand;
 }

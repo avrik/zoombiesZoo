@@ -88,6 +88,7 @@ export function findMatch(newState: IState, tile: Tile) {
 }
 
 export function getMatchesAround(tile: Tile, checkWithTiles: Tile[], card: Card = null): Tile[] {
+
     let collector: Tile[] = [];
     if (card && card.family.name == CardFamilyTypeEnum.WILD) {
         card = getCardFromWild(tile);
@@ -161,7 +162,7 @@ export function getCardFromWild(tile: Tile): Card {
         card = getCardByFamily(CardFamilyTypeEnum.GRAVE);
     }
 
-    console.log("WILD TO CARD ", card);
+   // console.log("WILD TO CARD ", card);
 
     return card;
 }

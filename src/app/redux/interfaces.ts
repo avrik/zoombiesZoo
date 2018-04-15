@@ -4,17 +4,27 @@ import { GameLevel } from 'app/game/levels/game-level';
 import { CityLevel } from '../game/levels/game-level';
 import { IMessage } from 'app/services/messages.service';
 
+export interface ITutorialLevel {
+    index:number;
+    title?: string;
+    text?: string;
+    activeTiles: number[];
+    cards: any[];
+    completeBy?: any;
+}
 
 export interface IAction {
     payload: any;
     type: any;
-    notrace:boolean;
+    notrace: boolean;
 }
 
 export interface IState {
-    tutorialLevel:number,
-    lastActionDate:Date,
-    maxEnergy:number,
+    tutorialLevel: ITutorialLevel;
+    tutorialComplete: boolean;
+    tutorialActive: boolean;
+    lastActionDate: Date;
+    maxEnergy: number;
     energy: number;
     pendingMoveCard: Card;
     tiles: Tile[];
@@ -54,9 +64,9 @@ export interface IBuyItem {
 }
 
 export interface IResourceStorage {
-    bricks?: number,
-    lumber?: number,
-    coins?: number,
-    silver?: number,
-    maxStorage?: number,
+    bricks?: number;
+    lumber?: number;
+    coins?: number;
+    silver?: number;
+    maxStorage?: number;
 }
