@@ -1,4 +1,3 @@
-
 import { Tile } from 'app/game/board/tile/tile';
 import { createStore, Store } from 'redux';
 import { mainReducerFunc } from 'app/redux/main-reducer';
@@ -19,20 +18,33 @@ export class GameEngineService {
     this.store = createStore(mainReducerFunc);
   }
 
-  initGame() {
+  /* initGame() {
     this.store.dispatch({ type: Action.INIT_GAME, payload: { rows: this.totalRows, cols: this.totalCols } });
-  }
+  } */
 
   restart(restoreState: boolean = false) {
-    this.initGame();
 
-    if (restoreState) {
-      this.store.dispatch({ type: Action.RESTORE_GAMESTATE });
+    this.store.dispatch({ type: Action.INIT_GAME, payload: { rows: this.totalRows, cols: this.totalCols } });
+    //localStorage.clear();
+    //this.initGame();
 
-    } else {
+    //if (restoreState) {
+      /* let lastState = localStorage.getItem("lastState");
+      if (lastState) {
+        this.store.dispatch({ type: Action.RESTORE_GAMESTATE });
+      }  */
+      //else {
+        //this.store.dispatch({ type: Action.NEW_GAME });
+      //}
+    /* } else {
       localStorage.removeItem('lastState');
-      this.store.dispatch({ type: Action.NEW_GAME });
+      
+    } */
+
+    if (!restoreState) {
+      localStorage.removeItem('lastState');
     }
+    this.store.dispatch({ type: Action.NEW_GAME });
     setTimeout(() => { this.store.dispatch({ type: Action.NEW_FLOATTILE }) }, 50);
   }
 

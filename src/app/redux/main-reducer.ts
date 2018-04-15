@@ -29,7 +29,7 @@ import { setNextTutorialLevel, tutorialLevels } from './reducers/tutorial-reduce
 export class MainReducer { }
 
 const message_no_energy: IMessage = { title: "No more energy - wait for recharge", message: "wait for your energy to go back", type: MessageType.TOOLBAR };
-const message_welcome: IMessage = { title: "Welcome to your new kingdom sir", message: "let'a start!", butns: [{ label: "GO!" }], type: MessageType.POPUP };
+const message_welcome: IMessage = { isWow:true,title: "Welcome to your new kingdom sir", message: "Welcome to your kingdom. \nmay your rule be long and prosperous", butns: [{ label: "GO!" }], type: MessageType.CURTAIN };
 
 const initState: IState = {
     tutorialLevel: null,
@@ -72,15 +72,11 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
         console.info('Dispatch action :', action.type, action.payload);
     }
 
-
-
     //setNextTutorialLevel(newState);
-
-
 
     switch (action.type) {
         case Action.RESTORE_GAMESTATE:
-            newState = restoreGameState();
+            //newState = restoreGameState(newState);
             return newState;
 
         case Action.INIT_GAME:
@@ -90,6 +86,11 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             return newState;
 
         case Action.NEW_GAME:
+            let restoreState = restoreGameState(newState);
+            if (restoreState) {
+                return restoreState;
+            }
+
             populateWorldWithResources(newState.tiles);
             newState.nextCard = getNextCard(newState);
             newState.currentMessage = message_welcome;
