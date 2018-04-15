@@ -81,7 +81,12 @@ export function checkIfLevelCompleted(state: IState): IState {
                 coinCard.collected = newGameLevel.reward.coins;
 
                 let randTile:Tile = getRandomEmptyTile(newState.tileClicked?newState.tileClicked.linked:newState.tiles);
-                randTile.card = coinCard;
+                if (randTile) {
+                    randTile.card = coinCard;
+                } else {
+                    console.error("rand Tile on reward error!!")
+                }
+
                 //newState.tiles.find(a => a.terrain.type == TerrainEnum.RESOURCES && !a.card).card = coinCard
             }
         }

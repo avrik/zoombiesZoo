@@ -21,23 +21,28 @@ export class ResourceTableComponent implements OnInit {
   //@ViewChild('silverRef') silverRef;
 
   resourceStorage: IResourceStorage;
-
+  bricks: number = 0;
   constructor(public gameEngine: GameEngineService, private messagesService: MessagesService) {
 
     this.gameEngine.store.subscribe(() => {
       let newState: IState = this.gameEngine.store.getState();
 
-      if (this.resourceStorage != newState.resources) {
-        this.resourceStorage = newState.resources;
-        if (this.resourceStorage) {
-          if (this.brickRef && newState.resources.bricks > this.resourceStorage.bricks) this.brickRef.animate();
-          if (this.lumberRef && newState.resources.lumber > this.resourceStorage.lumber) this.lumberRef.animate();
-          if (this.coinRef && newState.resources.coins > this.resourceStorage.coins) this.coinRef.animate();
-          //if (newState.resources.silver > this.resourceStorage.silver) this.silverRef.animate();
-        }
+      //if (this.resourceStorage != newState.resources) {
 
-        
-      }
+      // if (this.resourceStorage) {
+      //if (this.brickRef && newState.resources.bricks > this.bricks) this.brickRef.animate();
+      if (this.brickRef && newState.resources.bricks > this.resourceStorage.bricks) this.brickRef.animate();
+      if (this.lumberRef && newState.resources.lumber > this.resourceStorage.lumber) this.lumberRef.animate();
+      if (this.coinRef && newState.resources.coins > this.resourceStorage.coins) this.coinRef.animate();
+      //if (newState.resources.silver > this.resourceStorage.silver) this.silverRef.animate();
+
+      // }
+
+
+      //debugger;
+      this.resourceStorage = Object.assign({}, newState.resources);
+      this.bricks = newState.resources.bricks
+      // }
     });
   }
 

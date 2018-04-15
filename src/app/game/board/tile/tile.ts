@@ -5,6 +5,7 @@ import { TileState } from "../../../enums/tile-state.enum";
 
 export class Tile {
 
+    disabled: boolean;
     linked: Tile[] = [];
     card: Card;
     terrain: Terrain;

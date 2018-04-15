@@ -24,42 +24,17 @@ import { openStore, openBlockedItemStore } from './reducers/open-store-reducer';
 import { collectResources } from './reducers/collect-resources-reducer';
 import { Card } from '../game/cards/card';
 import { IMessage } from '../services/messages.service';
+import { setNextTutorialLevel, tutorialLevels } from './reducers/tutorial-reducer';
 
 export class MainReducer { }
 
-export interface ITutorialLevel {
-    text: string;
-    activeTiles: number[];
-    cards: any[];
-    completeBy?: any;
-}
-
-const message_no_energy:IMessage = { title: "No more energy - wait for recharge", message: "wait for your energy to go back", type: MessageType.TOOLBAR };
-const message_welcome:IMessage = { title: "Welcome to your new kingdom sir", message: "let'a start!", butns: [{ label: "GO!" }], type: MessageType.POPUP };
-
-const tutorialLevels: ITutorialLevel[] = [
-    {
-        text: "Welcome sir,\b let us show you how to build your kingdom \b place your first stone",
-        activeTiles: [62, 72, 82, 73],
-        cards: [
-            { family: CardFamilyTypeEnum.BRICK, level: 0 },
-            { family: CardFamilyTypeEnum.BRICK, level: 0 },
-            { family: CardFamilyTypeEnum.BRICK, level: 0 },
-        ]
-    },
-    {
-        text: "Great job,\b we need some more brick",
-        activeTiles: [62, 72, 82, 73],
-        cards: [
-            { family: CardFamilyTypeEnum.BRICK, level: 0 },
-            { family: CardFamilyTypeEnum.BRICK, level: 0 },
-            { family: CardFamilyTypeEnum.BRICK, level: 1 },
-        ]
-    }
-]
+const message_no_energy: IMessage = { title: "No more energy - wait for recharge", message: "wait for your energy to go back", type: MessageType.TOOLBAR };
+const message_welcome: IMessage = { title: "Welcome to your new kingdom sir", message: "let'a start!", butns: [{ label: "GO!" }], type: MessageType.POPUP };
 
 const initState: IState = {
-    tutorialLevel: 0,
+    tutorialLevel: null,
+    tutorialComplete: false,
+    tutorialActive: false,
     lastActionDate: new Date(),
     energy: 300,
     gameOver: false,
@@ -91,22 +66,17 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
     }
 
     let newState: IState = Object.assign({}, state);
-
-    /* if (action.type != Action.INIT_GAME && newState.energy <= 0) {
-        console.log("no more energy!!!!")
-        newState.currentMessage = { title: "No more energy - wait for recharge", message: "wait for your energy to go back", type: MessageType.TOOLBAR }
-        return newState;
-    } */
-
-    let tile: Tile;
-
-    if (action.payload && action.payload instanceof Tile) {
-        tile = action.payload;
-    }
+    let tile: Tile = (action.payload instanceof Tile) ? action.payload : null
 
     if (!action.notrace) {
         console.info('Dispatch action :', action.type, action.payload);
     }
+
+
+
+    //setNextTutorialLevel(newState);
+
+
 
     switch (action.type) {
         case Action.RESTORE_GAMESTATE:
@@ -224,10 +194,12 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
         }
 
         case Action.SHOW_MATCH_HINT: {
-            let matches: Tile[] = getMatchesAround(tile,tile.linked, newState.nextCard);
-            if (matches.length) {
-                //console.log("SHOW_MATCH_HINT", matches.length);
-                matches.forEach(a => a.card.state = CardState.MATCH_HINT);
+            if (newState.nextCard) {
+                let matches: Tile[] = getMatchesAround(tile, tile.linked, newState.nextCard);
+                if (matches.length) {
+                    //console.log("SHOW_MATCH_HINT", matches.length);
+                    matches.forEach(a => a.card.state = CardState.MATCH_HINT);
+                }
             }
 
             return newState;
@@ -243,6 +215,8 @@ function getCurState(state: IState): IState {
         lastActionDate: new Date(),
         energy: state.energy,
         tutorialLevel: state.tutorialLevel,
+        tutorialComplete: state.tutorialComplete,
+        tutorialActive: state.tutorialActive,
         gameOver: state.gameOver,
         tiles: state.tiles.map(a => a.toString()),
         turn: state.turn,

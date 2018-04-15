@@ -189,11 +189,11 @@ export const cardCollection: ICardData[] = [
     }
   },
   { level: 0, family: familyPerson, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 5, img: UrlConst.PERSON1, imgOptions: [UrlConst.PERSON1, UrlConst.PERSON2, UrlConst.PERSON3, UrlConst.PERSON4] },
-  { level: 1, family: familyPerson, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 2, img: UrlConst.PERSON_HOLY1 },
-  { level: 2, family: familyPerson, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 1, img: UrlConst.PERSON_ROYAL1 },
+  { level: 1, family: familyPerson, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 2, availableFromLevel: 2, img: UrlConst.PERSON_HOLY1 },
+  { level: 2, family: familyPerson, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 1, availableFromLevel: 3, img: UrlConst.PERSON_ROYAL1 },
   {
     level: 0, family: { name: CardFamilyTypeEnum.WILD, value: -1 }, chance: 10, img: UrlConst.WILD
-   // nextCard: graveCard,
+    // nextCard: graveCard,
   },
   {
     level: 0, family: { name: CardFamilyTypeEnum.ANIMAL, value: 0 }, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, img: UrlConst.ANIMAL, availableFromLevel: 2, chance: 0, imgOptions: [UrlConst.ANIMAL, UrlConst.ANIMAL2],

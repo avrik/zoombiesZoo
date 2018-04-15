@@ -4,7 +4,7 @@
         <!-- <span style="opacity:0.5"> / {{totalStorage | number}}</span>  -->
         <!-- <button *ngIf="type>=0" style="position:absolute;margin-left: 15px" (click)="onClick()">+</button> -->
     </div>
-    <div [@animate]="state" style="line-height:50px">
+    <div [@animate]="state" (@animate.done)="animationEnd($event)" style="line-height:50px">
         <!-- <img [src]="icon" alt="" height="35"> -->
         <item-img [type]="icon" size="30"></item-img>
     </div>
