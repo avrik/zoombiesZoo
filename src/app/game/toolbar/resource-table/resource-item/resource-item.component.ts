@@ -78,7 +78,7 @@ export class ResourceItemComponent implements OnInit {
     }, 300); */
   }
 
-  animationEnd() {
+  animationEnd(event) {
     this.state = "";
   }
 
