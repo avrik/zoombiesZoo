@@ -1,77 +1,155 @@
 <div *ngIf="show==true">
-  <div class="container">
+    <div class="container">
 
-    <!-- <app-board [tiles]="tiles1" [totalCols]=3 [totalRows]=3></app-board> -->
+        <!-- <app-board [tiles]="tiles1" [totalCols]=3 [totalRows]=3></app-board> -->
 
-    <div class="butns-container" >
-      <button class="butn" (click)="butnClicked()">got it! let's go!</button>
-    </div>
+        <div class="butns-container">
+            <button class="butn" (click)="butnClicked()">got it! let's go!</button>
+        </div>
 
-    <!-- <button class="close-butn" (click)="onClose()">x</button> -->
-    <!-- <button class="side-butn right" (click)="onNext()">></button>
+        <!-- <button class="close-butn" (click)="onClose()">x</button> -->
+        <!-- <button class="side-butn right" (click)="onNext()">></button>
     <button class="side-butn left" (click)="onPrev()"> 
       <</button>-->
 
-    <div class="content">
+        <div class="content">
 
-      <div class="section" style="border-bottom: 1px solid black">
-        <h2 class="title">
-          <span class="num">1</span> Match & Trap</h2>
+            <div class="section" style="border-bottom: 1px solid black">
+                <h2 class="title">
+                    <span class="num">1</span> Match , Trap & Collect</h2>
 
-        <!-- <item-img type='brick'></item-img>
+                <!-- <item-img type='brick'></item-img>
             <item-img type='lumber'></item-img> -->
-        <div class="section-content">
-          <!-- match 3 resources to pile up collectable resources. ex : match 3 rocks to get 1 brick => match 3 bricks to collect -->
+                <div class="section-content">
+                    <!-- match 3 resources to pile up collectable resources. ex : match 3 rocks to get 1 brick => match 3 bricks to collect -->
 
-          <ul>
-            <li>match 3 stones , get 1 brick</li>
-            <li>match 3 bricks - can collect</li>
-            <li>match 3 trees , get 1 lumber</li>
-            <li>match 3 lumber - can collect</li>
-          </ul>
+                    <ul>
+                        <li>match 3 stones , get 1 brick
 
-          <ul>
-            <li>trap 3 people/animal , get 1 tomb</li>
-            <li>match 3 tombs, get 1 pile of bones</li>
-            <li>match 3 pile of bones , get 1 oil reservoir</li>
-            <li>match 3 oil reservoir - get 1 oil barrel</li>
-          </ul>
+                        </li>
+                        <div>
+                            <img src="assets/icons/hex_rock_icon.png" alt="rocks" height="30">+
+                            <img src="assets/icons/hex_rock_icon.png" alt="rocks" height="30">+
+                            <img src="assets/icons/hex_rock_icon.png" alt="rocks" height="30">=
+                            <img src="assets/icons/hex_brick_icon.png" alt="rocks" height="30">
+                        </div>
 
+                        <li>match 3 bricks - get 3 collectable brick</li>
 
-        </div>
+                        <div>
+                            <img src="assets/icons/hex_brick_icon.png" alt="rocks" height="30">+
+                            <img src="assets/icons/hex_brick_icon.png" alt="rocks" height="30">+
+                            <img src="assets/icons/hex_brick_icon.png" alt="rocks" height="30">=
+                            <img src="assets/icons/hex_brick_icon2.png" alt="rocks" height="30">
+                        </div>
 
-      </div>
+                        <li>match 3 trees , get 1 lumber</li>
 
-      <div class="section" style="border-bottom: 1px solid black">
-        <h2 class="title">
-          <span class="num">2</span>Collect</h2>
-
-        <div class="section-content">
-          <ul>
-            <li>more than 3 bricks on a tile, can be collected to the city storage </li>
-            <li>more than 3 lumber on a tile, can be collected to the city sawmill</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="section" style="border-bottom: 1px solid black">
-        <h2 class="title">
-          <span class="num">3</span>Build ,Populate & Grow</h2>
-        <div class="section-content">
-          <ul>
-            <li>use collected resources (bricks, lumber and coins) to develop your city </li>
-            <li>build roads to lead the wondering people to their houses</li>
-            <li>build regular houses to the peasants</li>
-            <li>build churchs to populate holy men</li>
-            <li>build palaces to populate the royal</li>
-            <li>match 3 same type building to upgrade it </li>
-          </ul>
-        </div>
-      </div>
+                        <div>
+                            <img src="assets/icons/hex_tree_icon.png" alt="rocks" height="30">+
+                            <img src="assets/icons/hex_tree_icon.png" alt="rocks" height="30">+
+                            <img src="assets/icons/hex_tree_icon.png" alt="rocks" height="30">=
+                            <img src="assets/icons/hex_lumber_icon.png" alt="rocks" height="30">
+                        </div>
 
 
+                        <li>match 3 lumber - get 3 collectable lumber</li>
 
-      <!-- <div class="section">
+                        <div>
+                            <img src="assets/icons/hex_lumber_icon.png" alt="rocks" height="30">+
+                            <img src="assets/icons/hex_lumber_icon.png" alt="rocks" height="30">+
+                            <img src="assets/icons/hex_lumber_icon.png" alt="rocks" height="30">=
+                            <img src="assets/icons/hex_lumber_icon2.png" alt="rocks" height="30">
+                        </div>
+                    </ul>
+
+                    <ul>
+                        <li>trap 3 people/animal , get 1 tomb</li>
+
+                        <div>
+                            <img src="assets/icons/hex_person_icon.png" alt="rocks" height="30">+
+                            <img src="assets/icons/hex_person_icon.png" alt="rocks" height="30">+
+                            <img src="assets/icons/hex_person_icon.png" alt="rocks" height="30">=
+                            <img src="assets/icons/hex_grave_icon.png" alt="rocks" height="30">
+                        </div>
+                        <div>
+                            <img src="assets/icons/hex_animal_icon.png" alt="rocks" height="30">+
+                            <img src="assets/icons/hex_animal_icon.png" alt="rocks" height="30">+
+                            <img src="assets/icons/hex_animal_icon.png" alt="rocks" height="30">=
+                            <img src="assets/icons/hex_grave_icon.png" alt="rocks" height="30">
+                        </div>
+
+                        <li>match 3 tombs, get 1 pile of bones</li>
+
+                        <div>
+                            <img src="assets/icons/hex_grave_icon.png" alt="rocks" height="30">+
+                            <img src="assets/icons/hex_grave_icon.png" alt="rocks" height="30">+
+                            <img src="assets/icons/hex_grave_icon.png" alt="rocks" height="30">=
+                            <img src="assets/icons/hex_bones_icon.png" alt="rocks" height="30">
+                        </div>
+
+                        <li>match 3 pile of bones , get 1 oil reservoir</li>
+
+                        <div>
+                            <img src="assets/icons/hex_bones_icon.png" alt="rocks" height="30">+
+                            <img src="assets/icons/hex_bones_icon.png" alt="rocks" height="30">+
+                            <img src="assets/icons/hex_bones_icon.png" alt="rocks" height="30">=
+                            <img src="assets/icons/hex_oil_icon.png" alt="rocks" height="30">
+                        </div>
+
+                        <li>match 3 oil reservoir - get 1 collectable oil barrel (recharge energy bar) </li>
+
+                        <div>
+                            <img src="assets/icons/hex_oil_icon.png" alt="rocks" height="30">+
+                            <img src="assets/icons/hex_oil_icon.png" alt="rocks" height="30">+
+                            <img src="assets/icons/hex_oil_icon.png" alt="rocks" height="30">=
+                            <img src="assets/icons/hex_oil_icon2.png" alt="rocks" height="30">
+                        </div>
+
+                        <li>more than 3 bricks on a tile, can be collected to the city storage </li>
+                        <li>more than 3 lumber on a tile, can be collected to the city sawmill</li>
+                    </ul>
+
+
+                </div>
+
+            </div>
+
+            <!-- <div class="section" style="border-bottom: 1px solid black">
+                <h2 class="title">
+                    <span class="num">2</span>Collect</h2>
+
+                <div class="section-content">
+                    <ul>
+                        
+                    </ul>
+                </div>
+            </div> -->
+
+            <div class="section" style="border-bottom: 1px solid black">
+                <h2 class="title">
+                    <span class="num">2</span>Build , Populate & Grow</h2>
+                <div class="section-content">
+                    <ul>
+                        <li>use collected resources (bricks, lumber and coins) to develop your city </li>
+                        <div>
+                            <img src="assets/icons/hex_brick_icon.png" alt="rocks" height="30">
+                            <img src="assets/icons/hex_lumber_icon.png" alt="rocks" height="30">
+                            <img src="assets/icons/hex_coin_icon.png" alt="rocks" height="30">
+
+                        </div>
+                        <li>build roads to lead the wondering people to their houses</li>
+                        <li>build regular houses to the peasants</li>
+                        <li>build churchs to populate holy men</li>
+                        <li>build palaces to populate the royal</li>
+                        <li>match 3 of the same type to upgrade building </li>
+                    </ul>
+                </div>
+            </div>
+
+
+
+            <!-- <div class="section">
         <h2 class="title">
           <span class="num">4</span>Populate</h2>
 
@@ -89,16 +167,22 @@
         </div>
       </div> -->
 
-      <div class="section">
-        <h2 class="title">
-          <span class="num">6</span>Expand</h2>
+            <div class="section">
+                <h2 class="title">
+                    <span class="num">3</span>Expand</h2>
 
-        <div class="section-content">
-          expand your city, buy more land!
-        </div>
-      </div>
+                <div class="section-content" style="margin-bottom:30px">
+                    <ul>
+                        <li>populate your city</li>
+                        <li>upgrade houses</li>
+                        <li>expand storage </li>
+                        <li>buy more tiles!</li>
+                    </ul>
 
-      <!-- <div style="display:flex">
+                </div>
+            </div>
+
+            <!-- <div style="display:flex">
 
           <item-img type='brick'></item-img>+
           <item-img type="brick"></item-img>+
@@ -115,7 +199,7 @@
           <item-img type="lumber"></item-img>
 
         </div> -->
-      <!-- <div class="title"><b>{{message?.title}}</b></div>
+            <!-- <div class="title"><b>{{message?.title}}</b></div>
       <div class="content">{{message?.message}}</div>
   
       <div class="butns-container">
@@ -123,9 +207,9 @@
           <button class="butn"  (click)="butnClicked(item)">{{item?.label}}</button>
         </span>
       </div> -->
+        </div>
     </div>
-  </div>
 
-  <div class="blocker" (click)="onClose()"></div>
+    <div class="blocker" (click)="onClose()"></div>
 
 </div>

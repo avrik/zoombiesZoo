@@ -47,6 +47,10 @@ export class TitleScreenComponent implements OnInit {
   }
 
   get rollOverTile(): Tile {
+   /*  if (this.gameEngine.rollOverTile) {
+      debugger;
+    } */
+    
     return this.gameEngine.rollOverTile;
   }
 

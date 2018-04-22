@@ -5,31 +5,32 @@
 
     <div *ngIf="!message && rollOverTile && rollOverTile.card!=null">
         <div *ngIf="rollOverTile.terrainTop && rollOverTile.terrainTop.type>=4" style="display:flex">
-                <img [src]="currentCard.img" alt="" height="25">
-                <b class="sign">&#8646;</b>
-                <img [src]="rollOverTile.card.img" alt="" height="25">
+            <img [src]="currentCard.icon" alt="" height="25">
+            <b class="sign">&#8646;</b>
+            <img [src]="rollOverTile.card.icon" alt="" height="25">
         </div>
-        
-        <div *ngIf="!rollOverTile.terrainTop && rollOverTile.card.nextCard!=null && rollOverTile.card.family.name!=100" style="display:flex">
-            <img [src]="rollOverTile.card.img" alt="" height="20">
-            <b class="sign">✚</b>
-            <img [src]="rollOverTile.card.img" alt="" height="20">
-            <b class="sign">✚</b>
-            <img [src]="rollOverTile.card.img" alt="" height="20">
-            <b class="sign">=</b>
 
-            <img [src]="rollOverTile.card.nextCard.img" alt="" height="25">
+        <div *ngIf="!rollOverTile.terrainTop && rollOverTile.card.nextCard!=null && rollOverTile.card.family.name!=100" style="display:flex">
+            <img [src]="rollOverTile.card.icon" alt="" height="20">
+            <b class="sign">✚</b>
+            <img [src]="rollOverTile.card.icon" alt="" height="20">
+            <b class="sign">✚</b>
+            <img [src]="rollOverTile.card.icon" alt="" height="20">
+            <b class="sign">➔</b>
 
             <span *ngIf="rollOverTile.card.nextCard.reward">
-                <img src="assets/resources/coin.png" alt="" height="20">
+                <img src="assets/icons/hex_coin_icon.png" alt="" height="25">
             </span>
+            <img [src]="rollOverTile.card.nextCard.icon" alt="" height="25">
+
+
         </div>
 
         <div *ngIf="rollOverTile.card.family.name==100" style="display:flex">
             <img src="assets/buildings/house.png" alt="" height="20">
             <b class="sign">⬅</b>
 
-            <img style="margin-top:-15px" [src]="rollOverTile.card.img" alt="" height="35">
+            <img style="margin-top:-15px" [src]="rollOverTile.card.icon" alt="" height="35">
         </div>
     </div>
 
@@ -39,9 +40,9 @@
 
     <div *ngIf="!message && (rollOverTile && !rollOverTile.card)  && currentCard!=null" style="display:flex">
         <!-- <div> -->
-            <span i18n="@@place">place</span>
+        <span i18n="@@place">place</span>
         <span style="margin-left:10px">
-            <img [src]="currentCard.img" alt="" height="20">
+            <img [src]="currentCard.icon" alt="" height="20">
         </span>
 
         <!-- </div> -->

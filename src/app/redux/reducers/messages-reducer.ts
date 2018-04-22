@@ -5,13 +5,12 @@ import { MessageType } from "../../enums/message-type.enum";
 export const message_no_energy: IMessage = { title: "No more energy - wait for recharge", message: "wait for your energy to go back", type: MessageType.TOOLBAR };
 export const message_game_over: IMessage = {
     title: "Game Over",
-    message: `Welcome to your kingdom.
-may your rule be long and prosperous`, butns: [{ label: "GO!" }, { label: "guide me", actionType: Action.SHOW_GUIDE_MESSAGE }], type: MessageType.POPUP
+    message: `no more empty tiles
+    we are so sorry sir...`, butns: [{ label: "start a new kingdom" }], type: MessageType.POPUP
 };
 export const message_welcome: IMessage = {
     isWow: true, title: "Welcome to your new kingdom sir",
-    message: `Welcome to your kingdom.
-may your rule be long and prosperous`, butns: [ { label: "guide me", actionType: Action.SHOW_GUIDE_MESSAGE },{ label: "GO!", type: 1 }], type: MessageType.POPUP
+    message: `may your rule be long and prosperous!`, butns: [ { label: "guide me", actionType: Action.SHOW_GUIDE_MESSAGE },{ label: "GO!", type: 1 }], type: MessageType.POPUP
 };
 export const message_guide: IMessage = {
     title: "Let's guide you through",
