@@ -25,16 +25,15 @@ import { collectResources } from './reducers/collect-resources-reducer';
 import { Card } from '../game/cards/card';
 import { IMessage } from '../services/messages.service';
 import { setNextTutorialLevel, tutorialLevels } from './reducers/tutorial-reducer';
+import { message_guide, message_guide2, message_welcome, message_no_energy } from './reducers/messages-reducer';
 
 export class MainReducer { }
 
-const message_no_energy: IMessage = { title: "No more energy - wait for recharge", message: "wait for your energy to go back", type: MessageType.TOOLBAR };
-const message_welcome: IMessage = { title: "Welcome to your new kingdom sir", message: "let'a start!", butns: [{ label: "GO!" }], type: MessageType.POPUP };
-
 const initState: IState = {
+    messages: [],
     tutorialLevel: null,
     tutorialComplete: false,
-    tutorialActive: false,
+    tutorialActive: true,
     lastActionDate: new Date(),
     energy: 300,
     gameOver: false,
@@ -72,15 +71,22 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
         console.info('Dispatch action :', action.type, action.payload);
     }
 
-
-
     //setNextTutorialLevel(newState);
 
-
-
     switch (action.type) {
+        case Action.SHOW_GUIDE_MESSAGE:
+            newState.messages.push(message_guide);
+            newState.currentMessage = message_guide;
+            return newState;
+
+
+        case Action.SHOW_GUIDE_MESSAGE2:
+            newState.messages.push(message_guide2);
+            newState.currentMessage = message_guide2;
+            return newState;
+
         case Action.RESTORE_GAMESTATE:
-            newState = restoreGameState();
+            //newState = restoreGameState(newState);
             return newState;
 
         case Action.INIT_GAME:
@@ -89,9 +95,31 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             newState.tiles = generateWorld(action.payload.rows, action.payload.cols);
             return newState;
 
-        case Action.NEW_GAME:
+        case Action.RESTART_GAME:
+            newState = Object.assign({}, initState);
+            newState.resources = { bricks: 0, lumber: 0, coins: 10 };
+            newState.tiles = generateWorld(6, 11);
+
             populateWorldWithResources(newState.tiles);
             newState.nextCard = getNextCard(newState);
+            newState.messages.push(message_welcome);
+            newState.currentMessage = message_welcome;
+            saveState(newState);
+            return newState;
+
+        case Action.NEW_GAME:
+            let restoreState = restoreGameState(newState);
+            if (restoreState) {
+                return restoreState;
+            }
+
+            populateWorldWithResources(newState.tiles);
+            newState.nextCard = getNextCard(newState);
+
+            if (newState.tutorialActive) {
+                newState.messages.push({ type: MessageType.TUTORIAL });
+            }
+            newState.messages.push(message_welcome);
             newState.currentMessage = message_welcome;
             saveState(newState);
             return newState;
@@ -114,6 +142,7 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
         case Action.CLICK_TILE:
             if (newState.energy <= 0) {
                 console.log("no more energy!!!!")
+                newState.messages.push(message_no_energy);
                 newState.currentMessage = message_no_energy;
             } else {
                 newState.tileClicked = tile;
@@ -150,6 +179,7 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
         case Action.BUY_ITEM:
             if (newState.energy <= 0) {
                 console.log("no more energy!!!!")
+                newState.messages.push(message_no_energy);
                 newState.currentMessage = message_no_energy;
             } else {
                 newState = buyItem(newState, action.payload);
@@ -205,6 +235,10 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             return newState;
         }
 
+        case Action.CLOSE_TUTORAIL:
+            newState.tutorialActive = false;
+            return newState;
+
         default:
             return newState;
     }
@@ -212,6 +246,7 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
 
 function getCurState(state: IState): IState {
     return {
+        messages: [...state.messages],
         lastActionDate: new Date(),
         energy: state.energy,
         tutorialLevel: state.tutorialLevel,

@@ -67,7 +67,7 @@ export class TileCardComponent implements OnInit {
   animState: string;
   show: boolean;
 
-  constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
+  constructor(private gameEngine: GameEngineService) {
     this.gameEngine.store.subscribe(() => {
       let newState: IState = this.gameEngine.store.getState();
 
@@ -76,13 +76,16 @@ export class TileCardComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.card.showDelay) {
-      setTimeout(() => {
+    if (this.card) {
+      if (this.card.showDelay) {
+        setTimeout(() => {
+          this.show = true;
+        }, this.card.showDelay);
+      } else {
         this.show = true;
-      }, this.card.showDelay);
-    } else {
-      this.show = true;
+      }
     }
+    
   }
 
   /* get getAnimState():string {

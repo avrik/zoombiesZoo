@@ -8,8 +8,9 @@ import { UrlConst } from '../../../consts/url-const';
   styleUrls: ['./item-img.component.css']
 })
 export class ItemImgComponent implements OnInit {
-  @Input() size: number;
+  @Input() size: number = 30;
   @Input() type: string;
+  @Input() level: number;
   url: string;
 
   constructor() { }
@@ -23,7 +24,19 @@ export class ItemImgComponent implements OnInit {
         this.url = UrlConst.COIN_SILVER;
         break;
       case 'brick':
-        this.url = UrlConst.BRICK_IMG;
+
+        switch (this.level) {
+          case 2:
+            this.url = UrlConst.BRICK3;
+            break;
+          case 3:
+            this.url = UrlConst.BRICK4;
+            break;
+          default:
+            this.url = UrlConst.BRICK_IMG;
+            break;
+        }
+
         break;
       case 'lumber':
         this.url = UrlConst.LUMBER_IMG;

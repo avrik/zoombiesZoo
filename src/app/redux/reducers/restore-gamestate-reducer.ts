@@ -4,7 +4,12 @@ import { IState } from '../interfaces';
 
 export function restoreGameState(takeState: IState = null): IState {
     let lastState: string = localStorage.getItem('lastState');
-    let parsedState: IState = takeState || JSON.parse(lastState);
+
+    if (!lastState) return null;
+
+    let parsedState: IState = JSON.parse(lastState);
+
+    console.info("!!!!! parsedState = "+parsedState);
 
     if (parsedState && parsedState.tiles && parsedState.tiles.length) {
         parsedState.tiles = parsedState.tiles.map(a => new Tile(a));
@@ -26,5 +31,5 @@ export function restoreGameState(takeState: IState = null): IState {
         console.log("NO state saved!!")
     }
 
-    return parsedState;
+    return null;
 }

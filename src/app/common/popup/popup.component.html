@@ -1,12 +1,12 @@
 <div *ngIf="message">
-    <div class="container" >
+    <div class="container" [@animState]="animState" (@animState.done)="onAnimDone()">
         <button class="close-butn" (click)="onClose()">x</button>
         <div class="title"><b>{{message?.title}}</b></div>
         <div class="content">{{message?.message}}</div>
     
-        <div style="display:flex;justify-content:space-around">
+        <div class="butns-container">
             <span *ngFor="let item of message.butns">
-            <button class="butn"  (click)="butnClicked(item)">{{item?.label}}</button>
+            <button [class]="item.type==1?'butn success':'butn'"  (click)="butnClicked(item)">{{item?.label}}</button>
           </span>
         </div>
     </div>

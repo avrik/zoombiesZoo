@@ -30,6 +30,8 @@ import { TileFrameComponent } from './game/board/tile/tile-frame/tile-frame.comp
 import { BatteryViewComponent } from './game/toolbar/battery-view/battery-view.component';
 import { TileTopComponent } from './game/board/tile/tile-top/tile-top.component';
 import { DigitCounterService } from './services/digit-counter.service';
+import { GuideScreenComponent } from './game/guide-screen/guide-screen.component';
+import { GuidePageComponent } from './game/guide-screen/guide-page/guide-page.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +56,8 @@ import { DigitCounterService } from './services/digit-counter.service';
     TileFrameComponent,
     BatteryViewComponent,
     TileTopComponent,
+    GuideScreenComponent,
+    GuidePageComponent,
 
   ],
   imports: [

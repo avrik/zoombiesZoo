@@ -1,8 +1,9 @@
-<tile-buy-popup *ngIf="showStoreItems" [items]="showStoreItems" (buyItem)="onBuyItem($event)" title="Store">
+<tile-buy-popup *ngIf="showStoreItems"  [items]="showStoreItems" (buyItem)="onBuyItem($event)" title="Store">
 </tile-buy-popup>
 
 <test-panel *ngIf="debug"></test-panel>
 
+<guide-screen></guide-screen>
 <div class="container">
 
     <!-- <div class="header">
@@ -10,7 +11,8 @@
     </div> -->
 
     <game-toolbar></game-toolbar>
-    <app-board></app-board>
+
+    <app-board [tiles]="tiles" [totalCols]="totalCols" [totalRows]="totalRows"></app-board>
 
 
 </div>

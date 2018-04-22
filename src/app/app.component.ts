@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MessagesService, IMessage } from './services/messages.service';
+import { GameEngineService } from 'app/services/game-engine.service';
 
 //BUGS :
 
@@ -88,11 +89,14 @@ import { MessagesService, IMessage } from './services/messages.service';
 export class AppComponent {
   currentMessage: IMessage;
 
-  constructor(private messagesService: MessagesService) {
+  constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
     this.messagesService.currentMessage$.subscribe(message => {
       this.currentMessage = message;
     })
 
+  }
 
+  onActionType(event) {
+    this.gameEngine.store.dispatch({ type: event });
   }
 }

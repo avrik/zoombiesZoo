@@ -1,5 +1,5 @@
 
-import { Component, OnInit, ViewChild, ElementRef, trigger, transition, animate, keyframes, style } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, trigger, transition, animate, keyframes, style, Input } from '@angular/core';
 import { GameEngineService } from '../../services/game-engine.service';
 import { TileComponent } from './tile/tile.component';
 import { Tile } from 'app/game/board/tile/tile';
@@ -28,7 +28,10 @@ import { CardFamilyTypeEnum } from '../../enums/card-family-type-enum.enum';
 })
 export class BoardComponent implements OnInit {
 
-  tiles: Tile[] = [];
+  @Input() tiles: Tile[] = [];
+  @Input() totalCols: number;
+  @Input() totalRows: number;
+  @Input() baseindex: number = 10;
   state: string = "";
 
   constructor(public gameEngine: GameEngineService) {
@@ -36,7 +39,7 @@ export class BoardComponent implements OnInit {
     this.gameEngine.store.subscribe(() => {
       let newState: IState = this.gameEngine.store.getState();
       this.state = newState.boardState;
-      this.tiles = newState.tiles;
+      //this.tiles = newState.tiles;
     })
   }
 
@@ -46,7 +49,7 @@ export class BoardComponent implements OnInit {
 
   getCols() {
     let str: string = ''
-    for (var i = 0; i < this.gameEngine.totalCols; i++) {
+    for (var i = 0; i < this.totalCols; i++) {
       str += "78px ";
     }
     return str;
@@ -54,7 +57,7 @@ export class BoardComponent implements OnInit {
 
   getRows() {
     let str: string = ''
-    for (var i = 0; i < this.gameEngine.totalRows; i++) {
+    for (var i = 0; i < this.totalRows; i++) {
       str += "55px ";
     }
 
@@ -66,7 +69,7 @@ export class BoardComponent implements OnInit {
   }
 
   getIndex(tile: Tile) {
-    return tile.oddTile ? 10 + (tile.ypos * 10) : 20 + (tile.ypos * 10);
+    return tile.oddTile ? this.baseindex + (tile.ypos * 10) : this.baseindex + 10 + (tile.ypos * 10);
   }
 
   getMargin(tile: Tile) {
