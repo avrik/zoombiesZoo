@@ -117,4 +117,7 @@ export class GameEngineService {
     this.store.dispatch({ type: Action.CLOSE_STORE })
   }
 
+  closeTutorial() {
+    this.store.dispatch({ type: Action.CLOSE_TUTORAIL })
+  }
 }

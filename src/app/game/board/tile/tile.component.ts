@@ -52,7 +52,7 @@ export class TileComponent implements OnInit {
   isCardFloating: boolean;
   onMe: boolean;
 
-  constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
+  constructor(private gameEngine: GameEngineService) {
 
   }
 

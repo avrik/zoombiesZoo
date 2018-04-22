@@ -24,7 +24,7 @@ export class Tile {
             this.xpos = data.xpos;
             this.ypos = data.ypos;
             this.card = data.card;
-            this.terrain = data.terrain;
+            this.terrain = data.terrain?data.terrain:new Terrain();
             this.terrainTop = data.terrainTop;
             this.movment = data.movment;
             this.state = data.state;

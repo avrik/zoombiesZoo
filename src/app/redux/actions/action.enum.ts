@@ -12,6 +12,7 @@ export enum Action {
     BUY_ITEM = "buy item",
     CLOSE_STORE = "close store",
     UNDO = "undo",
+    RESTART_GAME = "restaert game",
     RESTORE_GAMESTATE = "restore state",
     NEW_FLOATTILE = "new float tile",
 
@@ -21,4 +22,12 @@ export enum Action {
     ADD_ENERGY = "add energy",
     SHOW_MATCH_HINT = "show match hint",
     CLEAR_MATCH_HINT = "clear match hint",
+
+
+    SHOW_GUIDE_MESSAGE = "show guide message",
+    SHOW_GUIDE_MESSAGE2 = "show guide message2",
+    SHOW_GUIDE_MESSAGE3 = "show guide message3",
+    SHOW_GUIDE_MESSAGE4 = "show guide message4",
+
+    CLOSE_TUTORAIL = "close tutorial"
 }

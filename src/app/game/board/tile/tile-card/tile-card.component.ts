@@ -67,7 +67,7 @@ export class TileCardComponent implements OnInit {
   animState: string;
   show: boolean;
 
-  constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
+  constructor(private gameEngine: GameEngineService) {
     this.gameEngine.store.subscribe(() => {
       let newState: IState = this.gameEngine.store.getState();
 

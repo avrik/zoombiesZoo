@@ -57,7 +57,7 @@ export class ResourceTableComponent implements OnInit {
         type: MessageType.POPUP, title: Messages.GAME_RESET_TITLE,
         message: Messages.GAME_RESET_MESSAGE, butns: [
           { label: Messages.GAME_RESET_BUTN1, action: a => { this.gameEngine.restart() } },
-          { label: Messages.GAME_RESET_BUTN2, action: a => { } }
+          { label: Messages.GAME_RESET_BUTN2}
         ]
       })
 

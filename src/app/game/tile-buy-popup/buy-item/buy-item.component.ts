@@ -19,7 +19,7 @@ export class BuyItemComponent implements OnInit {
   resourceStorage: IResourceStorage;
   enabled: boolean = true;
 
-  constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
+  constructor(private gameEngine: GameEngineService) {
 
   }
 

@@ -8,6 +8,11 @@ import { CardFamilyTypeEnum } from "../../enums/card-family-type-enum.enum";
 import { checkIfLevelCompleted } from "./levels-reducer";
 import { TerrainEnum } from "../../enums/terrain.enum";
 import { getFloatTile } from "./tile-reducer";
+import { message_game_over } from "./messages-reducer";
+import { Messages } from "../../enums/messages.enum";
+import { MessageType } from "../../enums/message-type.enum";
+import { Action } from "../actions/action.enum";
+
 
 export function nextTurn(newState: IState) {
     newState.currentMessage = null;
@@ -38,5 +43,15 @@ function checkIfGameOver(newState: IState) {
     let emptyInCity: number = relevantTiles.filter(a => a.terrain.type == TerrainEnum.CITY).length;
     let emptyInResources: number = relevantTiles.filter(a => a.terrain.type == TerrainEnum.RESOURCES).length;
 
-    if (!emptyInCity || !emptyInResources) newState.gameOver = true;
+    if (!emptyInCity || !emptyInResources) {
+        newState.gameOver = true;
+
+
+        let years = Math.round(newState.turn / 360) + 1;
+        let days = newState.turn;
+
+        let message: string = `Nice JOB! \n your kingdom lasted for ${days} days. you reached the population of ${newState.population}, and got ${newState.score} score`;
+ 
+        newState.currentMessage = { type: MessageType.POPUP, title: Messages.GAME_OVER_TITLE, message: message, butns: [{ label: Messages.GAME_OVER_BUTN1,actionType:Action.RESTART_GAME}] }
+    }
 }

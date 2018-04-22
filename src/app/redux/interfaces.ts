@@ -20,6 +20,7 @@ export interface IAction {
 }
 
 export interface IState {
+    messages:IMessage[];
     tutorialLevel: ITutorialLevel;
     tutorialComplete: boolean;
     tutorialActive: boolean;

@@ -1,0 +1,131 @@
+<div *ngIf="show==true">
+  <div class="container">
+
+    <!-- <app-board [tiles]="tiles1" [totalCols]=3 [totalRows]=3></app-board> -->
+
+    <div class="butns-container" >
+      <button class="butn" (click)="butnClicked()">got it! let's go!</button>
+    </div>
+
+    <!-- <button class="close-butn" (click)="onClose()">x</button> -->
+    <!-- <button class="side-butn right" (click)="onNext()">></button>
+    <button class="side-butn left" (click)="onPrev()"> 
+      <</button>-->
+
+    <div class="content">
+
+      <div class="section" style="border-bottom: 1px solid black">
+        <h2 class="title">
+          <span class="num">1</span> Match & Trap</h2>
+
+        <!-- <item-img type='brick'></item-img>
+            <item-img type='lumber'></item-img> -->
+        <div class="section-content">
+          <!-- match 3 resources to pile up collectable resources. ex : match 3 rocks to get 1 brick => match 3 bricks to collect -->
+
+          <ul>
+            <li>match 3 stones , get 1 brick</li>
+            <li>match 3 bricks - can collect</li>
+            <li>match 3 trees , get 1 lumber</li>
+            <li>match 3 lumber - can collect</li>
+          </ul>
+
+          <ul>
+            <li>trap 3 people/animal , get 1 tomb</li>
+            <li>match 3 tombs, get 1 pile of bones</li>
+            <li>match 3 pile of bones , get 1 oil reservoir</li>
+            <li>match 3 oil reservoir - get 1 oil barrel</li>
+          </ul>
+
+
+        </div>
+
+      </div>
+
+      <div class="section" style="border-bottom: 1px solid black">
+        <h2 class="title">
+          <span class="num">2</span>Collect</h2>
+
+        <div class="section-content">
+          <ul>
+            <li>more than 3 bricks on a tile, can be collected to the city storage </li>
+            <li>more than 3 lumber on a tile, can be collected to the city sawmill</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section" style="border-bottom: 1px solid black">
+        <h2 class="title">
+          <span class="num">3</span>Build ,Populate & Grow</h2>
+        <div class="section-content">
+          <ul>
+            <li>use collected resources (bricks, lumber and coins) to develop your city </li>
+            <li>build roads to lead the wondering people to their houses</li>
+            <li>build regular houses to the peasants</li>
+            <li>build churchs to populate holy men</li>
+            <li>build palaces to populate the royal</li>
+            <li>match 3 same type building to upgrade it </li>
+          </ul>
+        </div>
+      </div>
+
+
+
+      <!-- <div class="section">
+        <h2 class="title">
+          <span class="num">4</span>Populate</h2>
+
+        <p class="section-content">
+          direct people arriving, to thier houses
+        </p>
+      </div>
+
+      <div class="section">
+        <h2 class="title">
+          <span class="num">5</span>Grow</h2>
+
+        <div class="section-content">
+          grow your city by building houses, and matching 3 of the same type
+        </div>
+      </div> -->
+
+      <div class="section">
+        <h2 class="title">
+          <span class="num">6</span>Expand</h2>
+
+        <div class="section-content">
+          expand your city, buy more land!
+        </div>
+      </div>
+
+      <!-- <div style="display:flex">
+
+          <item-img type='brick'></item-img>+
+          <item-img type="brick"></item-img>+
+          <item-img type="brick"></item-img>=
+          <item-img type="brick"></item-img>
+
+        </div>
+
+        <div style="display:flex">
+
+          <item-img type='lumber'></item-img>+
+          <item-img type="lumber"></item-img>+
+          <item-img type="lumber"></item-img>=
+          <item-img type="lumber"></item-img>
+
+        </div> -->
+      <!-- <div class="title"><b>{{message?.title}}</b></div>
+      <div class="content">{{message?.message}}</div>
+  
+      <div class="butns-container">
+          <span *ngFor="let item of message.butns">
+          <button class="butn"  (click)="butnClicked(item)">{{item?.label}}</button>
+        </span>
+      </div> -->
+    </div>
+  </div>
+
+  <div class="blocker" (click)="onClose()"></div>
+
+</div>
