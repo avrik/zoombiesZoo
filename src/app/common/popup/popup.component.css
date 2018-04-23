@@ -7,20 +7,20 @@
   
     z-index: 1000;
     box-shadow: -1px 1px 13px 3px #000000a3;
-    border-radius: 20px;
+    border-radius: 10px;
     border:2px solid #160729;
 
-    top: 50%;
+    top: 20%;
     left: 50%;
 
     margin-left: -150px;
     /* negative half of width above */
-    margin-top: -75px;
+    /* margin-top: -75px; */
     /* negative half of height above */
 }
 
 .title {
-    padding: 5px;
+    padding: 15px 5px;
     white-space:pre-line;
 }
 

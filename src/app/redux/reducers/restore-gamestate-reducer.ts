@@ -1,9 +1,10 @@
 import { Tile } from '../../game/board/tile/tile';
 import { mapLinkedTiles } from './new-world-reducer';
 import { IState } from '../interfaces';
+import { LOCAL_GAME_STATE } from '../../consts/local-storage';
 
 export function restoreGameState(takeState: IState = null): IState {
-    let lastState: string = localStorage.getItem('lastState');
+    let lastState: string = localStorage.getItem(LOCAL_GAME_STATE);
 
     if (!lastState) return null;
 

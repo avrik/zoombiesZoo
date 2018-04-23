@@ -1,20 +1,27 @@
-<div class="container" [style.opacity]="enabled?1:0.5" [style.pointer-events]="enabled?'pointer':'none'" (click)="onBuy()">
+<div class="container" [style.opacity]="enabled?1:0.8" [style.pointer-events]="enabled?'pointer':'none'" (click)="onBuy()">
     <div style="text-align:center;display:flex;justify-content:space-between">
         <!-- {{title}} -->
-        
+
         <div [style.opacity]="enabled?1:0.8">
-            <img [style.padding-left.px]="buyItem.amount?25:0" [src]="icon" alt="" height="40">
+            <img [style.padding-left.px]="buyItem.amount?25:0" [src]="icon" alt="" height="50">
 
-            <br>
+            <!-- <br> -->
 
-            <button [disabled]="!enabled" >{{buyItem.label?buyItem.label:'buy'}}</button>
-            <span *ngIf="buyItem.amount" class="multi-amount">x{{buyItem.amount}}</span>
+
+            <!-- <span *ngIf="buyItem.amount" class="multi-amount">x{{buyItem.amount}}</span> -->
         </div>
 
-        <div *ngIf="resourceNeeded" style="display:flex;padding:2px;">
-          <app-resource-item *ngIf="buyItem.cost.block" [amount]="buyItem.cost.block" icon="brick"></app-resource-item>
-          <app-resource-item *ngIf="buyItem.cost.lumber" [amount]="buyItem.cost.lumber" icon="lumber"></app-resource-item>
-          <app-resource-item *ngIf="buyItem.cost.coin" [amount]="buyItem.cost.coin" icon="coin"></app-resource-item>
-       </div>
+        <div>
+            <div *ngIf="resourceNeeded" style="display:flex;padding:2px;">
+                <app-resource-item *ngIf="buyItem.cost.block" [amount]="buyItem.cost.block" icon="brick"></app-resource-item>
+                <app-resource-item *ngIf="buyItem.cost.lumber" [amount]="buyItem.cost.lumber" icon="lumber"></app-resource-item>
+                <app-resource-item *ngIf="buyItem.cost.coin" [amount]="buyItem.cost.coin" icon="coin"></app-resource-item>
+            </div>
+            
+        </div>
+
+        
     </div>
+
+    <button [disabled]="!enabled" style="width:100%">{{label}}</button>
 </div>

@@ -18,6 +18,7 @@ export class BuyItemComponent implements OnInit {
   resourceNeeded: any[] = [];
   resourceStorage: IResourceStorage;
   enabled: boolean = true;
+  label: string;
 
   constructor(private gameEngine: GameEngineService) {
 
@@ -39,6 +40,13 @@ export class BuyItemComponent implements OnInit {
         (!this.buyItem.cost.coin || newState.resources.coins >= this.buyItem.cost.coin) &&
         (this.buyItem.amount > 0 || isNaN(this.buyItem.amount))
       ) ? true : false;
+    }
+
+
+    this.label = this.buyItem.label ? `${this.buyItem.label} ` : 'buy';
+
+    if (this.buyItem.amount) {
+      this.label += `(x${this.buyItem.amount})`;
     }
   }
 

@@ -6,12 +6,12 @@
     position: absolute;
     z-index: 1050;
     text-align: center;
-    top: 50%;
+    top: 10%;
     left: 50%;
 
     margin-left: -300px;
     /* negative half of width above */
-    margin-top: -150px;
+    /* margin-top: -150px; */
     /* negative half of height above */
 }
 
@@ -24,6 +24,8 @@
     grid-column-gap: 5px;
     /* grid-template-rows: 50% 50%; */
     overflow: auto;
+    font-family: Nanum Brush Script;
+    font-size: 26px;
 }
 
 .section {

@@ -12,7 +12,10 @@ body {
 }
 
 h1,h2,h3 {
-    font-family: 'Lobster', cursive;
+    /* font-family: 'Lobster', cursive; */
+    /* font-family: 'Cabin Sketch', cursive; */
+    /* font-family: 'Architects Daughter', cursive; */
+    font-family: 'Chewy', cursive;
 }
 
 .blocker {
@@ -48,13 +51,20 @@ button {
     border: 1px solid rgba(0, 0, 0, 0);
     transition: all 200ms;
     height: 40px;
-    
+    font-size: 15px;
 }
 
 button:hover {
     background-color: rgb(255, 255, 255);
     color: #160729;
     border:1px solid #160729;
+}
+
+button:disabled {
+
+    background-color: rgb(172, 161, 161);
+    color: rgb(88, 85, 85);
+    cursor:none;
 }
 
 .butn {

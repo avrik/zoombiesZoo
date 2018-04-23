@@ -1,6 +1,6 @@
 <div *ngIf="message">
     <div class="container" [@animState]="animState" (@animState.done)="onAnimDone()">
-        <button class="close-butn" (click)="onClose()">x</button>
+        <!-- <button class="close-butn" (click)="onClose()">x</button> -->
         <div class="title"><b>{{message?.title}}</b></div>
         <div class="content">{{message?.message}}</div>
     

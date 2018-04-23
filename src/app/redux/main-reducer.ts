@@ -26,6 +26,7 @@ import { Card } from '../game/cards/card';
 import { IMessage } from '../services/messages.service';
 import { setNextTutorialLevel, tutorialLevels } from './reducers/tutorial-reducer';
 import { message_guide, message_guide2, message_welcome, message_no_energy } from './reducers/messages-reducer';
+import { LOCAL_GAME_STATE } from '../consts/local-storage';
 
 export class MainReducer { }
 
@@ -42,7 +43,7 @@ const initState: IState = {
     maxEnergy: 300,
     score: 0,
     population: 0,
-    resources: { bricks: 0, lumber: 0, coins: 10, silver: 0, maxStorage: 0 },
+    resources: { bricks: 0, lumber: 0, coins: 0, silver: 0, maxStorage: 0 },
     tileClicked: null,
     floatTile: null,
     pendingMoveCard: null,
@@ -75,13 +76,13 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
 
     switch (action.type) {
         case Action.SHOW_GUIDE_MESSAGE:
-            newState.messages.push(message_guide);
+           // newState.messages.push(message_guide);
             newState.currentMessage = message_guide;
             return newState;
 
 
         case Action.SHOW_GUIDE_MESSAGE2:
-            newState.messages.push(message_guide2);
+            //newState.messages.push(message_guide2);
             newState.currentMessage = message_guide2;
             return newState;
 
@@ -91,18 +92,18 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
 
         case Action.INIT_GAME:
             newState = Object.assign({}, initState);
-            newState.resources = { bricks: 0, lumber: 0, coins: 10 };
+            newState.resources = { bricks: 0, lumber: 0, coins: 0 };
             newState.tiles = generateWorld(action.payload.rows, action.payload.cols);
             return newState;
 
         case Action.RESTART_GAME:
             newState = Object.assign({}, initState);
-            newState.resources = { bricks: 0, lumber: 0, coins: 10 };
+            newState.resources = { bricks: 0, lumber: 0, coins: 0 };
             newState.tiles = generateWorld(6, 11);
 
             populateWorldWithResources(newState.tiles);
             newState.nextCard = getNextCard(newState);
-            newState.messages.push(message_welcome);
+           // newState.messages.push(message_welcome);
             newState.currentMessage = message_welcome;
             saveState(newState);
             return newState;
@@ -116,10 +117,10 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             populateWorldWithResources(newState.tiles);
             newState.nextCard = getNextCard(newState);
 
-            if (newState.tutorialActive) {
+            /* if (newState.tutorialActive) {
                 newState.messages.push({ type: MessageType.TUTORIAL });
-            }
-            newState.messages.push(message_welcome);
+            } */
+            //newState.messages.push(message_welcome);
             newState.currentMessage = message_welcome;
             saveState(newState);
             return newState;
@@ -142,7 +143,7 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
         case Action.CLICK_TILE:
             if (newState.energy <= 0) {
                 console.log("no more energy!!!!")
-                newState.messages.push(message_no_energy);
+                //newState.messages.push(message_no_energy);
                 newState.currentMessage = message_no_energy;
             } else {
                 newState.tileClicked = tile;
@@ -179,7 +180,7 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
         case Action.BUY_ITEM:
             if (newState.energy <= 0) {
                 console.log("no more energy!!!!")
-                newState.messages.push(message_no_energy);
+                //newState.messages.push(message_no_energy);
                 newState.currentMessage = message_no_energy;
             } else {
                 newState = buyItem(newState, action.payload);
@@ -235,7 +236,12 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             return newState;
         }
 
+        case Action.OPEN_TUTORAIL:
+            newState.currentMessage = { type: MessageType.TUTORIAL };
+            return newState;
+
         case Action.CLOSE_TUTORAIL:
+            newState.currentMessage = null;
             newState.tutorialActive = false;
             return newState;
 
@@ -274,7 +280,7 @@ function getCurState(state: IState): IState {
 
 function saveState(state: IState) {
     let savedata = getCurState(state);
-    localStorage.setItem('lastState', JSON.stringify(savedata));
+    localStorage.setItem(LOCAL_GAME_STATE, JSON.stringify(savedata));
 }
 
 function stashCard(newState: IState, tile: Tile) {

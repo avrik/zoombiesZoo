@@ -3,7 +3,8 @@
 
 <test-panel *ngIf="debug"></test-panel>
 
-<guide-screen></guide-screen>
+<guide-screen *ngIf="showTutorial"></guide-screen>
+
 <div class="container">
 
     <!-- <div class="header">

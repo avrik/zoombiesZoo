@@ -1,7 +1,7 @@
 <div class="container">
     <div class="store">
         <div class="header" style="display:flex;justify-content:space-between">
-            <span style="margin-left:5px;line-height:25px;text-align:center;width:100%">{{description?description:title}}</span>
+            <h2 style="margin-left:5px;margin:2px;line-height:30px;text-align:center;width:100%">{{description?description:title}}</h2>
             <button style="margin-right:5px" (click)="onClose()">x</button>
         </div>
 
@@ -11,6 +11,8 @@
     </div>
 </div>
 
-<div class="mask" (click)="onClose()">
+<!-- <div class="mask" (click)="onClose()"></div> -->
+        
 
-</div>
+
+<div class="blocker" (click)="onClose()"></div>

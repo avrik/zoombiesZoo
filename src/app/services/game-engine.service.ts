@@ -6,6 +6,7 @@ import { Card, ICardData } from 'app/game/cards/card';
 import { IBuyItem } from '../redux/interfaces';
 import { MessagesService } from './messages.service';
 import { MessageType } from '../enums/message-type.enum';
+import { LOCAL_GAME_STATE } from '../consts/local-storage';
 
 export class GameEngineService {
 
@@ -42,7 +43,7 @@ export class GameEngineService {
     } */
 
     if (!restoreState) {
-      localStorage.removeItem('lastState');
+      localStorage.removeItem(LOCAL_GAME_STATE);
     }
     this.store.dispatch({ type: Action.NEW_GAME });
     setTimeout(() => { this.store.dispatch({ type: Action.NEW_FLOATTILE }) }, 50);

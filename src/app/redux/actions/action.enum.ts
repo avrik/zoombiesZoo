@@ -29,5 +29,6 @@ export enum Action {
     SHOW_GUIDE_MESSAGE3 = "show guide message3",
     SHOW_GUIDE_MESSAGE4 = "show guide message4",
 
-    CLOSE_TUTORAIL = "close tutorial"
+    OPEN_TUTORAIL = "open tutorial",
+    CLOSE_TUTORAIL = "close tutorial",
 }

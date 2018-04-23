@@ -17,9 +17,11 @@ export class GameComponent implements OnInit {
 
   debug: boolean;
   showStoreItems: IBuyItem[];
-  tiles:Tile[];
-  totalCols:number;
-  totalRows:number;
+  tiles: Tile[];
+  totalCols: number;
+  totalRows: number;
+  showTutorial:boolean;
+
   constructor(private gameEngine: GameEngineService, private messagesService: MessagesService) {
 
     this.totalCols = this.gameEngine.totalCols;
@@ -47,23 +49,29 @@ export class GameComponent implements OnInit {
 
         let message: string = `Nice JOB! \n your kingdom lasted for ${days} days. you reached the population of ${newState.population}, and got ${newState.score} score`;
         this.messagesService.postMessage({ type: MessageType.POPUP, title: Messages.GAME_OVER_TITLE, message: message, butns: [{ label: Messages.GAME_OVER_BUTN1, action: a => { this.restart() } }] });
-      } else */ 
-      
-      if (newState.tutorialActive) {
+      } else */
 
-      } else 
-      {
-        if (newState.currentMessage && newState.currentMessage.type == MessageType.POPUP) {
-          this.messagesService.postMessage(newState.currentMessage);
+      /* if (newState.tutorialActive) {
+
+      } else { */
+        if (newState.currentMessage) {
+          if (newState.currentMessage.type == MessageType.TUTORIAL) {
+            this.showTutorial = true;
+          }
+          if (newState.currentMessage.type == MessageType.POPUP) {
+            this.messagesService.postMessage(newState.currentMessage);
+          }
+        } else {
+          this.showTutorial = false;
         }
-      }
+     // }
 
       this.showStoreItems = newState.showStoreItems;
     })
   }
 
   ngOnInit() {
-    
+
     this.debug = !environment.production;
     this.restart(true);
   }
@@ -77,5 +85,5 @@ export class GameComponent implements OnInit {
     this.gameEngine.closeStore();
   }
 
-  
+
 }

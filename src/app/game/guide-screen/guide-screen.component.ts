@@ -14,10 +14,10 @@ export class GuideScreenComponent implements OnInit {
   brick = "brick";
   onPage: number = 1;
 
-  tiles1: Tile[] = [];
+  //tiles1: Tile[] = [];
 
   constructor(private gameEngine: GameEngineService) {
-    this.gameEngine.store.subscribe(() => {
+    /* this.gameEngine.store.subscribe(() => {
       let newState: IState = this.gameEngine.store.getState();
       if (newState) { 
 
@@ -26,8 +26,6 @@ export class GuideScreenComponent implements OnInit {
             let newTile: Tile = new Tile();
             newTile.xpos = j;
             newTile.ypos = i;
-            //let terrainType: number = j >= Math.floor(totalCols / 2) ? TerrainEnum.RESOURCES : TerrainEnum.CITY;
-            //newTile.terrain = new Terrain(terrainType);
             this.tiles1.push(newTile);
           }
         }
@@ -35,11 +33,7 @@ export class GuideScreenComponent implements OnInit {
         this.show = newState.tutorialActive;
       }
 
-    })
-
-
-
-    
+    }) */
 
   }
 
@@ -51,7 +45,7 @@ export class GuideScreenComponent implements OnInit {
   }
 
   onClose() {
-    this.gameEngine.closeTutorial()
+    this.gameEngine.closeTutorial();
   }
 
   onNext() {
