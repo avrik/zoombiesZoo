@@ -5,7 +5,7 @@ import { trigger, state, style, transition, animate, keyframes } from '@angular/
 const percentX = 75;
 const percentY = 40;
 const percentXY = 20;
-const delay = '120ms ease';
+const delay = '160ms ease-out';
 
 @Component({
   selector: 'tile-top',
