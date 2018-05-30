@@ -1,4 +1,4 @@
-<div *ngIf="tile.terrain" [@tileAnimation]="tileAnimation" (click)="clickTile()" [style.opacity]="getTileOpacity()" [style.pointer-events]="getTilePointer()">
+<div *ngIf="tile && tile.terrain" [@tileAnimation]="tileAnimation" (click)="clickTile()" [style.opacity]="getTileOpacity()" [style.pointer-events]="getTilePointer()">
 
     <div *ngIf="!tile.terrain.locked" style="position:absolute">
 
@@ -25,7 +25,7 @@
 
     <!-- /TERRAIN -->
     <!-- <small style="position: absolute;margin-top:20px;opacity:0.2">{{tile.id}}</small> -->
-    <div [style.margin]="gettilemargin()" [@terrainAnimation]="terrainAnimation" class="tile" *ngIf="tile" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()" (mouseup)="onMouseOut()" (mousedown)="onMouseOver()">
+    <div [style.margin]="gettilemargin()" class="tile" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()" (mouseup)="onMouseOut()" (mousedown)="onMouseOver()">
         <div class="over" *ngIf="tile.terrain?.clickable && gotCard==false"></div>
         <img style="position: absolute;z-index:1000;margin:10px 0 0 -5px;opacity:0.1" *ngIf="tile.terrain.locked" src="assets/lock.png" alt="" height="30">
         <div *ngIf="tile.terrain" [class]="tile.terrain.locked?'terrain locked':'terrain'">
