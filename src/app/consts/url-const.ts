@@ -104,9 +104,8 @@ export const UrlConst = {
     //PERSON1:"assets/people/Character Boy.png",
    // PERSON2:"assets/people/Character Cat Girl.png",
     PERSON1:"assets/people/hex_person1.png",
-    PERSON2:"assets/people/hex_person1.png",
-    PERSON3:"assets/people/hex_person1.png",
-    PERSON4:"assets/people/hex_person1.png",
+    PERSON2:"assets/people/hex_person2.png",
+    PERSON3:"assets/people/hex_person3.png",
 
     PERSON_ROYAL1:"assets/people/hex_person2.png",
     PERSON_ROYAL2:"assets/people/hex_person2.png",

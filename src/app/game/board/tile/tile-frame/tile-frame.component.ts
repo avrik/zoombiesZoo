@@ -21,6 +21,7 @@ import { trigger, state, style, transition, animate, keyframes } from '@angular/
 export class TileFrameComponent implements OnInit {
   @Input() card: Card;
   animState;
+  
   constructor() { }
 
   ngOnInit() {

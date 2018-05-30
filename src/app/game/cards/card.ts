@@ -189,9 +189,9 @@ export const cardCollection: ICardData[] = [
       }
     }
   },
-  { level: 0, family: familyPerson, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 5, img: UrlConst.PERSON1, imgOptions: [UrlConst.PERSON1, UrlConst.PERSON2, UrlConst.PERSON3, UrlConst.PERSON4], icon: UrlConst.PERSON_IMG },
-  { level: 1, family: familyPerson, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 2, availableFromLevel: 2, img: UrlConst.PERSON_HOLY1, icon: UrlConst.PERSON_IMG },
-  { level: 2, family: familyPerson, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 1, availableFromLevel: 3, img: UrlConst.PERSON_ROYAL1, icon: UrlConst.PERSON_IMG },
+  { level: 0, family: familyPerson, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 5, img: UrlConst.PERSON1, imgOptions: [UrlConst.PERSON1, UrlConst.PERSON2, UrlConst.PERSON3], icon: UrlConst.PERSON_IMG },
+  //{ level: 1, family: familyPerson, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 2, availableFromLevel: 2, img: UrlConst.PERSON_HOLY1, icon: UrlConst.PERSON_IMG },
+  //{ level: 2, family: familyPerson, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 1, availableFromLevel: 3, img: UrlConst.PERSON_ROYAL1, icon: UrlConst.PERSON_IMG },
   {
     level: 0, family: { name: CardFamilyTypeEnum.WILD, value: -1 }, chance: 10, img: UrlConst.WILD, icon: UrlConst.WILD_IMG
     // nextCard: graveCard,

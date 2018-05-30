@@ -33,11 +33,19 @@ import { IState } from '../../../redux/interfaces';
       transition('up => down', animate('300ms ease-out')),
     ]),
 
-    trigger('terrainAnimation', [
+    trigger('tileAnimation', [
       state('up', style({ transform: 'translateY(-15%)' })),
       state('down', style({ transform: 'translateY(0%)' })),
       transition('* => up', animate('150ms ease-out')),
       transition('* => down', animate('150ms ease-out'))
+    ]),
+
+    trigger('terrainAnimation', [
+      animate(300, keyframes([
+        style({opacity: 1, offset: 0}),
+        style({opacity: 0, offset: 0.5}),
+        style({opacity: 1, offset: 1.0})
+      ]))
     ]),
   ]
 })
@@ -45,6 +53,7 @@ import { IState } from '../../../redux/interfaces';
 export class TileComponent implements OnInit {
   @Input() tile: Tile;
   terrainAnimation: string;
+  tileAnimation: string;
   currentState: IState;
   floatState: string = "";
   moveState: string = "";
@@ -67,7 +76,7 @@ export class TileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.terrainAnimation = "down";
+    this.tileAnimation = "down";
 
     this.gameEngine.store.subscribe(() => {
       this.currentState = this.gameEngine.store.getState();
@@ -130,8 +139,8 @@ export class TileComponent implements OnInit {
         this.floatState = '';
       }
 
-      if (this.terrainAnimation != "down") {
-        this.terrainAnimation = "down";
+      if (this.tileAnimation != "down") {
+        this.tileAnimation = "down";
       }
 
       //if (this.tile.card) {
@@ -148,8 +157,8 @@ export class TileComponent implements OnInit {
       if (!this.tile.card && this.tile.terrain.clickable) {
         this.gameEngine.showMatchHint(this.tile);
 
-        if (this.terrainAnimation != "up") {
-          this.terrainAnimation = "up";
+        if (this.tileAnimation != "up") {
+          this.tileAnimation = "up";
         }
       }
 

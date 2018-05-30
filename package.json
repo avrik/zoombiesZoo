@@ -1,6 +1,6 @@
 {
-    "name": "HexTown",
-    "version": "1.3.0",
+    "name": "hextown",
+    "version": "1.4.0",
     "license": "MIT",
     "scripts": {
         "ng": "ng",

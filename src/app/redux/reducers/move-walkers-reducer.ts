@@ -130,12 +130,12 @@ function moveAnimalToRandomEmpty(tile: Tile): boolean {
 
 function movePersonToRandomEmpty(tile: Tile): boolean {
     let housesAround: Tile[] = tile.linked.filter(a =>
-        a.card && a.card.collected < a.card.collect &&
-        (
+        a.card && a.card.collected < a.card.collect && a.card.family.name == CardFamilyTypeEnum.HOUSE
+        /* (
             (a.card.family.name == CardFamilyTypeEnum.HOUSE && tile.card.level == 0) ||
             (a.card.family.name == CardFamilyTypeEnum.CHURCH && tile.card.level == 1) ||
             (a.card.family.name == CardFamilyTypeEnum.PALACE && tile.card.level == 2)
-        )
+        ) */
     )
 
     if (housesAround.length) {
