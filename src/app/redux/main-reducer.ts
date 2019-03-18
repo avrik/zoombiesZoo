@@ -29,7 +29,7 @@ import { message_guide, message_guide2, message_welcome, message_no_energy } fro
 import { LOCAL_GAME_STATE } from '../consts/local-storage';
 
 export class MainReducer { }
-
+const disableEnergy = true;
 const initState: IState = {
     messages: [],
     tutorialLevel: null,
@@ -141,7 +141,7 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             return newState;
 
         case Action.CLICK_TILE:
-            if (newState.energy <= 0) {
+            if (newState.energy <= 0 && !disableEnergy) {
                 console.log("no more energy!!!!")
                 //newState.messages.push(message_no_energy);
                 newState.currentMessage = message_no_energy;
@@ -178,7 +178,7 @@ export function mainReducerFunc(state: IState = initState, action: IAction): ISt
             return newState;
 
         case Action.BUY_ITEM:
-            if (newState.energy <= 0) {
+            if (newState.energy <= 0 && !disableEnergy) {
                 console.log("no more energy!!!!")
                 //newState.messages.push(message_no_energy);
                 newState.currentMessage = message_no_energy;

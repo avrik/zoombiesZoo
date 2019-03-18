@@ -159,7 +159,8 @@ export function getCardFromWild(tile: Tile): Card {
         // tile.card = optionsForWild[0].card
         card = optionsForWild[0].card
     } else {
-        card = getCardByFamily(CardFamilyTypeEnum.GRAVE);
+        card = getCardByFamily(CardFamilyTypeEnum.OIL);
+        //card = getCardByFamily(CardFamilyTypeEnum.GRAVE);
     }
 
    // console.log("WILD TO CARD ", card);

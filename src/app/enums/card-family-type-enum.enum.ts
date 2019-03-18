@@ -12,6 +12,7 @@ export enum CardFamilyTypeEnum {
     PERSON_ROYAL,
     ANIMAL,
 
+
     OIL,
     ZOOMBIE,
     ZOOMBIE_TRAP,

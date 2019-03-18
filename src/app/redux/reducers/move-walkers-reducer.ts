@@ -94,7 +94,7 @@ function testGroupTrapped(newState: IState, walkers: Tile[]): IState {
 }
 
 function trapWalkersGroup(walkerGroup: Tile[]) {
-    walkerGroup.forEach(walker => walker.card = getCardByFamily(CardFamilyTypeEnum.GRAVE));
+    walkerGroup.forEach(walker => walker.card = getCardByFamily(CardFamilyTypeEnum.OIL));
 }
 
 function moveZoombiesToRandomEmpty(tile: Tile): boolean {

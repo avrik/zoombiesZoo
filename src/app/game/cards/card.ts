@@ -52,13 +52,13 @@ const coinSilverCard: ICardData = { level: 0, family: familyCoinSilver, mergeBy:
 //const goldChest: ICardData = { level: 1, family: { name: CardFamilyTypeEnum.GOLD_CHEST, value: 1250 }, mergeBy: MergeTypeEnum.NONE, collect: 10, type: CardTypeEnum.BUILDING, img: "assets/resources/Chest Closed.png" }
 
 const bonesCard: ICardData = {
-  level: 3, family: familyOil, img: UrlConst.BONES, icon: UrlConst.BONES_IMG,
+  level: 0, family: familyOil, img: UrlConst.BONES, icon: UrlConst.BONES_IMG,
   nextCard: {
-    level: 4, family: familyOil, img: UrlConst.OIL1, icon: UrlConst.OIL_IMG,
+    level: 1, family: familyOil, img: UrlConst.OIL1, icon: UrlConst.OIL_IMG,
     nextCard: {
-      level: 5, family: familyOil, collect: 100, img: UrlConst.OIL2, icon: UrlConst.OIL2_IMG,
+      level: 2, family: familyOil, collect: 100, img: UrlConst.OIL2, icon: UrlConst.OIL2_IMG,
       nextCard: {
-        level: 6, family: familyOil, collect: 900, img: UrlConst.OIL3
+        level: 3, family: familyOil, collect: 900, img: UrlConst.OIL3
       }
     }
   }
@@ -68,11 +68,10 @@ const bonesCard: ICardData = {
   level: 3, family: { name: CardFamilyTypeEnum.ZOOMBIE, value: 0 }, mergeBy: MergeTypeEnum.TRAP_IN_CITY, type: CardTypeEnum.WALKER, img: UrlConst.ZOOMBIE,
 } */
 
-const graveCard: ICardData = {
+/* const graveCard: ICardData = {
   level: 0, family: { name: CardFamilyTypeEnum.GRAVE, value: 1 }, img: UrlConst.GRAVE, icon: UrlConst.GRAVE_IMG,
   nextCard: bonesCard
-  //nextCard: zoombieCard
-}
+} */
 
 const tntCard: ICardData = {
   level: 0, family: { name: CardFamilyTypeEnum.BOMB, value: 0 }, mergeBy: MergeTypeEnum.NONE, type: CardTypeEnum.BOMB, img: UrlConst.BOMB, collect: 3, collected: 3
@@ -199,12 +198,12 @@ export const cardCollection: ICardData[] = [
   {
     level: 0, family: { name: CardFamilyTypeEnum.ANIMAL, value: 0 }, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, img: UrlConst.ANIMAL, icon: UrlConst.ANIMAL_IMG, availableFromLevel: 2, chance: 0, imgOptions: [UrlConst.ANIMAL, UrlConst.ANIMAL2],
     //level: 1, family: { name: CardFamilyTypeEnum.ANIMAL, value: 0 }, mergeBy: MergeTypeEnum.TRAP, type: CardTypeEnum.WALKER, chance: 15, img: UrlConst.ANIMAL,
-    nextCard: graveCard,
+    nextCard: bonesCard,
   },
   bonesCard,
   coinCard,
   coinSilverCard,
-  graveCard,
+ // graveCard,
   tntCard,
 ]
 

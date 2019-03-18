@@ -22,7 +22,7 @@ export function clickTile(state: IState): IState {
         
 
         if (newState.nextCard.family.name == CardFamilyTypeEnum.WILD) {
-            newState.tileClicked.card = getCardFromWild(newState.tileClicked) || getCardByFamily(CardFamilyTypeEnum.GRAVE);
+            newState.tileClicked.card = getCardFromWild(newState.tileClicked) || getCardByFamily(CardFamilyTypeEnum.OIL);
         } else {
             newState.tileClicked.card = newState.nextCard;
         }
