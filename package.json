@@ -33,6 +33,7 @@
         "express": "^4.16.4",
         "json-decorator": "^1.0.0",
         "ng2-popup": "^0.4.0",
+        "path": "^0.12.7",
         "proton": "^0.5.0",
         "redux": "^3.7.2",
         "rxjs": "^5.1.0",
